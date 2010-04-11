@@ -46,5 +46,6 @@
     <modules>
         <module>monitoradmin</module>
         <module>it</module>
+        <module>jmx</module>
     </modules>
 </project>
