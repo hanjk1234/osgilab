@@ -3,10 +3,12 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.bundles.jmx;
+package org.osgilab.bundles.jmx.beans;
 
 import org.osgi.jmx.framework.FrameworkMBean;
+import org.osgilab.bundles.jmx.OsgiVisitor;
 
+import javax.management.NotCompliantMBeanException;
 import javax.management.openmbean.CompositeData;
 import java.io.IOException;
 
@@ -15,7 +17,11 @@ import java.io.IOException;
  *
  * @author dmytro.pishchukhin
  */
-public class Framework implements FrameworkMBean {
+public class Framework extends AbstractMBean implements FrameworkMBean {
+    public Framework(OsgiVisitor visitor) throws NotCompliantMBeanException {
+        super(FrameworkMBean.class, visitor);
+    }
+
     public int getFrameworkStartLevel() throws IOException {
         return 0;  // todo
     }

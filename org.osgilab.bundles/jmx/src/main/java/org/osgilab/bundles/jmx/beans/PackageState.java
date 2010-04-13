@@ -3,17 +3,25 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.bundles.jmx;
+package org.osgilab.bundles.jmx.beans;
 
 import org.osgi.jmx.framework.PackageStateMBean;
+import org.osgilab.bundles.jmx.OsgiVisitor;
 
+import javax.management.NotCompliantMBeanException;
 import javax.management.openmbean.TabularData;
 import java.io.IOException;
 
 /**
+ * PackageStateMBean Implementation
+ * 
  * @author dmytro.pishchukhin
  */
-public class PackageState implements PackageStateMBean {
+public class PackageState extends AbstractMBean implements PackageStateMBean {
+    public PackageState(OsgiVisitor visitor) throws NotCompliantMBeanException {
+        super(PackageStateMBean.class, visitor);
+    }
+
     public long[] getExportingBundles(String s, String s1) throws IOException {
         return new long[0];  // todo
     }

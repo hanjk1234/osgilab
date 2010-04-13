@@ -11,17 +11,18 @@ import org.osgi.jmx.framework.BundleStateMBean;
 import org.osgi.jmx.framework.FrameworkMBean;
 import org.osgi.jmx.framework.PackageStateMBean;
 import org.osgi.jmx.framework.ServiceStateMBean;
+import org.osgilab.bundles.jmx.beans.BundleState;
+import org.osgilab.bundles.jmx.beans.Framework;
+import org.osgilab.bundles.jmx.beans.PackageState;
+import org.osgilab.bundles.jmx.beans.ServiceState;
 
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import javax.management.StandardMBean;
+import javax.management.*;
 import java.lang.management.ManagementFactory;
 
 /**
  * @author dmytro.pishchukhin
  */
-public class Activator implements BundleActivator {
-
+public class Activator implements BundleActivator, OsgiVisitor {
     private MBeanServer server;
     private ObjectName frameworkMBeanObjectName;
     private ObjectName bundleStateMBeanObjectName;
@@ -29,28 +30,34 @@ public class Activator implements BundleActivator {
     private ObjectName packageStateMBeanObjectName;
 
     public void start(BundleContext context) throws Exception {
-        server = ManagementFactory.getPlatformMBeanServer();
-        frameworkMBeanObjectName = new ObjectName(FrameworkMBean.OBJECTNAME);
-        server.registerMBean(new StandardMBean(new Framework(),FrameworkMBean.class),
-                frameworkMBeanObjectName);
-
-        bundleStateMBeanObjectName = new ObjectName(BundleStateMBean.OBJECTNAME);
-        server.registerMBean(new StandardMBean(new BundleState(),BundleStateMBean.class),
-                bundleStateMBeanObjectName);
-
-        serviceStateMBeanObjectName = new ObjectName(ServiceStateMBean.OBJECTNAME);
-        server.registerMBean(new StandardMBean(new ServiceState(), ServiceStateMBean.class),
-                serviceStateMBeanObjectName);
-
-        packageStateMBeanObjectName = new ObjectName(PackageStateMBean.OBJECTNAME);
-        server.registerMBean(new StandardMBean(new PackageState(), PackageStateMBean.class),
-                packageStateMBeanObjectName);
+        registerJmxBeans();
     }
 
     public void stop(BundleContext context) throws Exception {
+        unregisterJmxBeans();
+    }
+
+    private void unregisterJmxBeans() throws InstanceNotFoundException, MBeanRegistrationException {
         server.unregisterMBean(packageStateMBeanObjectName);
         server.unregisterMBean(serviceStateMBeanObjectName);
         server.unregisterMBean(bundleStateMBeanObjectName);
         server.unregisterMBean(frameworkMBeanObjectName);
     }
+
+    private void registerJmxBeans() throws MalformedObjectNameException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
+        server = ManagementFactory.getPlatformMBeanServer();
+
+        frameworkMBeanObjectName = new ObjectName(FrameworkMBean.OBJECTNAME);
+        server.registerMBean(new Framework(this), frameworkMBeanObjectName);
+
+        bundleStateMBeanObjectName = new ObjectName(BundleStateMBean.OBJECTNAME);
+        server.registerMBean(new BundleState(this), bundleStateMBeanObjectName);
+
+        serviceStateMBeanObjectName = new ObjectName(ServiceStateMBean.OBJECTNAME);
+        server.registerMBean(new ServiceState(this), serviceStateMBeanObjectName);
+
+        packageStateMBeanObjectName = new ObjectName(PackageStateMBean.OBJECTNAME);
+        server.registerMBean(new PackageState(this), packageStateMBeanObjectName);
+    }
+
 }
