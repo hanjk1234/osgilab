@@ -5,6 +5,7 @@
 
 package org.osgilab.bundles.jmx;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.jmx.framework.BundleStateMBean;
@@ -28,13 +29,22 @@ public class Activator implements BundleActivator, OsgiVisitor {
     private ObjectName bundleStateMBeanObjectName;
     private ObjectName serviceStateMBeanObjectName;
     private ObjectName packageStateMBeanObjectName;
+    private BundleContext bc;
+    private BundleState bundleState;
 
     public void start(BundleContext context) throws Exception {
+        bc = context;
+
         registerJmxBeans();
+
+        bc.addBundleListener(bundleState);
     }
 
     public void stop(BundleContext context) throws Exception {
+        bc.removeBundleListener(bundleState);
+
         unregisterJmxBeans();
+        bc = null;
     }
 
     private void unregisterJmxBeans() throws InstanceNotFoundException, MBeanRegistrationException {
@@ -51,7 +61,8 @@ public class Activator implements BundleActivator, OsgiVisitor {
         server.registerMBean(new Framework(this), frameworkMBeanObjectName);
 
         bundleStateMBeanObjectName = new ObjectName(BundleStateMBean.OBJECTNAME);
-        server.registerMBean(new BundleState(this), bundleStateMBeanObjectName);
+        bundleState = new BundleState(this);
+        server.registerMBean(bundleState, bundleStateMBeanObjectName);
 
         serviceStateMBeanObjectName = new ObjectName(ServiceStateMBean.OBJECTNAME);
         server.registerMBean(new ServiceState(this), serviceStateMBeanObjectName);
@@ -60,4 +71,7 @@ public class Activator implements BundleActivator, OsgiVisitor {
         server.registerMBean(new PackageState(this), packageStateMBeanObjectName);
     }
 
+    public Bundle getBundle(long id) {
+        return bc.getBundle(id);
+    }
 }
