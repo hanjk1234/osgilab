@@ -6,19 +6,23 @@
 package org.osgilab.bundles.jmx.beans;
 
 import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 import org.osgi.jmx.framework.PackageStateMBean;
 import org.osgi.service.packageadmin.ExportedPackage;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgilab.bundles.jmx.OsgiVisitor;
+import org.osgilab.bundles.jmx.Utils;
 
 import javax.management.NotCompliantMBeanException;
 import javax.management.openmbean.TabularData;
 import javax.management.openmbean.TabularDataSupport;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * PackageStateMBean Implementation
- * 
+ *
  * @author dmytro.pishchukhin
  */
 public class PackageState extends AbstractMBean implements PackageStateMBean {
@@ -27,11 +31,39 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
     }
 
     public long[] getExportingBundles(String packageName, String version) throws IOException {
-        return new long[0];  // todo
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        Version packageVersion = new Version(version);
+        ExportedPackage[] packages = Utils.findPackages(packageAdmin.getExportedPackages((Bundle) null),
+                packageName, packageVersion);
+        Set<Bundle> bundles = new HashSet<Bundle>();
+        for (ExportedPackage aPackage : packages) {
+            Bundle bundle = aPackage.getExportingBundle();
+            if (bundle != null) {
+                bundles.add(bundle);
+            }
+        }
+        return Utils.getIds(bundles.toArray(new Bundle[bundles.size()]));
     }
 
     public long[] getImportingBundles(String packageName, String version, long exportingBundle) throws IOException {
-        return new long[0];  // todo
+        Bundle bundle = visitor.getBundle(exportingBundle);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Bundle ID is wrong: " + exportingBundle);
+        }
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        Version packageVersion = new Version(version);
+
+        ExportedPackage foundPackage = Utils.findPackage(packageAdmin.getExportedPackages(bundle), packageName, packageVersion);
+        if (foundPackage == null) {
+            throw new IllegalArgumentException("Package name/vesion are wrong: " + packageName + ", " + version);
+        }
+        return Utils.getIds(foundPackage.getImportingBundles());
     }
 
     public TabularData listPackages() throws IOException {
@@ -40,12 +72,26 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
             throw new IOException("PackageAdmin is not available");
         }
         TabularDataSupport dataSupport = new TabularDataSupport(PACKAGES_TYPE);
-        ExportedPackage[] exportedPackages = packageAdmin.getExportedPackages((Bundle)null);
+        ExportedPackage[] exportedPackages = packageAdmin.getExportedPackages((Bundle) null);
         // todo
         return dataSupport;
     }
 
     public boolean isRemovalPending(String packageName, String version, long exportingBundle) throws IOException {
-        return false;  // todo
+        Bundle bundle = visitor.getBundle(exportingBundle);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Bundle ID is wrong: " + exportingBundle);
+        }
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        Version packageVersion = new Version(version);
+        
+        ExportedPackage foundPackage = Utils.findPackage(packageAdmin.getExportedPackages(bundle), packageName, packageVersion);
+        if (foundPackage == null) {
+            throw new IllegalArgumentException("Package name/vesion are wrong: " + packageName + ", " + version);
+        }
+        return foundPackage.isRemovalPending();
     }
 }

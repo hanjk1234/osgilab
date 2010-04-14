@@ -5,9 +5,13 @@
 
 package org.osgilab.bundles.jmx.beans;
 
-import org.osgi.framework.*;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
 import org.osgi.jmx.framework.BundleStateMBean;
+import org.osgi.service.packageadmin.ExportedPackage;
 import org.osgi.service.packageadmin.PackageAdmin;
+import org.osgi.service.packageadmin.RequiredBundle;
 import org.osgi.service.startlevel.StartLevel;
 import org.osgilab.bundles.jmx.OsgiVisitor;
 import org.osgilab.bundles.jmx.Utils;
@@ -16,9 +20,9 @@ import javax.management.*;
 import javax.management.openmbean.CompositeDataSupport;
 import javax.management.openmbean.OpenDataException;
 import javax.management.openmbean.TabularData;
+import javax.management.openmbean.TabularDataSupport;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * BundleStateMBean Implementation
@@ -36,16 +40,46 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         nbs = new NotificationBroadcasterSupport();
     }
 
-    public long[] getRequiredBundles(long l) throws IOException {
-        return new long[0];  // todo
+    public long[] getRequiredBundles(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        }
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        RequiredBundle[] requiredBundles = packageAdmin.getRequiredBundles(bundle.getSymbolicName());
+        Set<Bundle> result = new HashSet<Bundle>();
+        if (requiredBundles != null) {
+            for (RequiredBundle requiredBundle : requiredBundles) {
+                result.add(requiredBundle.getBundle());
+            }
+        }
+        return Utils.getIds(result.toArray(new Bundle[result.size()]));
     }
 
     public TabularData listBundles() throws IOException {
         return null;  // todo
     }
 
-    public String[] getExportedPackages(long l) throws IOException {
-        return new String[0];  // todo
+    public String[] getExportedPackages(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        }
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        ExportedPackage[] exportedPackages = packageAdmin.getExportedPackages(bundle);
+        List<String> result = new ArrayList<String>();
+        if (exportedPackages != null) {
+            for (ExportedPackage exportedPackage : exportedPackages) {
+                result.add(exportedPackage.getName() + ';' + exportedPackage.getVersion().toString());
+            }
+        }
+        return result.toArray(new String[result.size()]);
     }
 
     public long[] getFragments(long bundleIdentifier) throws IOException {
@@ -60,8 +94,26 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         return Utils.getIds(packageAdmin.getFragments(bundle));
     }
 
-    public TabularData getHeaders(long l) throws IOException {
-        return null;  // todo
+    public TabularData getHeaders(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        }
+        TabularDataSupport dataSupport = new TabularDataSupport(HEADERS_TYPE);
+        try {
+            Dictionary headers = bundle.getHeaders();
+            Enumeration keys = headers.keys();
+            while (keys.hasMoreElements()) {
+                String key = (String) keys.nextElement();
+                Map<String, Object> values = new HashMap<String, Object>();
+                values.put(KEY, key);
+                values.put(VALUE, headers.get(key));
+                dataSupport.put(new CompositeDataSupport(HEADER_TYPE, values));
+            }
+        } catch (OpenDataException e) {
+            e.printStackTrace();  // todo
+        }
+        return dataSupport;
     }
 
     public long[] getHosts(long bundleIdentifier) throws IOException {

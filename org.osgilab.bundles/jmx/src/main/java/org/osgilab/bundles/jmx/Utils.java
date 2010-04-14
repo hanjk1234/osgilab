@@ -8,9 +8,13 @@ package org.osgilab.bundles.jmx;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.Version;
 import org.osgi.jmx.JmxConstants;
+import org.osgi.service.packageadmin.ExportedPackage;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -127,5 +131,30 @@ public class Utils {
             result[i] = longArray[i];
         }
         return result;
+    }
+
+    public static ExportedPackage findPackage(ExportedPackage[] packages, String packageName, Version version) {
+        if (packages != null) {
+            for (ExportedPackage exportedPackage : packages) {
+                if (exportedPackage.getName().equals(packageName) &&
+                        exportedPackage.getVersion().equals(version)) {
+                    return exportedPackage;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static ExportedPackage[] findPackages(ExportedPackage[] packages, String packageName, Version version) {
+        List<ExportedPackage> result = new ArrayList<ExportedPackage>();
+        if (packages != null) {
+            for (ExportedPackage exportedPackage : packages) {
+                if (exportedPackage.getName().equals(packageName) &&
+                        exportedPackage.getVersion().equals(version)) {
+                    result.add(exportedPackage);
+                }
+            }
+        }
+        return result.toArray(new ExportedPackage[result.size()]);
     }
 }
