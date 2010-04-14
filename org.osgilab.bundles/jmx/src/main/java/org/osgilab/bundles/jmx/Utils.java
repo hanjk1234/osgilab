@@ -35,7 +35,7 @@ public class Utils {
             result.append(JmxConstants.ARRAY_OF);
             Class<?> arrayType = aClass.getComponentType();
             String simpleName = arrayType.getSimpleName();
-            if (JmxConstants.SCALAR.contains(simpleName)) {
+            if (JmxConstants.SCALAR.contains(simpleName) || JmxConstants.P_BOOLEAN.equals(simpleName)) {
                 result.append(simpleName);
             } else {
                 throw new IllegalArgumentException("Unknown array type: " + arrayType.getName());
