@@ -5,6 +5,9 @@
 
 package org.osgilab.bundles.jmx;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceReference;
 import org.osgi.jmx.JmxConstants;
 
 import java.lang.reflect.Array;
@@ -91,5 +94,38 @@ public class Utils {
         } else {
             return String.valueOf(value);
         }
+    }
+
+    public static long[] getIds(Bundle[] bundles) {
+        if (bundles == null) {
+            return new long[0];
+        }
+        long[] result = new long[bundles.length];
+        for (int i = 0; i < bundles.length; i++) {
+            result[i] = bundles[i].getBundleId();
+        }
+        return result;
+    }
+
+    public static long[] getIds(ServiceReference[] serviceReferences) {
+        if (serviceReferences == null) {
+            return new long[0];
+        }
+        long[] result = new long[serviceReferences.length];
+        for (int i = 0; i < serviceReferences.length; i++) {
+            result[i] = (Long)serviceReferences[i].getProperty(Constants.SERVICE_ID);
+        }
+        return result;
+    }
+
+    public static Long[] toLongArray(long[] longArray) {
+        if (longArray == null) {
+            return new Long[0];
+        }
+        Long[] result = new Long[longArray.length];
+        for (int i = 0; i < longArray.length; i++) {
+            result[i] = longArray[i];
+        }
+        return result;
     }
 }

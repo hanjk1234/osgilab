@@ -85,17 +85,7 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
                     values.put(BUNDLE_IDENTIFIER, serviceReference.getBundle().getBundleId());
                     values.put(IDENTIFIER, serviceReference.getProperty(Constants.SERVICE_ID));
                     values.put(OBJECT_CLASS, serviceReference.getProperty(Constants.OBJECTCLASS));
-                    Bundle[] bundles = serviceReference.getUsingBundles();
-                    Long[] usingBundles;
-                    if (bundles == null) {
-                        usingBundles = new Long[0];
-                    } else {
-                        usingBundles = new Long[bundles.length];
-                        for (int i = 0; i < bundles.length; i++) {
-                            usingBundles[i] = bundles[i].getBundleId();
-                        }
-                    }
-                    values.put(USING_BUNDLES, usingBundles);
+                    values.put(USING_BUNDLES, Utils.toLongArray(Utils.getIds(serviceReference.getUsingBundles())));
                     dataSupport.put(new CompositeDataSupport(SERVICE_TYPE, values));
                 }
             }
@@ -111,17 +101,7 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
         if (serviceReference == null) {
             throw new IllegalArgumentException("Wrong Service ID: " + id);
         }
-        Bundle[] bundles = serviceReference.getUsingBundles();
-        long[] result;
-        if (bundles == null) {
-            result = new long[0];
-        } else {
-            result = new long[bundles.length];
-            for (int i = 0; i < bundles.length; i++) {
-                result[i] = bundles[i].getBundleId();
-            }
-        }
-        return result;
+        return Utils.getIds(serviceReference.getUsingBundles());
     }
 
     public void addNotificationListener(NotificationListener listener, NotificationFilter filter, Object handback) throws IllegalArgumentException {

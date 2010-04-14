@@ -7,7 +7,10 @@ package org.osgilab.bundles.jmx.beans;
 
 import org.osgi.framework.*;
 import org.osgi.jmx.framework.BundleStateMBean;
+import org.osgi.service.packageadmin.PackageAdmin;
+import org.osgi.service.startlevel.StartLevel;
 import org.osgilab.bundles.jmx.OsgiVisitor;
+import org.osgilab.bundles.jmx.Utils;
 
 import javax.management.*;
 import javax.management.openmbean.CompositeDataSupport;
@@ -45,16 +48,32 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         return new String[0];  // todo
     }
 
-    public long[] getFragments(long l) throws IOException {
-        return new long[0];  // todo
+    public long[] getFragments(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        }
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        return Utils.getIds(packageAdmin.getFragments(bundle));
     }
 
     public TabularData getHeaders(long l) throws IOException {
         return null;  // todo
     }
 
-    public long[] getHosts(long l) throws IOException {
-        return new long[0];  // todo
+    public long[] getHosts(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        }
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        return Utils.getIds(packageAdmin.getHosts(bundle));
     }
 
     public String[] getImportedPackages(long l) throws IOException {
@@ -74,17 +93,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         if (bundle == null) {
             throw new IllegalArgumentException("Wrong Bundle ID: " + id);
         }
-        ServiceReference[] serviceReferences = bundle.getRegisteredServices();
-        long[] result;
-        if (serviceReferences == null) {
-            result = new long[0];
-        } else {
-            result = new long[serviceReferences.length];
-            for (int i = 0; i < serviceReferences.length; i++) {
-                result[i] = (Long) serviceReferences[i].getProperty(Constants.SERVICE_ID);
-            }
-        }
-        return result;
+        return Utils.getIds(bundle.getRegisteredServices());
     }
 
     public long[] getRequiringBundles(long l) throws IOException {
@@ -96,21 +105,19 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         if (bundle == null) {
             throw new IllegalArgumentException("Wrong Bundle ID: " + id);
         }
-        ServiceReference[] serviceReferences = bundle.getServicesInUse();
-        long[] result;
-        if (serviceReferences == null) {
-            result = new long[0];
-        } else {
-            result = new long[serviceReferences.length];
-            for (int i = 0; i < serviceReferences.length; i++) {
-                result[i] = (Long) serviceReferences[i].getProperty(Constants.SERVICE_ID);
-            }
-        }
-        return result;
+        return Utils.getIds(bundle.getServicesInUse());
     }
 
-    public int getStartLevel(long l) throws IOException {
-        return 0;  // todo
+    public int getStartLevel(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        }
+        StartLevel startLevel = visitor.getStartLevel();
+        if (startLevel == null) {
+            throw new IOException("StartLevel is not available");
+        }
+        return startLevel.getBundleStartLevel(bundle);
     }
 
     public String getState(long l) throws IOException {
