@@ -7,6 +7,7 @@ package org.osgilab.bundles.jmx;
 
 import org.osgi.jmx.JmxConstants;
 
+import java.lang.reflect.Array;
 import java.util.Vector;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Vector;
  */
 public class Utils {
     public static String getValueType(Object value) {
-        Class<? extends Object> aClass = value.getClass();
+        Class aClass = value.getClass();
         StringBuilder result = new StringBuilder();
 
         if (value instanceof Vector) {
@@ -52,6 +53,43 @@ public class Utils {
     }
 
     public static String serializeToString(Object value) {
-        return null;  // todo
+        String type = getValueType(value);
+        boolean isStringType = type.endsWith(JmxConstants.STRING);
+        if (type.startsWith(JmxConstants.ARRAY_OF)) {
+            int length = Array.getLength(value);
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < length; i++) {
+                Object itemValue = Array.get(value, i);
+                builder.append(serializeToStringSimpleValue(itemValue, isStringType));
+                if (i < length - 1) {
+                    builder.append(",");
+                }
+            }
+            return builder.toString();
+        } else if (type.startsWith(JmxConstants.VECTOR_OF)) {
+            Vector vector = (Vector) value;
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < vector.size(); i++) {
+                Object itemValue = vector.get(i);
+                builder.append(serializeToStringSimpleValue(itemValue, isStringType));
+                if (i < vector.size() - 1) {
+                    builder.append(",");
+                }
+            }
+            return builder.toString();
+        }
+        return serializeToStringSimpleValue(value, isStringType);
+    }
+
+    private static String serializeToStringSimpleValue(Object value, boolean stringType) {
+        if (stringType) {
+            StringBuilder builder = new StringBuilder();
+            builder.append('"');
+            builder.append(String.valueOf(value).trim().replace("\\", "\\\\").replaceAll("'", "\\'").replaceAll("\"", "\\\""));
+            builder.append('"');
+            return builder.toString();
+        } else {
+            return String.valueOf(value);
+        }
     }
 }
