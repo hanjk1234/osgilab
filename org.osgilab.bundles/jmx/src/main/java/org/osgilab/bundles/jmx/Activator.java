@@ -10,6 +10,9 @@ import org.osgi.jmx.framework.BundleStateMBean;
 import org.osgi.jmx.framework.FrameworkMBean;
 import org.osgi.jmx.framework.PackageStateMBean;
 import org.osgi.jmx.framework.ServiceStateMBean;
+import org.osgi.service.packageadmin.PackageAdmin;
+import org.osgi.service.startlevel.StartLevel;
+import org.osgi.util.tracker.ServiceTracker;
 import org.osgilab.bundles.jmx.beans.BundleState;
 import org.osgilab.bundles.jmx.beans.Framework;
 import org.osgilab.bundles.jmx.beans.PackageState;
@@ -30,9 +33,17 @@ public class Activator implements BundleActivator, OsgiVisitor {
     private BundleContext bc;
     private BundleState bundleState;
     private ServiceState serviceState;
+    private ServiceTracker packageAdminTracker;
+    private ServiceTracker startLevelTracker;
 
     public void start(BundleContext context) throws Exception {
         bc = context;
+
+        packageAdminTracker = new ServiceTracker(bc, PackageAdmin.class.getName(), null);
+        packageAdminTracker.open();
+
+        startLevelTracker = new ServiceTracker(bc, StartLevel.class.getName(), null);
+        startLevelTracker.open();
 
         registerJmxBeans();
 
@@ -45,6 +56,13 @@ public class Activator implements BundleActivator, OsgiVisitor {
         bc.removeBundleListener(bundleState);
 
         unregisterJmxBeans();
+
+        startLevelTracker.close();
+        startLevelTracker = null;
+
+        packageAdminTracker.close();
+        packageAdminTracker = null;
+
         bc = null;
     }
 
@@ -100,6 +118,14 @@ public class Activator implements BundleActivator, OsgiVisitor {
             e.printStackTrace();  // todo
         }
         return new ServiceReference[0];
+    }
+
+    public PackageAdmin getPackageAdmin() {
+        return (PackageAdmin) packageAdminTracker.getService();
+    }
+
+    public StartLevel getStartLevel() {
+        return (StartLevel) startLevelTracker.getService();
     }
 
     private String createServiceIdFilter(long id) {

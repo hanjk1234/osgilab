@@ -6,6 +6,7 @@
 package org.osgilab.bundles.jmx.beans;
 
 import org.osgi.jmx.framework.FrameworkMBean;
+import org.osgi.service.startlevel.StartLevel;
 import org.osgilab.bundles.jmx.OsgiVisitor;
 
 import javax.management.NotCompliantMBeanException;
@@ -23,11 +24,19 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
     }
 
     public int getFrameworkStartLevel() throws IOException {
-        return 0;  // todo
+        StartLevel startLevel = visitor.getStartLevel();
+        if (startLevel == null) {
+            throw new IOException("StartLevel is not available");
+        }
+        return startLevel.getStartLevel();
     }
 
     public int getInitialBundleStartLevel() throws IOException {
-        return 0;  // todo
+        StartLevel startLevel = visitor.getStartLevel();
+        if (startLevel == null) {
+            throw new IOException("StartLevel is not available");
+        }
+        return startLevel.getInitialBundleStartLevel();
     }
 
     public long installBundle(String s) throws IOException {
@@ -74,12 +83,20 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
         return null;  // todo
     }
 
-    public void setFrameworkStartLevel(int i) throws IOException {
-        // todo
+    public void setFrameworkStartLevel(int level) throws IOException {
+        StartLevel startLevel = visitor.getStartLevel();
+        if (startLevel == null) {
+            throw new IOException("StartLevel is not available");
+        }
+        startLevel.setStartLevel(level);
     }
 
-    public void setInitialBundleStartLevel(int i) throws IOException {
-        // todo
+    public void setInitialBundleStartLevel(int level) throws IOException {
+        StartLevel startLevel = visitor.getStartLevel();
+        if (startLevel == null) {
+            throw new IOException("StartLevel is not available");
+        }
+        startLevel.setInitialBundleStartLevel(level);
     }
 
     public void shutdownFramework() throws IOException {

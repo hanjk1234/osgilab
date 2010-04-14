@@ -58,6 +58,12 @@
             <artifactId>org.osgi.enterprise</artifactId>
             <version>4.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.5</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -89,7 +95,8 @@
                             javax.management*,
                             !org.osgi.jmx*,
                             org.osgi.framework*,
-                            org.osgi.service*                            
+                            org.osgi.service*,                            
+                            org.osgi.util*
                         </Import-Package>
                         <Bundle-Activator>org.osgilab.bundles.jmx.Activator</Bundle-Activator>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId};singleton:=true
@@ -105,5 +112,27 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>run</id>
+            <build>
+                <defaultGoal>pax:provision</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.ops4j</groupId>
+                        <artifactId>maven-pax-plugin</artifactId>
+                        <version>1.4</version>
+                        <configuration>
+                            <framework>equinox</framework>
+                            <provision>
+                                <param>--workingDirectory=target/runner</param>
+                            </provision>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     
 </project>

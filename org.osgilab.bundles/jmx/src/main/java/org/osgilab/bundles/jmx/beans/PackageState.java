@@ -5,11 +5,15 @@
 
 package org.osgilab.bundles.jmx.beans;
 
+import org.osgi.framework.Bundle;
 import org.osgi.jmx.framework.PackageStateMBean;
+import org.osgi.service.packageadmin.ExportedPackage;
+import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgilab.bundles.jmx.OsgiVisitor;
 
 import javax.management.NotCompliantMBeanException;
 import javax.management.openmbean.TabularData;
+import javax.management.openmbean.TabularDataSupport;
 import java.io.IOException;
 
 /**
@@ -22,19 +26,26 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
         super(PackageStateMBean.class, visitor);
     }
 
-    public long[] getExportingBundles(String s, String s1) throws IOException {
+    public long[] getExportingBundles(String packageName, String version) throws IOException {
         return new long[0];  // todo
     }
 
-    public long[] getImportingBundles(String s, String s1, long l) throws IOException {
+    public long[] getImportingBundles(String packageName, String version, long exportingBundle) throws IOException {
         return new long[0];  // todo
     }
 
     public TabularData listPackages() throws IOException {
-        return null;  // todo
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        TabularDataSupport dataSupport = new TabularDataSupport(PACKAGES_TYPE);
+        ExportedPackage[] exportedPackages = packageAdmin.getExportedPackages((Bundle)null);
+        // todo
+        return dataSupport;
     }
 
-    public boolean isRemovalPending(String s, String s1, long l) throws IOException {
+    public boolean isRemovalPending(String packageName, String version, long exportingBundle) throws IOException {
         return false;  // todo
     }
 }

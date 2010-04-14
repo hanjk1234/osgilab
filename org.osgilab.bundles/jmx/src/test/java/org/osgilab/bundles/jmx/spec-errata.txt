@@ -1,0 +1,2 @@
+- Properties misses Boolean and boolean types
+- PackageStateMBean - NAME_ITEM javadoc error (type is SimpleType.LONG)
