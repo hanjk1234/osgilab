@@ -19,6 +19,7 @@ import org.osgilab.bundles.jmx.beans.PackageState;
 import org.osgilab.bundles.jmx.beans.ServiceState;
 
 import javax.management.*;
+import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 
 /**
@@ -35,6 +36,7 @@ public class Activator implements BundleActivator, OsgiVisitor {
     private ServiceState serviceState;
     private ServiceTracker packageAdminTracker;
     private ServiceTracker startLevelTracker;
+    private ServiceTracker frameworkTracker;
 
     public void start(BundleContext context) throws Exception {
         bc = context;
@@ -44,6 +46,9 @@ public class Activator implements BundleActivator, OsgiVisitor {
 
         startLevelTracker = new ServiceTracker(bc, StartLevel.class.getName(), null);
         startLevelTracker.open();
+
+        frameworkTracker = new ServiceTracker(bc, org.osgi.framework.launch.Framework.class.getName(), null);
+        frameworkTracker.open();
 
         registerJmxBeans();
 
@@ -56,6 +61,9 @@ public class Activator implements BundleActivator, OsgiVisitor {
         bc.removeBundleListener(bundleState);
 
         unregisterJmxBeans();
+
+        frameworkTracker.close();
+        frameworkTracker = null;
 
         startLevelTracker.close();
         startLevelTracker = null;
@@ -126,6 +134,18 @@ public class Activator implements BundleActivator, OsgiVisitor {
 
     public StartLevel getStartLevel() {
         return (StartLevel) startLevelTracker.getService();
+    }
+
+    public Bundle installBundle(String location) throws BundleException {
+        return bc.installBundle(location);
+    }
+
+    public Bundle installBundle(String location, InputStream stream) throws BundleException {
+        return bc.installBundle(location, stream);
+    }
+
+    public org.osgi.framework.launch.Framework getFramework() {
+        return (org.osgi.framework.launch.Framework) frameworkTracker.getService(); 
     }
 
     private String createServiceIdFilter(long id) {
