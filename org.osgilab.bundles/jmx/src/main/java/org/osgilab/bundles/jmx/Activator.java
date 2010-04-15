@@ -110,7 +110,7 @@ public class Activator implements BundleActivator, OsgiVisitor {
                 return serviceReferences[0];
             }
         } catch (InvalidSyntaxException e) {
-            e.printStackTrace();  // todo
+            e.printStackTrace();
         }
         return null;
     }
@@ -123,7 +123,7 @@ public class Activator implements BundleActivator, OsgiVisitor {
             }
             return serviceReferences;
         } catch (InvalidSyntaxException e) {
-            e.printStackTrace();  // todo
+            e.printStackTrace();
         }
         return new ServiceReference[0];
     }

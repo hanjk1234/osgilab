@@ -111,7 +111,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
                 dataSupport.put(new CompositeDataSupport(HEADER_TYPE, values));
             }
         } catch (OpenDataException e) {
-            e.printStackTrace();  // todo
+            e.printStackTrace();
         }
         return dataSupport;
     }
@@ -249,7 +249,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
 
             nbs.sendNotification(notification);
         } catch (OpenDataException e) {
-           // todo: handle somehow
+            e.printStackTrace();
         }
     }
 }

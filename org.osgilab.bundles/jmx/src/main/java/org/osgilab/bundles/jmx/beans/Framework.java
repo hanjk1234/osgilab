@@ -11,11 +11,15 @@ import org.osgi.jmx.framework.FrameworkMBean;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 import org.osgilab.bundles.jmx.OsgiVisitor;
+import org.osgilab.bundles.jmx.Utils;
 
 import javax.management.NotCompliantMBeanException;
 import javax.management.openmbean.CompositeData;
+import javax.management.openmbean.CompositeDataSupport;
+import javax.management.openmbean.OpenDataException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.*;
 
 /**
  * FrameworkMBean Implementation
@@ -61,12 +65,87 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
         }
     }
 
-    public CompositeData installBundles(String[] strings) throws IOException {
-        return null;  // todo
+    public CompositeData installBundles(String[] locations) throws IOException {
+        Set<String> remainingLocations = new HashSet<String>();
+        if (locations != null) {
+            remainingLocations.addAll(Arrays.asList(locations));
+        }
+        Set<Bundle> completedBundles = new HashSet<Bundle>();
+        boolean isSuccess = true;
+        String errorBundleLocation = null;
+        String errorDetails = null;
+
+        Iterator<String> locationsIterator = remainingLocations.iterator();
+        while (locationsIterator.hasNext()) {
+            String location = locationsIterator.next();
+            locationsIterator.remove();
+            try {
+                Bundle bundle = visitor.installBundle(location);
+                completedBundles.add(bundle);
+            } catch (BundleException e) {
+                isSuccess = false;
+                errorBundleLocation = location;
+                errorDetails = e.getMessage();
+                break;
+            }
+        }
+
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put(REMAINING, remainingLocations.toArray(new String[remainingLocations.size()]));
+        values.put(COMPLETED, Utils.getIds(completedBundles.toArray(new Bundle[completedBundles.size()])));
+        if (!isSuccess) {
+            values.put(BUNDLE_IN_ERROR, errorBundleLocation);
+            values.put(ERROR, errorDetails);
+        }
+        values.put(SUCCESS, isSuccess);
+        try {
+            return new CompositeDataSupport(BATCH_INSTALL_RESULT_TYPE, values);
+        } catch (OpenDataException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public CompositeData installBundlesFromURL(String[] strings, String[] strings1) throws IOException {
-        return null;  // todo
+    public CompositeData installBundlesFromURL(String[] locations, String[] urls) throws IOException {
+        List<String> remainingLocations = new ArrayList<String>();
+        Set<Bundle> completedBundles = new HashSet<Bundle>();
+        boolean isSuccess = true;
+        String errorBundleLocation = null;
+        String errorDetails = null;
+
+        if (locations != null && urls != null) {
+            if (locations.length != urls.length) {
+                throw new IllegalArgumentException("Locations array length is not equal to urls array length");
+            }
+            remainingLocations.addAll(Arrays.asList(locations));
+
+            for (int i = 0; remainingLocations.size() > 0; i++) {
+                String location = remainingLocations.remove(0);
+                try {
+                    Bundle bundle = visitor.installBundle(location, new URL(urls[i]).openStream());
+                    completedBundles.add(bundle);
+                } catch (Exception e) {
+                    isSuccess = false;
+                    errorBundleLocation = location;
+                    errorDetails = e.getMessage();
+                    break;
+                }
+            }
+        }
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put(REMAINING, remainingLocations.toArray(new String[remainingLocations.size()]));
+        values.put(COMPLETED, Utils.getIds(completedBundles.toArray(new Bundle[completedBundles.size()])));
+        if (!isSuccess) {
+            values.put(BUNDLE_IN_ERROR, errorBundleLocation);
+            values.put(ERROR, errorDetails);
+        }
+        values.put(SUCCESS, isSuccess);
+        try {
+            return new CompositeDataSupport(BATCH_INSTALL_RESULT_TYPE, values);
+        } catch (OpenDataException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void refreshBundle(long bundleIdentifier) throws IOException {
@@ -161,8 +240,56 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
         startLevel.setBundleStartLevel(bundle, newLevel);
     }
 
-    public CompositeData setBundleStartLevels(long[] longs, int[] ints) throws IOException {
-        return null;  // todo
+    public CompositeData setBundleStartLevels(long[] bundleIdentifiers, int[] newlevels) throws IOException {
+        List<Bundle> bundles = new ArrayList<Bundle>();
+        Set<Bundle> completedBundles = new HashSet<Bundle>();
+        boolean isSuccess = true;
+        long errorBundleId = 0;
+        String errorDetails = null;
+
+        if (bundleIdentifiers != null && newlevels != null) {
+            if (bundleIdentifiers.length != newlevels.length) {
+                throw new IllegalArgumentException("BundlesId array length is not equal to levels array length");
+            }
+            for (long bundleIdentifier : bundleIdentifiers) {
+                Bundle bundle = visitor.getBundle(bundleIdentifier);
+                if (bundle == null) {
+                    throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+                }
+                bundles.add(bundle);
+            }
+            StartLevel startLevel = visitor.getStartLevel();
+            if (startLevel == null) {
+                throw new IOException("StartLevel is not available");
+            }
+
+            for (int i = 0; bundles.size() > 0; i++) {
+                Bundle bundle = bundles.remove(0);
+                try {
+                    startLevel.setBundleStartLevel(bundle, newlevels[i]);
+                    completedBundles.add(bundle);
+                } catch (Exception e) {
+                    isSuccess = false;
+                    errorBundleId = bundle.getBundleId();
+                    errorDetails = e.getMessage();
+                    break;
+                }
+            }
+        }
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put(REMAINING, Utils.getIds(bundles.toArray(new Bundle[bundles.size()])));
+        values.put(COMPLETED, Utils.getIds(completedBundles.toArray(new Bundle[completedBundles.size()])));
+        if (!isSuccess) {
+            values.put(BUNDLE_IN_ERROR, errorBundleId);
+            values.put(ERROR, errorDetails);
+        }
+        values.put(SUCCESS, isSuccess);
+        try {
+            return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
+        } catch (OpenDataException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void setFrameworkStartLevel(int level) throws IOException {
@@ -209,8 +336,51 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
         }
     }
 
-    public CompositeData startBundles(long[] longs) throws IOException {
-        return null;  // todo
+    public CompositeData startBundles(long[] bundleIdentifiers) throws IOException {
+        Set<Bundle> bundles = new HashSet<Bundle>();
+        if (bundleIdentifiers != null) {
+            for (long bundleIdentifier : bundleIdentifiers) {
+                Bundle bundle = visitor.getBundle(bundleIdentifier);
+                if (bundle == null) {
+                    throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+                }
+                bundles.add(bundle);
+            }
+        }
+        Set<Bundle> completedBundles = new HashSet<Bundle>();
+        boolean isSuccess = true;
+        long errorBundleId = 0;
+        String errorDetails = null;
+
+        Iterator<Bundle> bundleIterator = bundles.iterator();
+        while (bundleIterator.hasNext()) {
+            Bundle bundle = bundleIterator.next();
+            bundleIterator.remove();
+            try {
+                bundle.update();
+                completedBundles.add(bundle);
+            } catch (BundleException e) {
+                isSuccess = false;
+                errorBundleId = bundle.getBundleId();
+                errorDetails = e.getMessage();
+                break;
+            }
+        }
+
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put(REMAINING, Utils.getIds(bundles.toArray(new Bundle[bundles.size()])));
+        values.put(COMPLETED, Utils.getIds(completedBundles.toArray(new Bundle[completedBundles.size()])));
+        if (!isSuccess) {
+            values.put(BUNDLE_IN_ERROR, errorBundleId);
+            values.put(ERROR, errorDetails);
+        }
+        values.put(SUCCESS, isSuccess);
+        try {
+            return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
+        } catch (OpenDataException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void stopBundle(long bundleIdentifier) throws IOException {
@@ -225,8 +395,51 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
         }
     }
 
-    public CompositeData stopBundles(long[] longs) throws IOException {
-        return null;  // todo
+    public CompositeData stopBundles(long[] bundleIdentifiers) throws IOException {
+        Set<Bundle> bundles = new HashSet<Bundle>();
+        if (bundleIdentifiers != null) {
+            for (long bundleIdentifier : bundleIdentifiers) {
+                Bundle bundle = visitor.getBundle(bundleIdentifier);
+                if (bundle == null) {
+                    throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+                }
+                bundles.add(bundle);
+            }
+        }
+        Set<Bundle> completedBundles = new HashSet<Bundle>();
+        boolean isSuccess = true;
+        long errorBundleId = 0;
+        String errorDetails = null;
+
+        Iterator<Bundle> bundleIterator = bundles.iterator();
+        while (bundleIterator.hasNext()) {
+            Bundle bundle = bundleIterator.next();
+            bundleIterator.remove();
+            try {
+                bundle.stop();
+                completedBundles.add(bundle);
+            } catch (BundleException e) {
+                isSuccess = false;
+                errorBundleId = bundle.getBundleId();
+                errorDetails = e.getMessage();
+                break;
+            }
+        }
+
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put(REMAINING, Utils.getIds(bundles.toArray(new Bundle[bundles.size()])));
+        values.put(COMPLETED, Utils.getIds(completedBundles.toArray(new Bundle[completedBundles.size()])));
+        if (!isSuccess) {
+            values.put(BUNDLE_IN_ERROR, errorBundleId);
+            values.put(ERROR, errorDetails);
+        }
+        values.put(SUCCESS, isSuccess);
+        try {
+            return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
+        } catch (OpenDataException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void uninstallBundle(long bundleIdentifier) throws IOException {
@@ -241,8 +454,51 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
         }
     }
 
-    public CompositeData uninstallBundles(long[] longs) throws IOException {
-        return null;  // todo
+    public CompositeData uninstallBundles(long[] bundleIdentifiers) throws IOException {
+        Set<Bundle> bundles = new HashSet<Bundle>();
+        if (bundleIdentifiers != null) {
+            for (long bundleIdentifier : bundleIdentifiers) {
+                Bundle bundle = visitor.getBundle(bundleIdentifier);
+                if (bundle == null) {
+                    throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+                }
+                bundles.add(bundle);
+            }
+        }
+        Set<Bundle> completedBundles = new HashSet<Bundle>();
+        boolean isSuccess = true;
+        long errorBundleId = 0;
+        String errorDetails = null;
+
+        Iterator<Bundle> bundleIterator = bundles.iterator();
+        while (bundleIterator.hasNext()) {
+            Bundle bundle = bundleIterator.next();
+            bundleIterator.remove();
+            try {
+                bundle.uninstall();
+                completedBundles.add(bundle);
+            } catch (BundleException e) {
+                isSuccess = false;
+                errorBundleId = bundle.getBundleId();
+                errorDetails = e.getMessage();
+                break;
+            }
+        }
+
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put(REMAINING, Utils.getIds(bundles.toArray(new Bundle[bundles.size()])));
+        values.put(COMPLETED, Utils.getIds(completedBundles.toArray(new Bundle[completedBundles.size()])));
+        if (!isSuccess) {
+            values.put(BUNDLE_IN_ERROR, errorBundleId);
+            values.put(ERROR, errorDetails);
+        }
+        values.put(SUCCESS, isSuccess);
+        try {
+            return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
+        } catch (OpenDataException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void updateBundle(long bundleIdentifier) throws IOException {
@@ -269,12 +525,99 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
         }
     }
 
-    public CompositeData updateBundles(long[] longs) throws IOException {
-        return null;  // todo
+    public CompositeData updateBundles(long[] bundleIdentifiers) throws IOException {
+        Set<Bundle> bundles = new HashSet<Bundle>();
+        if (bundleIdentifiers != null) {
+            for (long bundleIdentifier : bundleIdentifiers) {
+                Bundle bundle = visitor.getBundle(bundleIdentifier);
+                if (bundle == null) {
+                    throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+                }
+                bundles.add(bundle);
+            }
+        }
+        Set<Bundle> completedBundles = new HashSet<Bundle>();
+        boolean isSuccess = true;
+        long errorBundleId = 0;
+        String errorDetails = null;
+
+        Iterator<Bundle> bundleIterator = bundles.iterator();
+        while (bundleIterator.hasNext()) {
+            Bundle bundle = bundleIterator.next();
+            bundleIterator.remove();
+            try {
+                bundle.update();
+                completedBundles.add(bundle);
+            } catch (BundleException e) {
+                isSuccess = false;
+                errorBundleId = bundle.getBundleId();
+                errorDetails = e.getMessage();
+                break;
+            }
+        }
+
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put(REMAINING, Utils.getIds(bundles.toArray(new Bundle[bundles.size()])));
+        values.put(COMPLETED, Utils.getIds(completedBundles.toArray(new Bundle[completedBundles.size()])));
+        if (!isSuccess) {
+            values.put(BUNDLE_IN_ERROR, errorBundleId);
+            values.put(ERROR, errorDetails);
+        }
+        values.put(SUCCESS, isSuccess);
+        try {
+            return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
+        } catch (OpenDataException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public CompositeData updateBundlesFromURL(long[] longs, String[] strings) throws IOException {
-        return null;  // todo
+    public CompositeData updateBundlesFromURL(long[] bundleIdentifiers, String[] urls) throws IOException {
+        List<Bundle> bundles = new ArrayList<Bundle>();
+        Set<Bundle> completedBundles = new HashSet<Bundle>();
+        boolean isSuccess = true;
+        long errorBundleId = 0;
+        String errorDetails = null;
+
+        if (bundleIdentifiers != null && urls != null) {
+            if (bundleIdentifiers.length != urls.length) {
+                throw new IllegalArgumentException("BundlesId array length is not equal to urls array length");
+            }
+            for (long bundleIdentifier : bundleIdentifiers) {
+                Bundle bundle = visitor.getBundle(bundleIdentifier);
+                if (bundle == null) {
+                    throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+                }
+                bundles.add(bundle);
+            }
+
+            for (int i = 0; bundles.size() > 0; i++) {
+                Bundle bundle = bundles.remove(0);
+                try {
+                    bundle.update(new URL(urls[i]).openStream());
+                    completedBundles.add(bundle);
+                } catch (Exception e) {
+                    isSuccess = false;
+                    errorBundleId = bundle.getBundleId();
+                    errorDetails = e.getMessage();
+                    break;
+                }
+            }
+        }
+        Map<String, Object> values = new HashMap<String, Object>();
+        values.put(REMAINING, Utils.getIds(bundles.toArray(new Bundle[bundles.size()])));
+        values.put(COMPLETED, Utils.getIds(completedBundles.toArray(new Bundle[completedBundles.size()])));
+        if (!isSuccess) {
+            values.put(BUNDLE_IN_ERROR, errorBundleId);
+            values.put(ERROR, errorDetails);
+        }
+        values.put(SUCCESS, isSuccess);
+        try {
+            return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
+        } catch (OpenDataException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void updateFramework() throws IOException {

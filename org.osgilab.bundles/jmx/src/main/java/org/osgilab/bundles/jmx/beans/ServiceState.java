@@ -69,7 +69,6 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
             }
         } catch (OpenDataException e) {
             e.printStackTrace(); 
-            // todo: handle somehow
         }
         return dataSupport;
     }
@@ -91,7 +90,6 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
             }
         } catch (OpenDataException e) {
             e.printStackTrace();
-            // todo: handle somehow
         }
         return dataSupport;
     }
@@ -138,7 +136,7 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
 
             nbs.sendNotification(notification);
         } catch (OpenDataException e) {
-            // todo: handle somehow
+            e.printStackTrace();
         }
     }
 }

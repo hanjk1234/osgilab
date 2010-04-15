@@ -1,2 +1,4 @@
 - Properties misses Boolean and boolean types
 - PackageStateMBean - NAME_ITEM javadoc error (type is SimpleType.LONG)
+- Framework - updateBundles should throw IAE
+- Framework - updateBundlesFromURL,installBundlesFromURL,setBundleStartLevels should throw IAE if arrays size not equal
