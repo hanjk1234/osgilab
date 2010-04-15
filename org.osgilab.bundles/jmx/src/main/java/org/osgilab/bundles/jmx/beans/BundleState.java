@@ -11,7 +11,6 @@ import org.osgi.framework.BundleListener;
 import org.osgi.jmx.framework.BundleStateMBean;
 import org.osgi.service.packageadmin.ExportedPackage;
 import org.osgi.service.packageadmin.PackageAdmin;
-import org.osgi.service.packageadmin.RequiredBundle;
 import org.osgi.service.startlevel.StartLevel;
 import org.osgilab.bundles.jmx.OsgiVisitor;
 import org.osgilab.bundles.jmx.Utils;
@@ -49,14 +48,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         if (packageAdmin == null) {
             throw new IOException("PackageAdmin is not available");
         }
-        RequiredBundle[] requiredBundles = packageAdmin.getRequiredBundles(bundle.getSymbolicName());
-        Set<Bundle> result = new HashSet<Bundle>();
-        if (requiredBundles != null) {
-            for (RequiredBundle requiredBundle : requiredBundles) {
-                result.add(requiredBundle.getBundle());
-            }
-        }
-        return Utils.getIds(result.toArray(new Bundle[result.size()]));
+        return null;  // todo
     }
 
     public TabularData listBundles() throws IOException {
@@ -132,10 +124,10 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         return new String[0];  // todo
     }
 
-    public long getLastModified(long id) throws IOException {
-        Bundle bundle = visitor.getBundle(id);
+    public long getLastModified(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
         if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + id);
+            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
         }
         return bundle.getLastModified();
     }
@@ -152,10 +144,10 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         return new long[0];  // todo
     }
 
-    public long[] getServicesInUse(long id) throws IOException {
-        Bundle bundle = visitor.getBundle(id);
+    public long[] getServicesInUse(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
         if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + id);
+            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
         }
         return Utils.getIds(bundle.getServicesInUse());
     }
@@ -172,24 +164,44 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         return startLevel.getBundleStartLevel(bundle);
     }
 
-    public String getState(long l) throws IOException {
-        return null;  // todo
+    public String getState(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        }
+        return stateAsString(bundle.getState());
     }
 
-    public String getSymbolicName(long id) throws IOException {
-        Bundle bundle = visitor.getBundle(id);
+    public String getSymbolicName(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
         if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + id);
+            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
         }
         return bundle.getSymbolicName();
     }
 
-    public boolean isPersistentlyStarted(long l) throws IOException {
-        return false;  // todo
+    public boolean isPersistentlyStarted(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        }
+        StartLevel startLevel = visitor.getStartLevel();
+        if (startLevel == null) {
+            throw new IOException("StartLevel is not available");
+        }
+        return startLevel.isBundlePersistentlyStarted(bundle);
     }
 
-    public boolean isFragment(long l) throws IOException {
-        return false;  // todo
+    public boolean isFragment(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        }
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        return packageAdmin.getBundleType(bundle) == PackageAdmin.BUNDLE_TYPE_FRAGMENT;
     }
 
     public boolean isRemovalPending(long l) throws IOException {
@@ -200,18 +212,18 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         return false;  // todo
     }
 
-    public String getLocation(long id) throws IOException {
-        Bundle bundle = visitor.getBundle(id);
+    public String getLocation(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
         if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + id);
+            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
         }
         return bundle.getLocation();
     }
 
-    public String getVersion(long id) throws IOException {
-        Bundle bundle = visitor.getBundle(id);
+    public String getVersion(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
         if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + id);
+            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
         }
         return bundle.getVersion().toString();
     }
@@ -252,4 +264,24 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             e.printStackTrace();
         }
     }
+
+    private static String stateAsString(int state) {
+        switch (state) {
+            case Bundle.UNINSTALLED:
+                return UNINSTALLED;
+            case Bundle.INSTALLED:
+                return INSTALLED;
+            case Bundle.RESOLVED:
+                return RESOLVED;
+            case Bundle.STARTING:
+                return STARTING;
+            case Bundle.STOPPING:
+                return STOPPING;
+            case Bundle.ACTIVE:
+                return ACTIVE;
+            default:
+                return UNKNOWN;
+        }
+    }
+
 }

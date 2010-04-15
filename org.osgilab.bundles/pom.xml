@@ -45,7 +45,29 @@
 
     <modules>
         <module>monitoradmin</module>
-        <module>it</module>
         <module>jmx</module>
+        <module>it</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>run</id>
+            <build>
+                <defaultGoal>pax:provision</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.ops4j</groupId>
+                        <artifactId>maven-pax-plugin</artifactId>
+                        <version>1.4</version>
+                        <configuration>
+                            <framework>equinox</framework>
+                            <provision>
+                                <param>--workingDirectory=target/runner</param>
+                            </provision>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

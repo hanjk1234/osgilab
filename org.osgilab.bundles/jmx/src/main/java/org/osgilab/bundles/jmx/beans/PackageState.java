@@ -14,11 +14,12 @@ import org.osgilab.bundles.jmx.OsgiVisitor;
 import org.osgilab.bundles.jmx.Utils;
 
 import javax.management.NotCompliantMBeanException;
+import javax.management.openmbean.CompositeDataSupport;
+import javax.management.openmbean.OpenDataException;
 import javax.management.openmbean.TabularData;
 import javax.management.openmbean.TabularDataSupport;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * PackageStateMBean Implementation
@@ -73,7 +74,33 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
         }
         TabularDataSupport dataSupport = new TabularDataSupport(PACKAGES_TYPE);
         ExportedPackage[] exportedPackages = packageAdmin.getExportedPackages((Bundle) null);
-        // todo
+        Map<String, PackageInfo> packages = new HashMap<String, PackageInfo>();
+        if (exportedPackages != null) {
+            for (ExportedPackage exportedPackage : exportedPackages) {
+                String key = exportedPackage.getName() + ";" + exportedPackage.getVersion().toString();
+                PackageInfo packageInfo = packages.get(key);
+                if (packageInfo == null) {
+                    packageInfo = new PackageInfo(exportedPackage.getName(), exportedPackage.getVersion(), exportedPackage.isRemovalPending());
+                    packages.put(key, packageInfo);
+                }
+                packageInfo.exportingBundles.add(exportedPackage.getExportingBundle());
+                packageInfo.importingBundles.addAll(Arrays.asList(exportedPackage.getImportingBundles()));
+            }
+        }
+        Collection<PackageInfo> packageInfos = packages.values();
+        try {
+            for (PackageInfo packageInfo : packageInfos) {
+                Map<String, Object> values = new HashMap<String, Object>();
+                values.put(NAME, packageInfo.name);
+                values.put(VERSION, packageInfo.version.toString());
+                values.put(REMOVAL_PENDING, packageInfo.isRemovalPending);
+                values.put(EXPORTING_BUNDLES, Utils.toLongArray(Utils.getIds(packageInfo.exportingBundles.toArray(new Bundle[packageInfo.exportingBundles.size()]))));
+                values.put(IMPORTING_BUNDLES, Utils.toLongArray(Utils.getIds(packageInfo.importingBundles.toArray(new Bundle[packageInfo.importingBundles.size()]))));
+                dataSupport.put(new CompositeDataSupport(PACKAGE_TYPE, values));
+            }
+        } catch (OpenDataException e) {
+            e.printStackTrace();
+        }
         return dataSupport;
     }
 
@@ -87,11 +114,25 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
             throw new IOException("PackageAdmin is not available");
         }
         Version packageVersion = new Version(version);
-        
+
         ExportedPackage foundPackage = Utils.findPackage(packageAdmin.getExportedPackages(bundle), packageName, packageVersion);
         if (foundPackage == null) {
             throw new IllegalArgumentException("Package name/vesion are wrong: " + packageName + ", " + version);
         }
         return foundPackage.isRemovalPending();
+    }
+
+    private static class PackageInfo {
+        Set<Bundle> exportingBundles = new HashSet<Bundle>();
+        Set<Bundle> importingBundles = new HashSet<Bundle>();
+        boolean isRemovalPending;
+        String name;
+        Version version;
+
+        private PackageInfo(String name, Version version, boolean removalPending) {
+            this.name = name;
+            this.version = version;
+            isRemovalPending = removalPending;
+        }
     }
 }
