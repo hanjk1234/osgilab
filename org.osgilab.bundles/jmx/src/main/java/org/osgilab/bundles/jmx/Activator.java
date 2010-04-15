@@ -13,10 +13,11 @@ import org.osgi.jmx.framework.ServiceStateMBean;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 import org.osgi.util.tracker.ServiceTracker;
-import org.osgilab.bundles.jmx.beans.BundleState;
-import org.osgilab.bundles.jmx.beans.Framework;
-import org.osgilab.bundles.jmx.beans.PackageState;
-import org.osgilab.bundles.jmx.beans.ServiceState;
+import org.osgilab.bundles.jmx.beans.OsgiVisitor;
+import org.osgilab.bundles.jmx.framework.*;
+import org.osgilab.bundles.jmx.framework.PackageState;
+import org.osgilab.bundles.jmx.framework.Framework;
+import org.osgilab.bundles.jmx.framework.ServiceState;
 
 import javax.management.*;
 import java.io.InputStream;

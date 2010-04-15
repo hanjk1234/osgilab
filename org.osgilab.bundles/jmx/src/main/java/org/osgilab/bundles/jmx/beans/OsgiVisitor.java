@@ -1,4 +1,4 @@
-package org.osgilab.bundles.jmx;
+package org.osgilab.bundles.jmx.beans;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;

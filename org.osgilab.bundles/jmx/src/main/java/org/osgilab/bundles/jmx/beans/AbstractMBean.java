@@ -1,7 +1,5 @@
 package org.osgilab.bundles.jmx.beans;
 
-import org.osgilab.bundles.jmx.OsgiVisitor;
-
 import javax.management.NotCompliantMBeanException;
 import javax.management.StandardMBean;
 

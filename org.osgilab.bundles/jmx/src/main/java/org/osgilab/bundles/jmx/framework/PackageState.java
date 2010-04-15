@@ -3,15 +3,16 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.bundles.jmx.beans;
+package org.osgilab.bundles.jmx.framework;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 import org.osgi.jmx.framework.PackageStateMBean;
 import org.osgi.service.packageadmin.ExportedPackage;
 import org.osgi.service.packageadmin.PackageAdmin;
-import org.osgilab.bundles.jmx.OsgiVisitor;
+import org.osgilab.bundles.jmx.beans.OsgiVisitor;
 import org.osgilab.bundles.jmx.Utils;
+import org.osgilab.bundles.jmx.beans.AbstractMBean;
 
 import javax.management.NotCompliantMBeanException;
 import javax.management.openmbean.CompositeDataSupport;
