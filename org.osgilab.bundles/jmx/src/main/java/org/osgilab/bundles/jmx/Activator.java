@@ -148,6 +148,10 @@ public class Activator implements BundleActivator, OsgiVisitor {
         return (org.osgi.framework.launch.Framework) frameworkTracker.getService(); 
     }
 
+    public Bundle[] getBundles() {
+        return bc.getBundles();
+    }
+
     private String createServiceIdFilter(long id) {
         StringBuilder builder = new StringBuilder();
         builder.append('(');

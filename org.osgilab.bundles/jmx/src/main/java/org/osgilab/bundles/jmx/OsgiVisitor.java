@@ -27,4 +27,6 @@ public interface OsgiVisitor {
     Bundle installBundle(String location, InputStream stream) throws BundleException;
 
     org.osgi.framework.launch.Framework getFramework();
+
+    Bundle[] getBundles();
 }
