@@ -11,6 +11,7 @@ import org.osgi.framework.BundleListener;
 import org.osgi.jmx.framework.BundleStateMBean;
 import org.osgi.service.packageadmin.ExportedPackage;
 import org.osgi.service.packageadmin.PackageAdmin;
+import org.osgi.service.packageadmin.RequiredBundle;
 import org.osgi.service.startlevel.StartLevel;
 import org.osgilab.bundles.jmx.OsgiVisitor;
 import org.osgilab.bundles.jmx.Utils;
@@ -48,7 +49,26 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         if (packageAdmin == null) {
             throw new IOException("PackageAdmin is not available");
         }
-        return null;  // todo
+        RequiredBundle[] requiredBundles = packageAdmin.getRequiredBundles(null);
+        if (requiredBundles != null) {
+            Set<Bundle> result = new HashSet<Bundle>();
+            for (RequiredBundle requiredBundle : requiredBundles) {
+                Bundle[] requiringBundles = requiredBundle.getRequiringBundles();
+                if (requiringBundles != null) {
+                    for (Bundle requiringBundle : requiringBundles) {
+                        if (bundle.equals(requiringBundle)) {
+                            Bundle associatedRequiredBundle = requiredBundle.getBundle();
+                            if (associatedRequiredBundle != null) {
+                                result.add(associatedRequiredBundle);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return Utils.getIds(result.toArray(new Bundle[result.size()]));
+        }
+        return new long[0];
     }
 
     public TabularData listBundles() throws IOException {
@@ -120,8 +140,32 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         return Utils.getIds(packageAdmin.getHosts(bundle));
     }
 
-    public String[] getImportedPackages(long l) throws IOException {
-        return new String[0];  // todo
+    public String[] getImportedPackages(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        }
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        ExportedPackage[] exportedPackages = packageAdmin.getExportedPackages((Bundle) null);
+        if (exportedPackages != null) {
+            Set<String> result = new HashSet<String>();
+            for (ExportedPackage exportedPackage : exportedPackages) {
+                Bundle[] importingBundles = exportedPackage.getImportingBundles();
+                if (importingBundles != null) {
+                    for (Bundle importingBundle : importingBundles) {
+                        if (bundle.equals(importingBundle)) {
+                            result.add(exportedPackage.getName() + ";" + exportedPackage.getVersion().toString());
+                            break;
+                        }
+                    }
+                }
+            }
+            return result.toArray(new String[result.size()]);
+        }
+        return new String[0];
     }
 
     public long getLastModified(long bundleIdentifier) throws IOException {
@@ -140,8 +184,25 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         return Utils.getIds(bundle.getRegisteredServices());
     }
 
-    public long[] getRequiringBundles(long l) throws IOException {
-        return new long[0];  // todo
+    public long[] getRequiringBundles(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        }
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        RequiredBundle[] requiredBundles = packageAdmin.getRequiredBundles(bundle.getSymbolicName());
+        if (requiredBundles != null) {
+            for (RequiredBundle requiredBundle : requiredBundles) {
+                if (bundle.equals(requiredBundle.getBundle())) {
+                    Bundle[] requiringBundles = requiredBundle.getRequiringBundles();
+                    return Utils.getIds(requiringBundles);
+                }
+            }
+        }
+        return new long[0];
     }
 
     public long[] getServicesInUse(long bundleIdentifier) throws IOException {
@@ -204,12 +265,45 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         return packageAdmin.getBundleType(bundle) == PackageAdmin.BUNDLE_TYPE_FRAGMENT;
     }
 
-    public boolean isRemovalPending(long l) throws IOException {
-        return false;  // todo
+    public boolean isRemovalPending(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        }
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        RequiredBundle[] requiredBundles = packageAdmin.getRequiredBundles(bundle.getSymbolicName());
+        if (requiredBundles != null) {
+            for (RequiredBundle requiredBundle : requiredBundles) {
+                if (bundle.equals(requiredBundle.getBundle())) {
+                    return requiredBundle.isRemovalPending();
+                }
+            }
+        }
+        return false;
     }
 
-    public boolean isRequired(long l) throws IOException {
-        return false;  // todo
+    public boolean isRequired(long bundleIdentifier) throws IOException {
+        Bundle bundle = visitor.getBundle(bundleIdentifier);
+        if (bundle == null) {
+            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        }
+        PackageAdmin packageAdmin = visitor.getPackageAdmin();
+        if (packageAdmin == null) {
+            throw new IOException("PackageAdmin is not available");
+        }
+        RequiredBundle[] requiredBundles = packageAdmin.getRequiredBundles(bundle.getSymbolicName());
+        if (requiredBundles != null) {
+            for (RequiredBundle requiredBundle : requiredBundles) {
+                if (bundle.equals(requiredBundle.getBundle())) {
+                    Bundle[] requiringBundles = requiredBundle.getRequiringBundles();
+                    return requiringBundles != null && requiringBundles.length > 0;
+                }
+            }
+        }
+        return false;
     }
 
     public String getLocation(long bundleIdentifier) throws IOException {
