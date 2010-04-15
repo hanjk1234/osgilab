@@ -10,7 +10,7 @@
 
 
     <packaging>bundle</packaging>
-    <name>OSGi Lab JMX</name>
+    <name>OSGi Lab JMX Management Model</name>
     <description>OSGi JMX Management Model Implementation</description>
     <url>http://osgilab.org</url>
 

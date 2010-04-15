@@ -10,37 +10,53 @@ import org.osgi.jmx.framework.BundleStateMBean;
 import org.osgi.jmx.framework.FrameworkMBean;
 import org.osgi.jmx.framework.PackageStateMBean;
 import org.osgi.jmx.framework.ServiceStateMBean;
+import org.osgi.service.log.LogService;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 import org.osgi.util.tracker.ServiceTracker;
+import org.osgilab.bundles.jmx.beans.LogVisitor;
 import org.osgilab.bundles.jmx.beans.OsgiVisitor;
-import org.osgilab.bundles.jmx.framework.*;
-import org.osgilab.bundles.jmx.framework.PackageState;
+import org.osgilab.bundles.jmx.framework.BundleState;
 import org.osgilab.bundles.jmx.framework.Framework;
+import org.osgilab.bundles.jmx.framework.PackageState;
 import org.osgilab.bundles.jmx.framework.ServiceState;
 
 import javax.management.*;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
+ * JMX Management Model Activator
+ *
  * @author dmytro.pishchukhin
  */
-public class Activator implements BundleActivator, OsgiVisitor {
+public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
+    private static final Logger LOG = Logger.getLogger(Activator.class.getName());
+
     private MBeanServer server;
+
     private ObjectName frameworkMBeanObjectName;
     private ObjectName bundleStateMBeanObjectName;
     private ObjectName serviceStateMBeanObjectName;
     private ObjectName packageStateMBeanObjectName;
+
     private BundleContext bc;
     private BundleState bundleState;
+
     private ServiceState serviceState;
     private ServiceTracker packageAdminTracker;
     private ServiceTracker startLevelTracker;
     private ServiceTracker frameworkTracker;
 
+    private ServiceTracker logServiceTracker;
+
     public void start(BundleContext context) throws Exception {
         bc = context;
+
+        logServiceTracker = new ServiceTracker(bc, LogService.class.getName(), null);
+        logServiceTracker.open();
 
         packageAdminTracker = new ServiceTracker(bc, PackageAdmin.class.getName(), null);
         packageAdminTracker.open();
@@ -51,53 +67,104 @@ public class Activator implements BundleActivator, OsgiVisitor {
         frameworkTracker = new ServiceTracker(bc, org.osgi.framework.launch.Framework.class.getName(), null);
         frameworkTracker.open();
 
+        server = ManagementFactory.getPlatformMBeanServer();
         registerJmxBeans();
 
-        bc.addBundleListener(bundleState);
-        bc.addServiceListener(serviceState);
+        info("JMX Management Model started", null);
     }
 
     public void stop(BundleContext context) throws Exception {
-        bc.removeServiceListener(serviceState);
-        bc.removeBundleListener(bundleState);
-
         unregisterJmxBeans();
 
-        frameworkTracker.close();
-        frameworkTracker = null;
+        if (frameworkTracker != null) {
+            frameworkTracker.close();
+            frameworkTracker = null;
+        }
 
-        startLevelTracker.close();
-        startLevelTracker = null;
+        if (startLevelTracker != null) {
+            startLevelTracker.close();
+            startLevelTracker = null;
+        }
 
-        packageAdminTracker.close();
-        packageAdminTracker = null;
+        if (packageAdminTracker != null) {
+            packageAdminTracker.close();
+            packageAdminTracker = null;
+        }
+
+        info("JMX Management Model stoppped", null);
+
+        if (logServiceTracker != null) {
+            logServiceTracker.close();
+            logServiceTracker = null;
+        }
 
         bc = null;
     }
 
     private void unregisterJmxBeans() throws InstanceNotFoundException, MBeanRegistrationException {
         server.unregisterMBean(packageStateMBeanObjectName);
+
+        bc.removeServiceListener(serviceState);
         server.unregisterMBean(serviceStateMBeanObjectName);
+
+        bc.removeBundleListener(bundleState);
         server.unregisterMBean(bundleStateMBeanObjectName);
+
         server.unregisterMBean(frameworkMBeanObjectName);
     }
 
     private void registerJmxBeans() throws MalformedObjectNameException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
-        server = ManagementFactory.getPlatformMBeanServer();
-
         frameworkMBeanObjectName = new ObjectName(FrameworkMBean.OBJECTNAME);
-        server.registerMBean(new Framework(this), frameworkMBeanObjectName);
+        server.registerMBean(new Framework(this, this), frameworkMBeanObjectName);
 
         bundleStateMBeanObjectName = new ObjectName(BundleStateMBean.OBJECTNAME);
-        bundleState = new BundleState(this);
+        bundleState = new BundleState(this, this);
+        bc.addBundleListener(bundleState);
         server.registerMBean(bundleState, bundleStateMBeanObjectName);
 
         serviceStateMBeanObjectName = new ObjectName(ServiceStateMBean.OBJECTNAME);
-        serviceState = new ServiceState(this);
+        serviceState = new ServiceState(this, this);
+        bc.addServiceListener(serviceState);
         server.registerMBean(serviceState, serviceStateMBeanObjectName);
 
         packageStateMBeanObjectName = new ObjectName(PackageStateMBean.OBJECTNAME);
-        server.registerMBean(new PackageState(this), packageStateMBeanObjectName);
+        server.registerMBean(new PackageState(this, this), packageStateMBeanObjectName);
+    }
+
+    public void debug(String message, Throwable throwable) {
+        LogService logService = (LogService) logServiceTracker.getService();
+        if (logService != null) {
+            logService.log(LogService.LOG_DEBUG, message, throwable);
+        } else {
+            LOG.log(Level.FINE, message, throwable);
+        }
+    }
+
+    public void info(String message, Throwable throwable) {
+        LogService logService = (LogService) logServiceTracker.getService();
+        if (logService != null) {
+            logService.log(LogService.LOG_INFO, message, throwable);
+        } else {
+            LOG.log(Level.INFO, message, throwable);
+        }
+    }
+
+    public void warning(String message, Throwable throwable) {
+        LogService logService = (LogService) logServiceTracker.getService();
+        if (logService != null) {
+            logService.log(LogService.LOG_WARNING, message, throwable);
+        } else {
+            LOG.log(Level.WARNING, message, throwable);
+        }
+    }
+
+    public void error(String message, Throwable throwable) {
+        LogService logService = (LogService) logServiceTracker.getService();
+        if (logService != null) {
+            logService.log(LogService.LOG_ERROR, message, throwable);
+        } else {
+            LOG.log(Level.SEVERE, message, throwable);
+        }
     }
 
     public Bundle getBundle(long id) {
