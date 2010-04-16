@@ -10,8 +10,6 @@ import org.osgi.framework.Version;
 import org.osgi.jmx.framework.PackageStateMBean;
 import org.osgi.service.packageadmin.ExportedPackage;
 import org.osgi.service.packageadmin.PackageAdmin;
-import org.osgilab.bundles.jmx.beans.LogVisitor;
-import org.osgilab.bundles.jmx.beans.OsgiVisitor;
 import org.osgilab.bundles.jmx.Utils;
 import org.osgilab.bundles.jmx.beans.AbstractMBean;
 
@@ -29,8 +27,8 @@ import java.util.*;
  * @author dmytro.pishchukhin
  */
 public class PackageState extends AbstractMBean implements PackageStateMBean {
-    public PackageState(OsgiVisitor visitor, LogVisitor logVisitor) throws NotCompliantMBeanException {
-        super(PackageStateMBean.class, visitor, logVisitor);
+    public PackageState() throws NotCompliantMBeanException {
+        super(PackageStateMBean.class);
     }
 
     public long[] getExportingBundles(String packageName, String version) throws IOException {

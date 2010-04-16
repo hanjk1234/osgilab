@@ -51,6 +51,8 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
     private ServiceTracker frameworkTracker;
 
     private ServiceTracker logServiceTracker;
+    private Framework framework;
+    private PackageState packageState;
 
     public void start(BundleContext context) throws Exception {
         bc = context;
@@ -103,32 +105,46 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
 
     private void unregisterJmxBeans() throws InstanceNotFoundException, MBeanRegistrationException {
         server.unregisterMBean(packageStateMBeanObjectName);
+        packageState.uninit();
 
         bc.removeServiceListener(serviceState);
         server.unregisterMBean(serviceStateMBeanObjectName);
+        serviceState.uninit();
 
         bc.removeBundleListener(bundleState);
         server.unregisterMBean(bundleStateMBeanObjectName);
-
+        bundleState.uninit();
+        
         server.unregisterMBean(frameworkMBeanObjectName);
+        framework.uninit();
     }
 
     private void registerJmxBeans() throws MalformedObjectNameException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
         frameworkMBeanObjectName = new ObjectName(FrameworkMBean.OBJECTNAME);
-        server.registerMBean(new Framework(this, this), frameworkMBeanObjectName);
+        framework = new Framework();
+        framework.setVisitor(this);
+        framework.setLogVisitor(this);
+        server.registerMBean(framework, frameworkMBeanObjectName);
 
         bundleStateMBeanObjectName = new ObjectName(BundleStateMBean.OBJECTNAME);
-        bundleState = new BundleState(this, this);
+        bundleState = new BundleState();
+        bundleState.setVisitor(this);
+        bundleState.setLogVisitor(this);
         bc.addBundleListener(bundleState);
         server.registerMBean(bundleState, bundleStateMBeanObjectName);
 
         serviceStateMBeanObjectName = new ObjectName(ServiceStateMBean.OBJECTNAME);
-        serviceState = new ServiceState(this, this);
+        serviceState = new ServiceState();
+        serviceState.setVisitor(this);
+        serviceState.setLogVisitor(this);
         bc.addServiceListener(serviceState);
         server.registerMBean(serviceState, serviceStateMBeanObjectName);
 
         packageStateMBeanObjectName = new ObjectName(PackageStateMBean.OBJECTNAME);
-        server.registerMBean(new PackageState(this, this), packageStateMBeanObjectName);
+        packageState = new PackageState();
+        packageState.setVisitor(this);
+        packageState.setLogVisitor(this);
+        server.registerMBean(packageState, packageStateMBeanObjectName);
     }
 
     public void debug(String message, Throwable throwable) {

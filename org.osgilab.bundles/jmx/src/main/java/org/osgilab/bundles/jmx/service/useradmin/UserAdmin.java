@@ -7,8 +7,6 @@ package org.osgilab.bundles.jmx.service.useradmin;
 
 import org.osgi.jmx.service.useradmin.UserAdminMBean;
 import org.osgilab.bundles.jmx.beans.AbstractMBean;
-import org.osgilab.bundles.jmx.beans.LogVisitor;
-import org.osgilab.bundles.jmx.beans.OsgiVisitor;
 
 import javax.management.NotCompliantMBeanException;
 import javax.management.openmbean.CompositeData;
@@ -19,8 +17,8 @@ import java.io.IOException;
  * @author dmytro.pishchukhin
  */
 public class UserAdmin extends AbstractMBean implements UserAdminMBean {
-    protected UserAdmin(OsgiVisitor visitor, LogVisitor logVisitor) throws NotCompliantMBeanException {
-        super(UserAdminMBean.class, visitor, logVisitor);
+    protected UserAdmin() throws NotCompliantMBeanException {
+        super(UserAdminMBean.class);
     }
 
     public void addCredential(String s, byte[] bytes, String s1) throws IOException {

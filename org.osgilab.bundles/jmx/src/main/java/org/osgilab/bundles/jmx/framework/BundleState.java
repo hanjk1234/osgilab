@@ -13,8 +13,6 @@ import org.osgi.service.packageadmin.ExportedPackage;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.packageadmin.RequiredBundle;
 import org.osgi.service.startlevel.StartLevel;
-import org.osgilab.bundles.jmx.beans.LogVisitor;
-import org.osgilab.bundles.jmx.beans.OsgiVisitor;
 import org.osgilab.bundles.jmx.Utils;
 import org.osgilab.bundles.jmx.beans.AbstractMBean;
 
@@ -37,8 +35,8 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
 
     private int sequenceNumber = 0;
 
-    public BundleState(OsgiVisitor visitor, LogVisitor logVisitor) throws NotCompliantMBeanException {
-        super(BundleStateMBean.class, visitor, logVisitor);
+    public BundleState() throws NotCompliantMBeanException {
+        super(BundleStateMBean.class);
         nbs = new NotificationBroadcasterSupport();
     }
 

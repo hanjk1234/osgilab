@@ -7,8 +7,6 @@ package org.osgilab.bundles.jmx.service.cm;
 
 import org.osgi.jmx.service.cm.ConfigurationAdminMBean;
 import org.osgilab.bundles.jmx.beans.AbstractMBean;
-import org.osgilab.bundles.jmx.beans.LogVisitor;
-import org.osgilab.bundles.jmx.beans.OsgiVisitor;
 
 import javax.management.NotCompliantMBeanException;
 import javax.management.openmbean.TabularData;
@@ -18,8 +16,8 @@ import java.io.IOException;
  * @author dmytro.pishchukhin
  */
 public class ConfigurationAdmin extends AbstractMBean implements ConfigurationAdminMBean {
-    public ConfigurationAdmin(OsgiVisitor visitor, LogVisitor logVisitor) throws NotCompliantMBeanException {
-        super(ConfigurationAdminMBean.class, visitor,logVisitor);
+    public ConfigurationAdmin() throws NotCompliantMBeanException {
+        super(ConfigurationAdminMBean.class);
     }
 
     public String createFactoryConfiguration(String s) throws IOException {

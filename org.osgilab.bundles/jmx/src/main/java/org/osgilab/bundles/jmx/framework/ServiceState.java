@@ -5,11 +5,12 @@
 
 package org.osgilab.bundles.jmx.framework;
 
-import org.osgi.framework.*;
+import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceListener;
+import org.osgi.framework.ServiceReference;
 import org.osgi.jmx.JmxConstants;
 import org.osgi.jmx.framework.ServiceStateMBean;
-import org.osgilab.bundles.jmx.beans.LogVisitor;
-import org.osgilab.bundles.jmx.beans.OsgiVisitor;
 import org.osgilab.bundles.jmx.Utils;
 import org.osgilab.bundles.jmx.beans.AbstractMBean;
 
@@ -32,8 +33,8 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
     private MBeanNotificationInfo[] notificationInfos;
     private int sequenceNumber = 0;
 
-    public ServiceState(OsgiVisitor visitor, LogVisitor logVisitor) throws NotCompliantMBeanException {
-        super(ServiceStateMBean.class, visitor, logVisitor);
+    public ServiceState() throws NotCompliantMBeanException {
+        super(ServiceStateMBean.class);
         nbs = new NotificationBroadcasterSupport();
     }
 

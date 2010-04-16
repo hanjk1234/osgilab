@@ -10,8 +10,6 @@ import org.osgi.framework.BundleException;
 import org.osgi.jmx.framework.FrameworkMBean;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
-import org.osgilab.bundles.jmx.beans.LogVisitor;
-import org.osgilab.bundles.jmx.beans.OsgiVisitor;
 import org.osgilab.bundles.jmx.Utils;
 import org.osgilab.bundles.jmx.beans.AbstractMBean;
 
@@ -29,8 +27,8 @@ import java.util.*;
  * @author dmytro.pishchukhin
  */
 public class Framework extends AbstractMBean implements FrameworkMBean {
-    public Framework(OsgiVisitor visitor, LogVisitor logVisitor) throws NotCompliantMBeanException {
-        super(FrameworkMBean.class, visitor, logVisitor);
+    public Framework() throws NotCompliantMBeanException {
+        super(FrameworkMBean.class);
     }
 
     public int getFrameworkStartLevel() throws IOException {

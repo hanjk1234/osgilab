@@ -7,8 +7,6 @@ package org.osgilab.bundles.jmx.service.permissionadmin;
 
 import org.osgi.jmx.service.permissionadmin.PermissionAdminMBean;
 import org.osgilab.bundles.jmx.beans.AbstractMBean;
-import org.osgilab.bundles.jmx.beans.LogVisitor;
-import org.osgilab.bundles.jmx.beans.OsgiVisitor;
 
 import javax.management.NotCompliantMBeanException;
 import java.io.IOException;
@@ -17,8 +15,8 @@ import java.io.IOException;
  * @author dmytro.pishchukhin
  */
 public class PermissionAdmin extends AbstractMBean implements PermissionAdminMBean {
-    protected PermissionAdmin(OsgiVisitor visitor, LogVisitor logVisitor) throws NotCompliantMBeanException {
-        super(PermissionAdminMBean.class, visitor, logVisitor);
+    protected PermissionAdmin() throws NotCompliantMBeanException {
+        super(PermissionAdminMBean.class);
     }
 
     public String[] listLocations() throws IOException {
