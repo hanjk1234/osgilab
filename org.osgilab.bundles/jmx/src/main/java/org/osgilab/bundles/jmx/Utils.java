@@ -12,10 +12,9 @@ import org.osgi.framework.Version;
 import org.osgi.jmx.JmxConstants;
 import org.osgi.service.packageadmin.ExportedPackage;
 
+import javax.management.openmbean.*;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * @author dmytro.pishchukhin
@@ -117,7 +116,7 @@ public class Utils {
         }
         long[] result = new long[serviceReferences.length];
         for (int i = 0; i < serviceReferences.length; i++) {
-            result[i] = (Long)serviceReferences[i].getProperty(Constants.SERVICE_ID);
+            result[i] = (Long) serviceReferences[i].getProperty(Constants.SERVICE_ID);
         }
         return result;
     }
@@ -156,5 +155,51 @@ public class Utils {
             }
         }
         return result.toArray(new ExportedPackage[result.size()]);
+    }
+
+    public static Object deserializeFromString(String value, String type) {
+        return null; // todo
+    }
+
+    public static Dictionary convertToDictionary(TabularData properties, boolean ignoreErrors) {
+        Hashtable<String, Object> props = new Hashtable<String, Object>();
+        if (properties != null) {
+            Collection<CompositeData> values = (Collection<CompositeData>) properties.values();
+            for (CompositeData value : values) {
+                try {
+                    String key = (String) value.get(JmxConstants.KEY);
+                    String type = (String) value.get(JmxConstants.TYPE);
+                    String val = (String) value.get(JmxConstants.VALUE);
+                    props.put(key, deserializeFromString(val, type));
+                } catch (IllegalArgumentException e) {
+                    if (!ignoreErrors) {
+                        throw e;
+                    }
+                }
+            }
+
+        }
+        return props;
+    }
+
+    public static TabularData getProperties(Dictionary properties) {
+        TabularDataSupport dataSupport = new TabularDataSupport(JmxConstants.PROPERTIES_TYPE);
+        try {
+            if (properties != null) {
+                Enumeration keys = properties.keys();
+                while (keys.hasMoreElements()) {
+                    Object key = keys.nextElement();
+                    Map<String, Object> values = new HashMap<String, Object>();
+                    values.put(JmxConstants.KEY, key);
+                    Object value = properties.get(key);
+                    values.put(JmxConstants.VALUE, serializeToString(value));
+                    values.put(JmxConstants.TYPE, getValueType(value));
+                    dataSupport.put(new CompositeDataSupport(JmxConstants.PROPERTY_TYPE, values));
+                }
+            }
+        } catch (OpenDataException e) {
+            e.printStackTrace();
+        }
+        return dataSupport;
     }
 }
