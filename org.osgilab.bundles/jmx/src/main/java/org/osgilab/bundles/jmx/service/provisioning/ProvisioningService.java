@@ -6,7 +6,7 @@
 package org.osgilab.bundles.jmx.service.provisioning;
 
 import org.osgi.jmx.service.provisioning.ProvisioningServiceMBean;
-import org.osgilab.bundles.jmx.beans.AbstractMBean;
+import org.osgilab.bundles.jmx.beans.ServiceAbstractMBean;
 
 import javax.management.NotCompliantMBeanException;
 import javax.management.openmbean.TabularData;
@@ -15,8 +15,10 @@ import java.io.IOException;
 /**
  * @author dmytro.pishchukhin
  */
-public class ProvisioningService extends AbstractMBean implements ProvisioningServiceMBean {
-    protected ProvisioningService() throws NotCompliantMBeanException {
+public class ProvisioningService extends ServiceAbstractMBean<org.osgi.service.provisioning.ProvisioningService>
+        implements ProvisioningServiceMBean {
+
+    public ProvisioningService() throws NotCompliantMBeanException {
         super(ProvisioningServiceMBean.class);
     }
 

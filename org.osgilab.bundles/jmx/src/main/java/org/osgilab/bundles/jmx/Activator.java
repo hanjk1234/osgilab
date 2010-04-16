@@ -10,20 +10,36 @@ import org.osgi.jmx.framework.BundleStateMBean;
 import org.osgi.jmx.framework.FrameworkMBean;
 import org.osgi.jmx.framework.PackageStateMBean;
 import org.osgi.jmx.framework.ServiceStateMBean;
+import org.osgi.jmx.service.cm.ConfigurationAdminMBean;
+import org.osgi.jmx.service.permissionadmin.PermissionAdminMBean;
+import org.osgi.jmx.service.provisioning.ProvisioningServiceMBean;
+import org.osgi.jmx.service.useradmin.UserAdminMBean;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.log.LogService;
+import org.osgi.service.monitor.MonitorAdmin;
 import org.osgi.service.packageadmin.PackageAdmin;
+import org.osgi.service.permissionadmin.PermissionAdmin;
+import org.osgi.service.prefs.PreferencesService;
+import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.service.startlevel.StartLevel;
+import org.osgi.service.useradmin.UserAdmin;
 import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.osgilab.bundles.jmx.beans.LogVisitor;
 import org.osgilab.bundles.jmx.beans.OsgiVisitor;
+import org.osgilab.bundles.jmx.beans.ServiceAbstractMBean;
 import org.osgilab.bundles.jmx.framework.BundleState;
 import org.osgilab.bundles.jmx.framework.Framework;
 import org.osgilab.bundles.jmx.framework.PackageState;
 import org.osgilab.bundles.jmx.framework.ServiceState;
+import org.osgilab.bundles.jmx.service.monitor.MonitorAdminMBean;
+import org.osgilab.bundles.jmx.service.prefs.PreferencesServiceMBean;
 
 import javax.management.*;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,16 +59,24 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
     private ObjectName packageStateMBeanObjectName;
 
     private BundleContext bc;
+    private Framework framework;
+    private PackageState packageState;
     private BundleState bundleState;
-
     private ServiceState serviceState;
+
     private ServiceTracker packageAdminTracker;
     private ServiceTracker startLevelTracker;
     private ServiceTracker frameworkTracker;
-
     private ServiceTracker logServiceTracker;
-    private Framework framework;
-    private PackageState packageState;
+
+    private ServiceTracker configurationAdminTracker;
+    private ServiceTracker permissionAdminTracker;
+    private ServiceTracker provisioningServiceTracker;
+    private ServiceTracker userAdminTracker;
+    private ServiceTracker monitorAdminTracker;
+    private ServiceTracker preferencesServiceTracker;
+
+    private Map<String,ServiceAbstractMBean> compendiumServices = new HashMap<String, ServiceAbstractMBean>();
 
     public void start(BundleContext context) throws Exception {
         bc = context;
@@ -60,24 +84,69 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         logServiceTracker = new ServiceTracker(bc, LogService.class.getName(), null);
         logServiceTracker.open();
 
-        packageAdminTracker = new ServiceTracker(bc, PackageAdmin.class.getName(), null);
-        packageAdminTracker.open();
-
-        startLevelTracker = new ServiceTracker(bc, StartLevel.class.getName(), null);
-        startLevelTracker.open();
-
-        frameworkTracker = new ServiceTracker(bc, org.osgi.framework.launch.Framework.class.getName(), null);
-        frameworkTracker.open();
-
         server = ManagementFactory.getPlatformMBeanServer();
+
+        registerCoreTrackers();
+
         registerJmxBeans();
+
+        registerCompendiumTrackers();
 
         info("JMX Management Model started", null);
     }
 
     public void stop(BundleContext context) throws Exception {
+        unregisterCompendiumTrackers();
+
         unregisterJmxBeans();
 
+        unregisterCoreTrackers();
+
+        info("JMX Management Model stoppped", null);
+
+        server = null;
+
+        if (logServiceTracker != null) {
+            logServiceTracker.close();
+            logServiceTracker = null;
+        }
+
+        bc = null;
+    }
+
+    private void unregisterCompendiumTrackers() {
+        if (preferencesServiceTracker != null) {
+            preferencesServiceTracker.close();
+            preferencesServiceTracker = null;
+        }
+
+        if (monitorAdminTracker != null) {
+            monitorAdminTracker.close();
+            monitorAdminTracker = null;
+        }
+
+        if (userAdminTracker != null) {
+            userAdminTracker.close();
+            userAdminTracker = null;
+        }
+
+        if (provisioningServiceTracker != null) {
+            provisioningServiceTracker.close();
+            provisioningServiceTracker = null;
+        }
+
+        if (permissionAdminTracker != null) {
+            permissionAdminTracker.close();
+            permissionAdminTracker = null;
+        }
+
+        if (configurationAdminTracker != null) {
+            configurationAdminTracker.close();
+            configurationAdminTracker = null;
+        }
+    }
+
+    private void unregisterCoreTrackers() {
         if (frameworkTracker != null) {
             frameworkTracker.close();
             frameworkTracker = null;
@@ -92,15 +161,49 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
             packageAdminTracker.close();
             packageAdminTracker = null;
         }
+    }
 
-        info("JMX Management Model stoppped", null);
+    private void registerCompendiumTrackers() {
+        configurationAdminTracker = new ServiceTracker(bc, ConfigurationAdmin.class.getName(),
+                new CompendiumServiceCustomizer<ConfigurationAdmin>(org.osgilab.bundles.jmx.service.cm.ConfigurationAdmin.class,
+                        ConfigurationAdminMBean.OBJECTNAME));
+        configurationAdminTracker.open();
 
-        if (logServiceTracker != null) {
-            logServiceTracker.close();
-            logServiceTracker = null;
-        }
+        permissionAdminTracker = new ServiceTracker(bc, PermissionAdmin.class.getName(),
+                new CompendiumServiceCustomizer<PermissionAdmin>(org.osgilab.bundles.jmx.service.permissionadmin.PermissionAdmin.class,
+                        PermissionAdminMBean.OBJECTNAME));
+        permissionAdminTracker.open();
 
-        bc = null;
+        provisioningServiceTracker = new ServiceTracker(bc, ProvisioningService.class.getName(),
+                new CompendiumServiceCustomizer<ProvisioningService>(org.osgilab.bundles.jmx.service.provisioning.ProvisioningService.class,
+                        ProvisioningServiceMBean.OBJECTNAME));
+        provisioningServiceTracker.open();
+
+        userAdminTracker = new ServiceTracker(bc, UserAdmin.class.getName(),
+                new CompendiumServiceCustomizer<UserAdmin>(org.osgilab.bundles.jmx.service.useradmin.UserAdmin.class,
+                        UserAdminMBean.OBJECTNAME));
+        userAdminTracker.open();
+
+        monitorAdminTracker = new ServiceTracker(bc, MonitorAdmin.class.getName(),
+                new CompendiumServiceCustomizer<MonitorAdmin>(org.osgilab.bundles.jmx.service.monitor.MonitorAdmin.class,
+                        MonitorAdminMBean.OBJECTNAME));
+        monitorAdminTracker.open();
+
+        preferencesServiceTracker = new ServiceTracker(bc, PreferencesService.class.getName(),
+                new CompendiumServiceCustomizer<PreferencesService>(org.osgilab.bundles.jmx.service.prefs.PreferencesService.class,
+                        PreferencesServiceMBean.OBJECTNAME));
+        preferencesServiceTracker.open();
+    }
+
+    private void registerCoreTrackers() {
+        packageAdminTracker = new ServiceTracker(bc, PackageAdmin.class.getName(), null);
+        packageAdminTracker.open();
+
+        startLevelTracker = new ServiceTracker(bc, StartLevel.class.getName(), null);
+        startLevelTracker.open();
+
+        frameworkTracker = new ServiceTracker(bc, org.osgi.framework.launch.Framework.class.getName(), null);
+        frameworkTracker.open();
     }
 
     private void unregisterJmxBeans() throws InstanceNotFoundException, MBeanRegistrationException {
@@ -244,5 +347,56 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         builder.append(id);
         builder.append(')');
         return builder.toString();
+    }
+
+    private String createObjectName(String objectNamePrefix, long serviceId) {
+        return objectNamePrefix + ",service.id=" + serviceId;
+    }
+
+    private class CompendiumServiceCustomizer<T> implements ServiceTrackerCustomizer {
+        private Class<? extends ServiceAbstractMBean<T>> beanClass;
+        private String objectNamePrefix;
+
+        private CompendiumServiceCustomizer(Class<? extends ServiceAbstractMBean<T>> beanClass, String objectNamePrefix) {
+            this.beanClass = beanClass;
+            this.objectNamePrefix = objectNamePrefix;
+        }
+
+        public Object addingService(ServiceReference reference) {
+            long serviceId = (Long) reference.getProperty(Constants.SERVICE_ID);
+            T service = (T) bc.getService(reference);
+            try {
+                ServiceAbstractMBean<T> mBean = beanClass.newInstance();
+                mBean.setVisitor(Activator.this);
+                mBean.setLogVisitor(Activator.this);
+                mBean.setService(service);
+                String objectName = createObjectName(objectNamePrefix, serviceId);
+                compendiumServices.put(objectName, mBean);
+                server.registerMBean(mBean, new ObjectName(objectName));
+                info("MBean registered for " + beanClass.getSimpleName() + " service.id: " + serviceId, null);
+            } catch (Exception e) {
+                warning("Unable to register MBean for " + beanClass.getSimpleName() + " service.id: " + serviceId, e);
+            }
+            return service;
+        }
+
+        public void modifiedService(ServiceReference reference, Object service) {
+            // do nothing
+        }
+
+        public void removedService(ServiceReference reference, Object service) {
+            long serviceId = (Long) reference.getProperty(Constants.SERVICE_ID);
+            try {
+                String objectName = createObjectName(objectNamePrefix, serviceId);
+                ServiceAbstractMBean serviceMBean = compendiumServices.get(objectName);
+                server.unregisterMBean(new ObjectName(objectName));
+                serviceMBean.uninit();
+                info("MBean unregistered for " + beanClass.getSimpleName() + " service.id: " + serviceId, null);
+            } catch (Exception e) {
+                warning("Unable to unregister MBean for " + beanClass.getSimpleName() + " service.id: " + serviceId, e);
+            }
+
+            bc.ungetService(reference);
+        }
     }
 }

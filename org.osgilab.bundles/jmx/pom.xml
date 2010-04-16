@@ -127,6 +127,10 @@
                             <framework>equinox</framework>
                             <provision>
                                 <param>--workingDirectory=target/runner</param>
+                                <param>mvn:org.apache.felix/org.apache.felix.prefs/1.0.4@3</param>
+                                <param>mvn:org.eclipse.equinox/log/1.0.100-v20070226@3</param>
+                                <param>mvn:org.eclipse.equinox/cm/3.2.0-v20070116@3</param>
+                                <param>mvn:org.osgilab.bundles/monitoradmin/1.0.0@3</param>
                             </provision>
                         </configuration>
                     </plugin>

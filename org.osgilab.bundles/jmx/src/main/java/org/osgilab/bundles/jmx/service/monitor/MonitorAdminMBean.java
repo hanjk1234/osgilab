@@ -9,4 +9,5 @@ package org.osgilab.bundles.jmx.service.monitor;
  * @author dmytro.pishchukhin
  */
 public interface MonitorAdminMBean {
+    String OBJECTNAME = "osgi.compendium:service=monitor,version=1.0";
 }

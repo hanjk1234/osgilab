@@ -9,4 +9,5 @@ package org.osgilab.bundles.jmx.service.prefs;
  * @author dmytro.pishchukhin
  */
 public interface PreferencesServiceMBean {
+    String OBJECTNAME = "osgi.compendium:service=prefs,version=1.1";
 }

@@ -5,15 +5,17 @@
 
 package org.osgilab.bundles.jmx.service.prefs;
 
-import org.osgilab.bundles.jmx.beans.AbstractMBean;
+import org.osgilab.bundles.jmx.beans.ServiceAbstractMBean;
 
 import javax.management.NotCompliantMBeanException;
 
 /**
  * @author dmytro.pishchukhin
  */
-public class PreferencesService extends AbstractMBean implements PreferencesServiceMBean {
-    protected PreferencesService() throws NotCompliantMBeanException {
+public class PreferencesService extends ServiceAbstractMBean<org.osgi.service.prefs.PreferencesService>
+        implements PreferencesServiceMBean {
+    
+    public PreferencesService() throws NotCompliantMBeanException {
         super(PreferencesServiceMBean.class);
     }
 }

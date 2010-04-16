@@ -6,7 +6,7 @@
 package org.osgilab.bundles.jmx.service.permissionadmin;
 
 import org.osgi.jmx.service.permissionadmin.PermissionAdminMBean;
-import org.osgilab.bundles.jmx.beans.AbstractMBean;
+import org.osgilab.bundles.jmx.beans.ServiceAbstractMBean;
 
 import javax.management.NotCompliantMBeanException;
 import java.io.IOException;
@@ -14,8 +14,10 @@ import java.io.IOException;
 /**
  * @author dmytro.pishchukhin
  */
-public class PermissionAdmin extends AbstractMBean implements PermissionAdminMBean {
-    protected PermissionAdmin() throws NotCompliantMBeanException {
+public class PermissionAdmin extends ServiceAbstractMBean<org.osgi.service.permissionadmin.PermissionAdmin>
+        implements PermissionAdminMBean {
+
+    public PermissionAdmin() throws NotCompliantMBeanException {
         super(PermissionAdminMBean.class);
     }
 
