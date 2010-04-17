@@ -132,6 +132,7 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
             Map<String, Object> values = new HashMap<String, Object>();
             values.put(IDENTIFIER, serviceReference.getProperty(Constants.SERVICE_ID));
             values.put(OBJECT_CLASS, serviceReference.getProperty(Constants.OBJECTCLASS));
+            values.put(BUNDLE_IDENTIFIER, serviceReference.getBundle().getBundleId());
             values.put(BUNDLE_LOCATION, serviceReference.getBundle().getLocation());
             values.put(BUNDLE_SYMBOLIC_NAME, serviceReference.getBundle().getSymbolicName());
             values.put(EVENT, event.getType());
