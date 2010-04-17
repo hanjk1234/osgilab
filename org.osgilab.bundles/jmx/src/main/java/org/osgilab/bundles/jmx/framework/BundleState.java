@@ -41,29 +41,40 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
     }
 
     public long[] getRequiredBundles(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+            }
+            PackageAdmin packageAdmin = visitor.getPackageAdmin();
+            if (packageAdmin == null) {
+                throw new IOException("PackageAdmin is not available");
+            }
+            return getRequiredBundles(bundle, packageAdmin);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getRequiredBundles error", e);
+            throw e;
+        } catch (IOException e) {
+            logVisitor.warning("getRequiredBundles error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getRequiredBundles error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        PackageAdmin packageAdmin = visitor.getPackageAdmin();
-        if (packageAdmin == null) {
-            throw new IOException("PackageAdmin is not available");
-        }
-        return getRequiredBundles(bundle, packageAdmin);
     }
 
     public TabularData listBundles() throws IOException {
-        Bundle[] bundles = visitor.getBundles();
-        PackageAdmin packageAdmin = visitor.getPackageAdmin();
-        if (packageAdmin == null) {
-            throw new IOException("PackageAdmin is not available");
-        }
-        StartLevel startLevel = visitor.getStartLevel();
-        if (startLevel == null) {
-            throw new IOException("StartLevel is not available");
-        }
-        TabularDataSupport dataSupport = new TabularDataSupport(BUNDLES_TYPE);
         try {
+            Bundle[] bundles = visitor.getBundles();
+            PackageAdmin packageAdmin = visitor.getPackageAdmin();
+            if (packageAdmin == null) {
+                throw new IOException("PackageAdmin is not available");
+            }
+            StartLevel startLevel = visitor.getStartLevel();
+            if (startLevel == null) {
+                throw new IOException("StartLevel is not available");
+            }
+            TabularDataSupport dataSupport = new TabularDataSupport(BUNDLES_TYPE);
             if (bundles != null) {
                 for (Bundle bundle : bundles) {
                     Map<String, Object> values = new HashMap<String, Object>();
@@ -90,194 +101,372 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
                     dataSupport.put(new CompositeDataSupport(BUNDLE_TYPE, values));
                 }
             }
-        } catch (OpenDataException e) {
-            e.printStackTrace();
+            return dataSupport;
+        } catch (IOException e) {
+            logVisitor.warning("listBundles error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("listBundles error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return dataSupport;
     }
 
     public String[] getExportedPackages(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+            }
+            PackageAdmin packageAdmin = visitor.getPackageAdmin();
+            if (packageAdmin == null) {
+                throw new IOException("PackageAdmin is not available");
+            }
+            return getExportedPackages(bundle, packageAdmin);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getExportedPackages error", e);
+            throw e;
+        } catch (IOException e) {
+            logVisitor.warning("getExportedPackages error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getExportedPackages error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        PackageAdmin packageAdmin = visitor.getPackageAdmin();
-        if (packageAdmin == null) {
-            throw new IOException("PackageAdmin is not available");
-        }
-        return getExportedPackages(bundle, packageAdmin);
     }
 
     public long[] getFragments(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+            }
+            PackageAdmin packageAdmin = visitor.getPackageAdmin();
+            if (packageAdmin == null) {
+                throw new IOException("PackageAdmin is not available");
+            }
+            return getFragments(bundle, packageAdmin);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getFragments error", e);
+            throw e;
+        } catch (IOException e) {
+            logVisitor.warning("getFragments error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getFragments error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        PackageAdmin packageAdmin = visitor.getPackageAdmin();
-        if (packageAdmin == null) {
-            throw new IOException("PackageAdmin is not available");
-        }
-        return getFragments(bundle, packageAdmin);
     }
 
     public TabularData getHeaders(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+            }
+            return getHeaders(bundle);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getHeaders error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getHeaders error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return getHeaders(bundle);
     }
 
     public long[] getHosts(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+            }
+            PackageAdmin packageAdmin = visitor.getPackageAdmin();
+            if (packageAdmin == null) {
+                throw new IOException("PackageAdmin is not available");
+            }
+            return getHosts(bundle, packageAdmin);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getHosts error", e);
+            throw e;
+        } catch (IOException e) {
+            logVisitor.warning("getHosts error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getHosts error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        PackageAdmin packageAdmin = visitor.getPackageAdmin();
-        if (packageAdmin == null) {
-            throw new IOException("PackageAdmin is not available");
-        }
-        return getHosts(bundle, packageAdmin);
     }
 
     public String[] getImportedPackages(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+            }
+            PackageAdmin packageAdmin = visitor.getPackageAdmin();
+            if (packageAdmin == null) {
+                throw new IOException("PackageAdmin is not available");
+            }
+            return getImportedPackages(bundle, packageAdmin);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getImportedPackages error", e);
+            throw e;
+        } catch (IOException e) {
+            logVisitor.warning("getImportedPackages error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getImportedPackages error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        PackageAdmin packageAdmin = visitor.getPackageAdmin();
-        if (packageAdmin == null) {
-            throw new IOException("PackageAdmin is not available");
-        }
-        return getImportedPackages(bundle, packageAdmin);
     }
 
     public long getLastModified(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+            }
+            return bundle.getLastModified();
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getLastModified error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getLastModified error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return bundle.getLastModified();
     }
 
     public long[] getRegisteredServices(long id) throws IOException {
-        Bundle bundle = visitor.getBundle(id);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + id);
+        try {
+            Bundle bundle = visitor.getBundle(id);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Wrong Bundle ID: " + id);
+            }
+            return getRegisteredServices(bundle);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getRegisteredServices error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getRegisteredServices error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return getRegisteredServices(bundle);
     }
 
     public long[] getRequiringBundles(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+            }
+            PackageAdmin packageAdmin = visitor.getPackageAdmin();
+            if (packageAdmin == null) {
+                throw new IOException("PackageAdmin is not available");
+            }
+            return getRequiringBundles(bundle, packageAdmin);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getRequiringBundles error", e);
+            throw e;
+        } catch (IOException e) {
+            logVisitor.warning("getRequiringBundles error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getRequiringBundles error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        PackageAdmin packageAdmin = visitor.getPackageAdmin();
-        if (packageAdmin == null) {
-            throw new IOException("PackageAdmin is not available");
-        }
-        return getRequiringBundles(bundle, packageAdmin);
     }
 
     public long[] getServicesInUse(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+            }
+            return getServicesInUse(bundle);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getServicesInUse error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getServicesInUse error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return getServicesInUse(bundle);
     }
 
     public int getStartLevel(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+            }
+            StartLevel startLevel = visitor.getStartLevel();
+            if (startLevel == null) {
+                throw new IOException("StartLevel is not available");
+            }
+            return getStartLevel(bundle, startLevel);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getStartLevel error", e);
+            throw e;
+        } catch (IOException e) {
+            logVisitor.warning("getStartLevel error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getStartLevel error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        StartLevel startLevel = visitor.getStartLevel();
-        if (startLevel == null) {
-            throw new IOException("StartLevel is not available");
-        }
-        return getStartLevel(bundle, startLevel);
     }
 
     public String getState(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Bundle ID is wrong: " + bundleIdentifier);
+            }
+            return getState(bundle);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getState error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getState error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return getState(bundle);
     }
 
     public String getSymbolicName(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+            }
+            return getSymbolicName(bundle);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getSymbolicName error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getSymbolicName error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return getSymbolicName(bundle);
     }
 
     public boolean isPersistentlyStarted(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+            }
+            StartLevel startLevel = visitor.getStartLevel();
+            if (startLevel == null) {
+                throw new IOException("StartLevel is not available");
+            }
+            return isPersistentlyStarted(bundle, startLevel);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("isPersistentlyStarted error", e);
+            throw e;
+        } catch (IOException e) {
+            logVisitor.warning("isPersistentlyStarted error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("isPersistentlyStarted error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        StartLevel startLevel = visitor.getStartLevel();
-        if (startLevel == null) {
-            throw new IOException("StartLevel is not available");
-        }
-        return isPersistentlyStarted(bundle, startLevel);
     }
 
     public boolean isFragment(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+            }
+            PackageAdmin packageAdmin = visitor.getPackageAdmin();
+            if (packageAdmin == null) {
+                throw new IOException("PackageAdmin is not available");
+            }
+            return isFragment(bundle, packageAdmin);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("isFragment error", e);
+            throw e;
+        } catch (IOException e) {
+            logVisitor.warning("isFragment error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("isFragment error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        PackageAdmin packageAdmin = visitor.getPackageAdmin();
-        if (packageAdmin == null) {
-            throw new IOException("PackageAdmin is not available");
-        }
-        return isFragment(bundle, packageAdmin);
     }
 
     public boolean isRemovalPending(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+            }
+            PackageAdmin packageAdmin = visitor.getPackageAdmin();
+            if (packageAdmin == null) {
+                throw new IOException("PackageAdmin is not available");
+            }
+            return isRemovalPending(bundle, packageAdmin);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("isRemovalPending error", e);
+            throw e;
+        } catch (IOException e) {
+            logVisitor.warning("isRemovalPending error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("isRemovalPending error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        PackageAdmin packageAdmin = visitor.getPackageAdmin();
-        if (packageAdmin == null) {
-            throw new IOException("PackageAdmin is not available");
-        }
-        return isRemovalPending(bundle, packageAdmin);
     }
 
     public boolean isRequired(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+            }
+            PackageAdmin packageAdmin = visitor.getPackageAdmin();
+            if (packageAdmin == null) {
+                throw new IOException("PackageAdmin is not available");
+            }
+            return isRequired(bundle, packageAdmin);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("isRequired error", e);
+            throw e;
+        } catch (IOException e) {
+            logVisitor.warning("isRequired error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("isRequired error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        PackageAdmin packageAdmin = visitor.getPackageAdmin();
-        if (packageAdmin == null) {
-            throw new IOException("PackageAdmin is not available");
-        }
-        return isRequired(bundle, packageAdmin);
     }
 
     public String getLocation(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+            }
+            return bundle.getLocation();
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getLocation error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getLocation error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return bundle.getLocation();
     }
 
     public String getVersion(long bundleIdentifier) throws IOException {
-        Bundle bundle = visitor.getBundle(bundleIdentifier);
-        if (bundle == null) {
-            throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+        try {
+            Bundle bundle = visitor.getBundle(bundleIdentifier);
+            if (bundle == null) {
+                throw new IllegalArgumentException("Wrong Bundle ID: " + bundleIdentifier);
+            }
+            return getVersion(bundle);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getVersion error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getVersion error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return getVersion(bundle);
     }
 
     public void addNotificationListener(NotificationListener listener, NotificationFilter filter, Object handback) throws IllegalArgumentException {
@@ -312,8 +501,8 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             notification.setUserData(new CompositeDataSupport(BundleStateMBean.BUNDLE_EVENT_TYPE, values));
 
             nbs.sendNotification(notification);
-        } catch (OpenDataException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            logVisitor.warning("Unable to send BundleEvent notification", e);
         }
     }
 
@@ -449,20 +638,16 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
         return new long[0];
     }
 
-    private TabularData getHeaders(Bundle bundle) {
+    private TabularData getHeaders(Bundle bundle) throws OpenDataException {
         TabularDataSupport dataSupport = new TabularDataSupport(HEADERS_TYPE);
-        try {
-            Dictionary headers = bundle.getHeaders();
-            Enumeration keys = headers.keys();
-            while (keys.hasMoreElements()) {
-                String key = (String) keys.nextElement();
-                Map<String, Object> values = new HashMap<String, Object>();
-                values.put(KEY, key);
-                values.put(VALUE, headers.get(key));
-                dataSupport.put(new CompositeDataSupport(HEADER_TYPE, values));
-            }
-        } catch (OpenDataException e) {
-            e.printStackTrace();
+        Dictionary headers = bundle.getHeaders();
+        Enumeration keys = headers.keys();
+        while (keys.hasMoreElements()) {
+            String key = (String) keys.nextElement();
+            Map<String, Object> values = new HashMap<String, Object>();
+            values.put(KEY, key);
+            values.put(VALUE, headers.get(key));
+            dataSupport.put(new CompositeDataSupport(HEADER_TYPE, values));
         }
         return dataSupport;
     }

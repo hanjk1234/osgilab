@@ -47,32 +47,79 @@ import java.util.logging.Logger;
  * @author dmytro.pishchukhin
  */
 public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
+    /**
+     * Logger
+     */
     private static final Logger LOG = Logger.getLogger(Activator.class.getName());
 
+    /**
+     * JMX server instance
+     */
     private MBeanServer server;
 
-    private ObjectName frameworkMBeanObjectName;
-    private ObjectName bundleStateMBeanObjectName;
-    private ObjectName serviceStateMBeanObjectName;
-    private ObjectName packageStateMBeanObjectName;
-
+    /**
+     * Bundle context
+     */
     private BundleContext bc;
+
+    /**
+     * {@link FrameworkMBean} implementation instance
+     */
     private Framework framework;
+    /**
+     * {@link PackageStateMBean} implementation instance
+     */
     private PackageState packageState;
+    /**
+     * {@link BundleStateMBean} implementation instance
+     */
     private BundleState bundleState;
+    /**
+     * {@link ServiceStateMBean} implementation instance
+     */
     private ServiceState serviceState;
 
+    /**
+     * ServiceTracker for {@link PackageAdmin} services
+     */
     private ServiceTracker packageAdminTracker;
+    /**
+     * ServiceTracker for {@link StartLevel} services
+     */
     private ServiceTracker startLevelTracker;
+    /**
+     * ServiceTracker for {@link org.osgi.framework.launch.Framework} services
+     */
     private ServiceTracker frameworkTracker;
+    /**
+     * ServiceTracker for {@link LogService} services
+     */
     private ServiceTracker logServiceTracker;
 
+    /**
+     * ServiceTracker for {@link org.osgi.service.cm.ConfigurationAdmin} services
+     */
     private ServiceTracker configurationAdminTracker;
+    /**
+     * ServiceTracker for {@link org.osgi.service.permissionadmin.PermissionAdmin} services
+     */
     private ServiceTracker permissionAdminTracker;
+    /**
+     * ServiceTracker for {@link org.osgi.service.provisioning.ProvisioningService} services
+     */
     private ServiceTracker provisioningServiceTracker;
+    /**
+     * ServiceTracker for {@link org.osgi.service.useradmin.UserAdmin} services
+     */
     private ServiceTracker userAdminTracker;
+    /**
+     * ServiceTracker for {@link org.osgi.service.monitor.MonitorAdmin} services
+     */
     private ServiceTracker monitorAdminTracker;
 
+    /**
+     * Compendium services MBean registration map.
+     */
     private Map<String,ServiceAbstractMBean> compendiumServices = new HashMap<String, ServiceAbstractMBean>();
 
     public void start(BundleContext context) throws Exception {
@@ -193,48 +240,46 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         frameworkTracker.open();
     }
 
-    private void unregisterJmxBeans() throws InstanceNotFoundException, MBeanRegistrationException {
-        server.unregisterMBean(packageStateMBeanObjectName);
+    private void unregisterJmxBeans()
+            throws InstanceNotFoundException, MBeanRegistrationException, MalformedObjectNameException {
+        server.unregisterMBean(new ObjectName(PackageStateMBean.OBJECTNAME));
         packageState.uninit();
 
         bc.removeServiceListener(serviceState);
-        server.unregisterMBean(serviceStateMBeanObjectName);
+        server.unregisterMBean(new ObjectName(ServiceStateMBean.OBJECTNAME));
         serviceState.uninit();
 
         bc.removeBundleListener(bundleState);
-        server.unregisterMBean(bundleStateMBeanObjectName);
+        server.unregisterMBean(new ObjectName(BundleStateMBean.OBJECTNAME));
         bundleState.uninit();
         
-        server.unregisterMBean(frameworkMBeanObjectName);
+        server.unregisterMBean(new ObjectName(FrameworkMBean.OBJECTNAME));
         framework.uninit();
     }
 
-    private void registerJmxBeans() throws MalformedObjectNameException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
-        frameworkMBeanObjectName = new ObjectName(FrameworkMBean.OBJECTNAME);
+    private void registerJmxBeans()
+            throws MalformedObjectNameException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
         framework = new Framework();
         framework.setVisitor(this);
         framework.setLogVisitor(this);
-        server.registerMBean(framework, frameworkMBeanObjectName);
+        server.registerMBean(framework, new ObjectName(FrameworkMBean.OBJECTNAME));
 
-        bundleStateMBeanObjectName = new ObjectName(BundleStateMBean.OBJECTNAME);
         bundleState = new BundleState();
         bundleState.setVisitor(this);
         bundleState.setLogVisitor(this);
         bc.addBundleListener(bundleState);
-        server.registerMBean(bundleState, bundleStateMBeanObjectName);
+        server.registerMBean(bundleState, new ObjectName(BundleStateMBean.OBJECTNAME));
 
-        serviceStateMBeanObjectName = new ObjectName(ServiceStateMBean.OBJECTNAME);
         serviceState = new ServiceState();
         serviceState.setVisitor(this);
         serviceState.setLogVisitor(this);
         bc.addServiceListener(serviceState);
-        server.registerMBean(serviceState, serviceStateMBeanObjectName);
+        server.registerMBean(serviceState, new ObjectName(ServiceStateMBean.OBJECTNAME));
 
-        packageStateMBeanObjectName = new ObjectName(PackageStateMBean.OBJECTNAME);
         packageState = new PackageState();
         packageState.setVisitor(this);
         packageState.setLogVisitor(this);
-        server.registerMBean(packageState, packageStateMBeanObjectName);
+        server.registerMBean(packageState, new ObjectName(PackageStateMBean.OBJECTNAME));
     }
 
     public void debug(String message, Throwable throwable) {

@@ -4,6 +4,8 @@ import javax.management.NotCompliantMBeanException;
 import javax.management.StandardMBean;
 
 /**
+ * Abstract MBean
+ * 
  * @author dpishchukhin
  */
 public abstract class AbstractMBean extends StandardMBean {
