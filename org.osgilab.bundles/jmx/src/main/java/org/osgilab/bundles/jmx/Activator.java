@@ -19,7 +19,6 @@ import org.osgi.service.log.LogService;
 import org.osgi.service.monitor.MonitorAdmin;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.permissionadmin.PermissionAdmin;
-import org.osgi.service.prefs.PreferencesService;
 import org.osgi.service.provisioning.ProvisioningService;
 import org.osgi.service.startlevel.StartLevel;
 import org.osgi.service.useradmin.UserAdmin;
@@ -33,7 +32,6 @@ import org.osgilab.bundles.jmx.framework.Framework;
 import org.osgilab.bundles.jmx.framework.PackageState;
 import org.osgilab.bundles.jmx.framework.ServiceState;
 import org.osgilab.bundles.jmx.service.monitor.MonitorAdminMBean;
-import org.osgilab.bundles.jmx.service.prefs.PreferencesServiceMBean;
 
 import javax.management.*;
 import java.io.InputStream;
@@ -74,7 +72,6 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
     private ServiceTracker provisioningServiceTracker;
     private ServiceTracker userAdminTracker;
     private ServiceTracker monitorAdminTracker;
-    private ServiceTracker preferencesServiceTracker;
 
     private Map<String,ServiceAbstractMBean> compendiumServices = new HashMap<String, ServiceAbstractMBean>();
 
@@ -115,11 +112,6 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
     }
 
     private void unregisterCompendiumTrackers() {
-        if (preferencesServiceTracker != null) {
-            preferencesServiceTracker.close();
-            preferencesServiceTracker = null;
-        }
-
         if (monitorAdminTracker != null) {
             monitorAdminTracker.close();
             monitorAdminTracker = null;
@@ -188,11 +180,6 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
                 new CompendiumServiceCustomizer<MonitorAdmin>(org.osgilab.bundles.jmx.service.monitor.MonitorAdmin.class,
                         MonitorAdminMBean.OBJECTNAME));
         monitorAdminTracker.open();
-
-        preferencesServiceTracker = new ServiceTracker(bc, PreferencesService.class.getName(),
-                new CompendiumServiceCustomizer<PreferencesService>(org.osgilab.bundles.jmx.service.prefs.PreferencesService.class,
-                        PreferencesServiceMBean.OBJECTNAME));
-        preferencesServiceTracker.open();
     }
 
     private void registerCoreTrackers() {
