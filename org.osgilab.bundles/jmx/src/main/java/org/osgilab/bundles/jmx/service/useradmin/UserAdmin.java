@@ -121,7 +121,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             values.put(TYPE, authRole.getType());
             return new CompositeDataSupport(AUTORIZATION_TYPE, values);
         } catch (Exception e) {
-            throw new IOException(e); // todo
+            throw new IOException(e);
         }
     }
 
@@ -133,8 +133,24 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
         return Utils.getProperties(((User) role).getCredentials());
     }
 
-    public CompositeData getGroup(String s) throws IOException {
-        return null;  // todo
+    public CompositeData getGroup(String groupname) throws IOException {
+        Role role = service.getRole(groupname);
+        if (role == null || role.getType() != Role.GROUP) {
+            throw new IllegalArgumentException(groupname + " is not Group name");
+        }
+        Group group = (Group) role;
+        try {
+            Map<String, Object> values = new HashMap<String, Object>();
+            values.put(NAME, group.getName());
+            values.put(TYPE, group.getProperties());
+            values.put(PROPERTIES, Utils.getProperties(group.getProperties()));
+            values.put(CREDENTIALS, Utils.getProperties(group.getCredentials()));
+            values.put(MEMBERS, getRoleNames(group.getMembers()));
+            values.put(REQUIRED_MEMBERS, getRoleNames(group.getRequiredMembers()));
+            return new CompositeDataSupport(GROUP_TYPE, values);
+        } catch (Exception e) {
+            throw new IOException(e);
+        }
     }
 
     public String[] listGroups() throws IOException {
@@ -187,8 +203,20 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
         return getRoleNames(((Group) role).getRequiredMembers());
     }
 
-    public CompositeData getRole(String s) throws IOException {
-        return null;  // todo
+    public CompositeData getRole(String name) throws IOException {
+        Role role = service.getRole(name);
+        if (role != null) {
+            try {
+                Map<String, Object> values = new HashMap<String, Object>();
+                values.put(NAME, role.getName());
+                values.put(TYPE, role.getProperties());
+                values.put(PROPERTIES, Utils.getProperties(role.getProperties()));
+                return new CompositeDataSupport(ROLE_TYPE, values);
+            } catch (Exception e) {
+                throw new IOException(e);
+            }
+        }
+        return null;
     }
 
     public String[] listRoles() throws IOException {
@@ -207,8 +235,22 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
         }
     }
 
-    public CompositeData getUser(String s) throws IOException {
-        return null;  // todo
+    public CompositeData getUser(String username) throws IOException {
+        Role role = service.getRole(username);
+        if (role == null || role.getType() != Role.USER) {
+            throw new IllegalArgumentException(username + " is not User name");
+        }
+        User user = (User) role;
+        try {
+            Map<String, Object> values = new HashMap<String, Object>();
+            values.put(NAME, user.getName());
+            values.put(TYPE, user.getProperties());
+            values.put(PROPERTIES, Utils.getProperties(user.getProperties()));
+            values.put(CREDENTIALS, Utils.getProperties(user.getCredentials()));
+            return new CompositeDataSupport(USER_TYPE, values);
+        } catch (Exception e) {
+            throw new IOException(e);
+        }
     }
 
     public String getUserWithProperty(String key, String value) throws IOException {
