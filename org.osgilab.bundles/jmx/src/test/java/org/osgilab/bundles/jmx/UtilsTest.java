@@ -133,4 +133,69 @@ public class UtilsTest {
         Assert.assertEquals("\"1\",\"true\"", Utils.serializeToString(new Vector(Arrays.asList("1", Boolean.TRUE))));
         Assert.assertEquals("true,1", Utils.serializeToString(new Vector(Arrays.asList(Boolean.TRUE, "1"))));
     }
+
+    @Test
+    public void testDeserializeToString() throws Exception {
+        Assert.assertEquals(new BigDecimal(1), Utils.deserializeFromString("1", JmxConstants.BIGDECIMAL));
+        Assert.assertEquals(new BigInteger("1"), Utils.deserializeFromString("1", JmxConstants.BIGINTEGER));
+        Assert.assertEquals(Boolean.TRUE, Utils.deserializeFromString("true", JmxConstants.BOOLEAN));
+        Assert.assertEquals(Byte.valueOf((byte) 1), Utils.deserializeFromString("1", JmxConstants.BYTE));
+        Assert.assertEquals(Character.valueOf('1'), Utils.deserializeFromString("1", JmxConstants.CHARACTER));
+        Assert.assertEquals(Double.valueOf((double) 1), Utils.deserializeFromString("1", JmxConstants.DOUBLE));
+        Assert.assertEquals(Float.valueOf((float) 1), Utils.deserializeFromString("1", JmxConstants.FLOAT));
+        Assert.assertEquals(Integer.valueOf(1), Utils.deserializeFromString("1", JmxConstants.INTEGER));
+        Assert.assertEquals(Long.valueOf(1), Utils.deserializeFromString("1", JmxConstants.LONG));
+        Assert.assertEquals(Short.valueOf((short) 1), Utils.deserializeFromString("1", JmxConstants.SHORT));
+        Assert.assertEquals(true, Utils.deserializeFromString("true", JmxConstants.P_BOOLEAN));
+        Assert.assertEquals((byte) 1, Utils.deserializeFromString("1", JmxConstants.P_BYTE));
+        Assert.assertEquals('1', Utils.deserializeFromString("1", JmxConstants.P_CHAR));
+        Assert.assertEquals((double) 1, Utils.deserializeFromString("1", JmxConstants.P_DOUBLE));
+        Assert.assertEquals((float) 1, Utils.deserializeFromString("1", JmxConstants.P_FLOAT));
+        Assert.assertEquals(1, Utils.deserializeFromString("1", JmxConstants.P_INT));
+        Assert.assertEquals((long) 1, Utils.deserializeFromString("1", JmxConstants.P_LONG));
+        Assert.assertEquals((short) 1, Utils.deserializeFromString("1", JmxConstants.P_SHORT));
+
+        Assert.assertEquals("1", Utils.deserializeFromString("\"1\"", JmxConstants.STRING));
+        Assert.assertEquals("", Utils.deserializeFromString("\"\"", JmxConstants.STRING));
+        Assert.assertEquals("", Utils.deserializeFromString("\'\'", JmxConstants.STRING));
+        Assert.assertEquals("'1", Utils.deserializeFromString("\'1", JmxConstants.STRING));
+        Assert.assertEquals("'\"1", Utils.deserializeFromString("\'\"1", JmxConstants.STRING));
+        Assert.assertEquals("'\"\\1", Utils.deserializeFromString("\'\"\\\\1", JmxConstants.STRING));
+
+        try {
+            Utils.deserializeFromString("\'\"\\\\1", "Object");
+            Assert.fail();
+        } catch (Exception e) {
+        }
+
+        Object vectorObject = Utils.deserializeFromString("1,2", JmxConstants.VECTOR_OF + JmxConstants.DOUBLE);
+        Assert.assertNotNull(vectorObject);
+        Assert.assertTrue(vectorObject instanceof Vector);
+        Vector vector = (Vector) vectorObject;
+        Assert.assertEquals(2, vector.size());
+        Assert.assertEquals(Double.valueOf("1"), vector.get(0));
+        Assert.assertEquals(Double.valueOf("2"), vector.get(1));
+
+        try {
+            Utils.deserializeFromString("1,2", JmxConstants.VECTOR_OF + "Object");
+            Assert.fail();
+        } catch (Exception e) {
+        }
+
+        Object arrayObject = Utils.deserializeFromString("1,2", JmxConstants.ARRAY_OF + JmxConstants.DOUBLE);
+        Assert.assertNotNull(arrayObject);
+        Assert.assertTrue(arrayObject instanceof Double[]);
+        Double[] doubleArray = (Double[]) arrayObject;
+        Assert.assertEquals(2, doubleArray.length);
+        Assert.assertEquals(Double.valueOf("1"), doubleArray[0]);
+        Assert.assertEquals(Double.valueOf("2"), doubleArray[1]);
+
+        arrayObject = Utils.deserializeFromString("1,2", JmxConstants.ARRAY_OF + JmxConstants.P_DOUBLE);
+        Assert.assertNotNull(arrayObject);
+        Assert.assertTrue(arrayObject instanceof double[]);
+        double[] doubleArray1 = (double[]) arrayObject;
+        Assert.assertEquals(2, doubleArray1.length);
+        Assert.assertEquals((double)1, doubleArray1[0], 0);
+        Assert.assertEquals((double)2, doubleArray1[1], 0);
+    }
 }

@@ -14,6 +14,8 @@ import org.osgi.service.packageadmin.ExportedPackage;
 
 import javax.management.openmbean.*;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -115,6 +117,114 @@ public class Utils {
     }
 
     /**
+     * Deserialized to String value
+     *
+     * @param value string value
+     * @param type one of value {@link JmxConstants#TYPE_ITEM}
+     * @return deserialized object
+     * @throws IllegalArgumentException if type is out of defined scope or unable to deserialize string
+     */
+    public static Object deserializeFromString(String value, String type) {
+        if (type.startsWith(JmxConstants.ARRAY_OF)) {
+            String elementType = type.substring(JmxConstants.ARRAY_OF.length());
+            String[] values = value.split(",");
+            Class typeClass = getTypeClass(elementType);
+            Object array = Array.newInstance(typeClass, values.length);
+            for (int i = 0; i < values.length; i++) {
+                String value1 = values[i];
+                Array.set(array, i, deserializeSimpleValue(value1, elementType));
+            }
+            return array;
+        } else if (type.startsWith(JmxConstants.VECTOR_OF)) {
+            String elementType = type.substring(JmxConstants.VECTOR_OF.length());
+            String[] values = value.split(",");
+            Vector<Object> result = new Vector<Object>();
+            for (String v : values) {
+                result.add(deserializeSimpleValue(v,  elementType));
+            }
+            return result;
+        }
+        return deserializeSimpleValue(value, type);
+    }
+
+    private static Class getTypeClass(String type) {
+        if (JmxConstants.BIGDECIMAL.equals(type)) {
+            return BigDecimal.class;
+        } else if (JmxConstants.BIGINTEGER.equals(type)) {
+            return BigInteger.class;
+        } else if (JmxConstants.BOOLEAN.equals(type)) {
+            return Boolean.class;
+        } else if (JmxConstants.BYTE.equals(type)) {
+            return Byte.class;
+        } else if (JmxConstants.CHARACTER.equals(type)) {
+            return Character.class;
+        } else if (JmxConstants.DOUBLE.equals(type)) {
+            return Double.class;
+        } else if (JmxConstants.FLOAT.equals(type)) {
+            return Float.class;
+        } else if (JmxConstants.INTEGER.equals(type)) {
+            return Integer.class;
+        } else if (JmxConstants.LONG.equals(type)) {
+            return Long.class;
+        } else if (JmxConstants.SHORT.equals(type)) {
+            return Short.class;
+        } else if (JmxConstants.STRING.equals(type)) {
+            return String.class;
+        } else if (JmxConstants.P_BOOLEAN.equals(type)) {
+            return boolean.class;
+        } else if (JmxConstants.P_BYTE.equals(type)) {
+            return byte.class;
+        } else if (JmxConstants.P_CHAR.equals(type)) {
+            return char.class;
+        } else if (JmxConstants.P_DOUBLE.equals(type)) {
+            return double.class;
+        } else if (JmxConstants.P_FLOAT.equals(type)) {
+            return float.class;
+        } else if (JmxConstants.P_INT.equals(type)) {
+            return int.class;
+        } else if (JmxConstants.P_LONG.equals(type)) {
+            return long.class;
+        } else if (JmxConstants.P_SHORT.equals(type)) {
+            return short.class;
+        }
+        throw new IllegalArgumentException("Unknown type value: " + type);
+    }
+
+    private static Object deserializeSimpleValue(String value, String type) {
+        try {
+            if (JmxConstants.BIGDECIMAL.equals(type)) {
+                return new BigDecimal(value);
+            } else if (JmxConstants.BIGINTEGER.equals(type)) {
+                return new BigInteger(value);
+            } else if (JmxConstants.BOOLEAN.equals(type) || JmxConstants.P_BOOLEAN.equals(type)) {
+                return Boolean.valueOf(value);
+            } else if (JmxConstants.BYTE.equals(type) || JmxConstants.P_BYTE.equals(type)) {
+                return Byte.valueOf(value);
+            } else if (JmxConstants.CHARACTER.equals(type) || JmxConstants.P_CHAR.equals(type)) {
+                return value.charAt(0);
+            } else if (JmxConstants.DOUBLE.equals(type) || JmxConstants.P_DOUBLE.equals(type)) {
+                return Double.valueOf(value);
+            } else if (JmxConstants.FLOAT.equals(type) || JmxConstants.P_FLOAT.equals(type)) {
+                return Float.valueOf(value);
+            } else if (JmxConstants.INTEGER.equals(type) || JmxConstants.P_INT.equals(type)) {
+                return Integer.valueOf(value);
+            } else if (JmxConstants.LONG.equals(type) || JmxConstants.P_LONG.equals(type)) {
+                return Long.valueOf(value);
+            } else if (JmxConstants.SHORT.equals(type) || JmxConstants.P_SHORT.equals(type)) {
+                return Short.valueOf(value);
+            } else if (JmxConstants.STRING.equals(type)) {
+                if ((value.startsWith("\"") && value.endsWith("\"")) || (value.startsWith("\'") && value.endsWith("\'"))) {
+                    value = value.substring(1, value.length() - 1);
+                }
+                return value.replaceAll("\\\"", "\"").replaceAll("\\'", "'").replace("\\\\", "\\");
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Unable to deserialize value: " + value + " with type: " + type);
+        }
+        throw new IllegalArgumentException("Unknown type value: " + type);
+    }
+
+    /**
      * Convert Bundles array to ids array
      *
      * @param bundles bundles array
@@ -202,18 +312,6 @@ public class Utils {
             }
         }
         return result.toArray(new ExportedPackage[result.size()]);
-    }
-
-    /**
-     * Deserialized to String value
-     *
-     * @param value string value
-     * @param type one of value {@link JmxConstants#TYPE_ITEM}
-     * @return deserialized object
-     * @throws IllegalArgumentException if type is out of defined scope or unable to deserialize string
-     */
-    public static Object deserializeFromString(String value, String type) {
-        return null; // todo
     }
 
     /**
