@@ -17,9 +17,18 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 /**
+ * Utils class
+ *
  * @author dmytro.pishchukhin
  */
 public class Utils {
+    /**
+     * Get type by value
+     *
+     * @param value object value
+     * @return one of value {@link JmxConstants#TYPE_ITEM}
+     * @throws IllegalArgumentException if type is out of defined scope
+     */
     public static String getValueType(Object value) {
         Class aClass = value.getClass();
         StringBuilder result = new StringBuilder();
@@ -58,6 +67,12 @@ public class Utils {
         return result.toString();
     }
 
+    /**
+     * Serialize object value to string
+     *
+     * @param value object value
+     * @return string for object value (see 124.5.6 for more details)
+     */
     public static String serializeToString(Object value) {
         String type = getValueType(value);
         boolean isStringType = type.endsWith(JmxConstants.STRING);
@@ -99,6 +114,12 @@ public class Utils {
         }
     }
 
+    /**
+     * Convert Bundles array to ids array
+     *
+     * @param bundles bundles array
+     * @return non-<code>null</code> bundle ids array
+     */
     public static long[] getIds(Bundle[] bundles) {
         if (bundles == null) {
             return new long[0];
@@ -110,6 +131,12 @@ public class Utils {
         return result;
     }
 
+    /**
+     * Convert ServiceReferences array to ids array
+     *
+     * @param serviceReferences bundles array
+     * @return non-<code>null</code> ServiceReference ids array
+     */
     public static long[] getIds(ServiceReference[] serviceReferences) {
         if (serviceReferences == null) {
             return new long[0];
@@ -121,6 +148,12 @@ public class Utils {
         return result;
     }
 
+    /**
+     * Convert primitive long array to Long array
+     *
+     * @param longArray primitive long array
+     * @return non-<code>null</code> Long array
+     */
     public static Long[] toLongArray(long[] longArray) {
         if (longArray == null) {
             return new Long[0];
@@ -132,6 +165,13 @@ public class Utils {
         return result;
     }
 
+    /**
+     * Find the first <code>ExportedPackage</code> by name and version
+     * @param packages <code>ExportedPackage</code>s array
+     * @param packageName package name
+     * @param version package version
+     * @return package with name and version, otherwise - <code>null</code>
+     */
     public static ExportedPackage findPackage(ExportedPackage[] packages, String packageName, Version version) {
         if (packages != null) {
             for (ExportedPackage exportedPackage : packages) {
@@ -144,6 +184,13 @@ public class Utils {
         return null;
     }
 
+    /**
+     * Find <code>ExportedPackage</code>s by name and version
+     * @param packages <code>ExportedPackage</code>s array
+     * @param packageName package name
+     * @param version package version
+     * @return non-<code>null</code> array with <code>ExportedPackage</code>s with name and version
+     */
     public static ExportedPackage[] findPackages(ExportedPackage[] packages, String packageName, Version version) {
         List<ExportedPackage> result = new ArrayList<ExportedPackage>();
         if (packages != null) {
@@ -157,10 +204,26 @@ public class Utils {
         return result.toArray(new ExportedPackage[result.size()]);
     }
 
+    /**
+     * Deserialized to String value
+     *
+     * @param value string value
+     * @param type one of value {@link JmxConstants#TYPE_ITEM}
+     * @return deserialized object
+     * @throws IllegalArgumentException if type is out of defined scope or unable to deserialize string
+     */
     public static Object deserializeFromString(String value, String type) {
         return null; // todo
     }
 
+    /**
+     * Convert TabularData to properties
+     *
+     * @param properties tabular data
+     * @param ignoreErrors ignore errors flag
+     * @return <code>Dictionary</code> with properties
+     * @throws IllegalArgumentException if <code>ignoreErrors</code> is <code>false</code> and unable to convert value from String by type
+     */
     public static Dictionary convertToDictionary(TabularData properties, boolean ignoreErrors) {
         Hashtable<String, Object> props = new Hashtable<String, Object>();
         if (properties != null) {
@@ -182,6 +245,13 @@ public class Utils {
         return props;
     }
 
+    /**
+     * Convert Properties to TabularData
+     *
+     * @param properties properties
+     * @return <code>TabularData</code> with properties
+     * @throws IllegalArgumentException if property type is out of defined scope
+     */
     public static TabularData getProperties(Dictionary properties) {
         TabularDataSupport dataSupport = new TabularDataSupport(JmxConstants.PROPERTIES_TYPE);
         try {

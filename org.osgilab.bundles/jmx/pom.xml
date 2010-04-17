@@ -6,7 +6,7 @@
 
     <groupId>org.osgilab.bundles</groupId>
     <artifactId>jmx</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
 
     <packaging>bundle</packaging>
@@ -105,7 +105,7 @@
                         <Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
                         <_removeheaders>
                             Bnd-LastModified, Built-By, Private-Package,
-                            Tool, Build-Jdk, Include-Resource
+                            Tool, Build-Jdk, Include-Resource, Ignore-Package
                         </_removeheaders>
                     </instructions>
                 </configuration>
