@@ -16,6 +16,8 @@ import javax.management.openmbean.*;
 import java.io.IOException;
 
 /**
+ * ConfigurationAdminMBean Implementation
+ *
  * @author dmytro.pishchukhin
  */
 public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm.ConfigurationAdmin>
@@ -27,22 +29,54 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
 
     public String createFactoryConfiguration(String factoryPid)
             throws IOException {
-        Configuration configuration = service.createFactoryConfiguration(factoryPid);
-        return configuration.getPid();
+        try {
+            Configuration configuration = service.createFactoryConfiguration(factoryPid);
+            return configuration.getPid();
+        } catch (IOException e) {
+            logVisitor.warning("createFactoryConfiguration error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("createFactoryConfiguration error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public String createFactoryConfigurationForLocation(String factoryPid, String location)
             throws IOException {
-        Configuration configuration = service.createFactoryConfiguration(factoryPid, location);
-        return configuration.getPid();
+        try {
+            Configuration configuration = service.createFactoryConfiguration(factoryPid, location);
+            return configuration.getPid();
+        } catch (IOException e) {
+            logVisitor.warning("createFactoryConfigurationForLocation error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("createFactoryConfigurationForLocation error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void delete(String pid) throws IOException {
-        service.getConfiguration(pid).delete();
+        try {
+            service.getConfiguration(pid).delete();
+        } catch (IOException e) {
+            logVisitor.warning("delete error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("delete error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void deleteForLocation(String pid, String location) throws IOException {
-        service.getConfiguration(pid, location).delete();
+        try {
+            service.getConfiguration(pid, location).delete();
+        } catch (IOException e) {
+            logVisitor.warning("deleteForLocation error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("deleteForLocation error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void deleteConfigurations(String filter) throws IOException {
@@ -54,28 +88,75 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
                 }
             }
         } catch (InvalidSyntaxException e) {
+            logVisitor.warning("deleteConfigurations error", e);
             throw new IllegalArgumentException("Filter is invalid: " + filter);
+        } catch (IOException e) {
+            logVisitor.warning("deleteConfigurations error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("deleteConfigurations error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public String getBundleLocation(String pid) throws IOException {
-        return service.getConfiguration(pid).getBundleLocation();
+        try {
+            return service.getConfiguration(pid).getBundleLocation();
+        } catch (IOException e) {
+            logVisitor.warning("getBundleLocation error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getBundleLocation error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public String getFactoryPid(String pid) throws IOException {
-        return service.getConfiguration(pid).getFactoryPid();
+        try {
+            return service.getConfiguration(pid).getFactoryPid();
+        } catch (IOException e) {
+            logVisitor.warning("getFactoryPid error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getFactoryPid error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public String getFactoryPidForLocation(String pid, String location) throws IOException {
-        return service.getConfiguration(pid, location).getFactoryPid();
+        try {
+            return service.getConfiguration(pid, location).getFactoryPid();
+        } catch (IOException e) {
+            logVisitor.warning("getFactoryPidForLocation error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getFactoryPidForLocation error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public TabularData getProperties(String pid) throws IOException {
-        return Utils.getProperties(service.getConfiguration(pid).getProperties());
+        try {
+            return Utils.getProperties(service.getConfiguration(pid).getProperties());
+        } catch (IOException e) {
+            logVisitor.warning("getProperties error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getProperties error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public TabularData getPropertiesForLocation(String pid, String location) throws IOException {
-        return Utils.getProperties(service.getConfiguration(pid, location).getProperties());
+        try {
+            return Utils.getProperties(service.getConfiguration(pid, location).getProperties());
+        } catch (IOException e) {
+            logVisitor.warning("getPropertiesForLocation error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getPropertiesForLocation error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public String[][] getConfigurations(String filter) throws IOException {
@@ -90,24 +171,55 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
                 }
                 return result;
             }
-            return new String[0][];
+            return new String[0][0];
         } catch (InvalidSyntaxException e) {
+            logVisitor.warning("getConfigurations error", e);
             throw new IllegalArgumentException("Filter is invalid: " + filter);
+        } catch (IOException e) {
+            logVisitor.warning("getConfigurations error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getConfigurations error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public void setBundleLocation(String pid, String location) throws IOException {
-        service.getConfiguration(pid).setBundleLocation(location);
+        try {
+            service.getConfiguration(pid).setBundleLocation(location);
+        } catch (IOException e) {
+            logVisitor.warning("setBundleLocation error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("setBundleLocation error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void update(String pid, TabularData properties) throws IOException {
-        Configuration configuration = service.getConfiguration(pid);
-        configuration.update(Utils.convertToDictionary(properties, false));
+        try {
+            Configuration configuration = service.getConfiguration(pid);
+            configuration.update(Utils.convertToDictionary(properties, false));
+        } catch (IOException e) {
+            logVisitor.warning("update error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("update error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void updateForLocation(String pid, String location, TabularData properties) throws IOException {
-        Configuration configuration = service.getConfiguration(pid, location);
-        configuration.update(Utils.convertToDictionary(properties, false));
+        try {
+            Configuration configuration = service.getConfiguration(pid, location);
+            configuration.update(Utils.convertToDictionary(properties, false));
+        } catch (IOException e) {
+            logVisitor.warning("updateForLocation error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("updateForLocation error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
 }

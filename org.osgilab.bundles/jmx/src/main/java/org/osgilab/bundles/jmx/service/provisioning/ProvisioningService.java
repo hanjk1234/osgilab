@@ -16,6 +16,8 @@ import java.net.URL;
 import java.util.zip.ZipInputStream;
 
 /**
+ * ProvisioningServiceMBean Implementation
+ *
  * @author dmytro.pishchukhin
  */
 public class ProvisioningService extends ServiceAbstractMBean<org.osgi.service.provisioning.ProvisioningService>
@@ -26,18 +28,41 @@ public class ProvisioningService extends ServiceAbstractMBean<org.osgi.service.p
     }
 
     public void addInformationFromZip(String zipURL) throws IOException {
-        service.addInformation(new ZipInputStream(new URL(zipURL).openStream()));
+        try {
+            service.addInformation(new ZipInputStream(new URL(zipURL).openStream()));
+        } catch (IOException e) {
+            logVisitor.warning("addInformationFromZip error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("addInformationFromZip error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void addInformation(TabularData tabularData) throws IOException {
-        service.addInformation(Utils.convertToDictionary(tabularData, true));
+        try {
+            service.addInformation(Utils.convertToDictionary(tabularData, true));
+        } catch (Exception e) {
+            logVisitor.warning("addInformation error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public TabularData listInformation() throws IOException {
-        return Utils.getProperties(service.getInformation());
+        try {
+            return Utils.getProperties(service.getInformation());
+        } catch (Exception e) {
+            logVisitor.warning("listInformation error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void setInformation(TabularData tabularData) throws IOException {
-        service.setInformation(Utils.convertToDictionary(tabularData, true));
+        try {
+            service.setInformation(Utils.convertToDictionary(tabularData, true));
+        } catch (Exception e) {
+            logVisitor.warning("setInformation error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 }

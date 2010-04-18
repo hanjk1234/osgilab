@@ -13,6 +13,8 @@ import javax.management.NotCompliantMBeanException;
 import java.io.IOException;
 
 /**
+ * PermissionAdminMBean Implementation
+ *
  * @author dmytro.pishchukhin
  */
 public class PermissionAdmin extends ServiceAbstractMBean<org.osgi.service.permissionadmin.PermissionAdmin>
@@ -23,30 +25,54 @@ public class PermissionAdmin extends ServiceAbstractMBean<org.osgi.service.permi
     }
 
     public String[] listLocations() throws IOException {
-        return service.getLocations();
+        try {
+            return service.getLocations();
+        } catch (Exception e) {
+            logVisitor.warning("listLocations error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public String[] getPermissions(String location) throws IOException {
-        return getPermissions(service.getPermissions(location));
+        try {
+            return getPermissions(service.getPermissions(location));
+        } catch (Exception e) {
+            logVisitor.warning("getPermissions error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void setDefaultPermissions(String[] encodedPermissions) throws IOException {
-        if (encodedPermissions != null) {
+        try {
             service.setDefaultPermissions(getPermissions(encodedPermissions));
+        } catch (Exception e) {
+            logVisitor.warning("setDefaultPermissions error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public String[] listDefaultPermissions() throws IOException {
-        return getPermissions(service.getDefaultPermissions());
+        try {
+            return getPermissions(service.getDefaultPermissions());
+        } catch (Exception e) {
+            logVisitor.warning("listDefaultPermissions error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void setPermissions(String location, String[] encodedPermissions) throws IOException {
-        if (encodedPermissions != null) {
+        try {
             service.setPermissions(location, getPermissions(encodedPermissions));
+        } catch (Exception e) {
+            logVisitor.warning("setPermissions error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     private PermissionInfo[] getPermissions(String[] encodedPermissions) {
+        if (encodedPermissions == null) {
+            return null;
+        }
         PermissionInfo[] permissions = new PermissionInfo[encodedPermissions.length];
         for (int i = 0; i < encodedPermissions.length; i++) {
             permissions[i] = new PermissionInfo(encodedPermissions[i]);

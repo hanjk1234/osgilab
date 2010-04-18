@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * UserAdminMBean Implementation
+ *
  * @author dmytro.pishchukhin
  */
 public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.UserAdmin>
