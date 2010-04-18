@@ -65,9 +65,6 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
     public long[] getImportingBundles(String packageName, String version, long exportingBundle) throws IOException {
         try {
             Bundle bundle = visitor.getBundle(exportingBundle);
-            if (bundle == null) {
-                throw new IllegalArgumentException("Bundle ID is wrong: " + exportingBundle);
-            }
             PackageAdmin packageAdmin = visitor.getPackageAdmin();
             if (packageAdmin == null) {
                 throw new IOException("PackageAdmin is not available");
@@ -135,9 +132,6 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
     public boolean isRemovalPending(String packageName, String version, long exportingBundle) throws IOException {
         try {
             Bundle bundle = visitor.getBundle(exportingBundle);
-            if (bundle == null) {
-                throw new IllegalArgumentException("Bundle ID is wrong: " + exportingBundle);
-            }
             PackageAdmin packageAdmin = visitor.getPackageAdmin();
             if (packageAdmin == null) {
                 throw new IOException("PackageAdmin is not available");
