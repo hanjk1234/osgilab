@@ -10,10 +10,7 @@ import org.osgi.service.monitor.StatusVariable;
 import org.osgilab.bundles.jmx.beans.ServiceAbstractMBean;
 
 import javax.management.NotCompliantMBeanException;
-import javax.management.openmbean.CompositeData;
-import javax.management.openmbean.CompositeDataSupport;
-import javax.management.openmbean.TabularData;
-import javax.management.openmbean.TabularDataSupport;
+import javax.management.openmbean.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,46 +26,104 @@ public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.
     }
 
     public String getDescription(String path) throws IllegalArgumentException, IOException {
-        return service.getDescription(path);
+        try {
+            return service.getDescription(path);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getDescription error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getDescription error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public CompositeData getStatusVariable(String path) throws IllegalArgumentException, IOException {
-        StatusVariable statusVariable = service.getStatusVariable(path);
-        return getCompositeData(statusVariable);
+        try {
+            StatusVariable statusVariable = service.getStatusVariable(path);
+            return getCompositeData(statusVariable);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getStatusVariable error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getStatusVariable error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public String[] getMonitorableNames() throws IOException {
-        return service.getMonitorableNames();
+        try {
+            return service.getMonitorableNames();
+        } catch (Exception e) {
+            logVisitor.warning("getMonitorableNames error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public TabularData getStatusVariables(String monitorableId) throws IllegalArgumentException, IOException {
-        StatusVariable[] statusVariables = service.getStatusVariables(monitorableId);
-        TabularDataSupport dataSupport = new TabularDataSupport(STATUS_VARIABLES_TYPE);
-        for (StatusVariable statusVariable : statusVariables) {
-            dataSupport.put(getCompositeData(statusVariable));
+        try {
+            StatusVariable[] statusVariables = service.getStatusVariables(monitorableId);
+            TabularDataSupport dataSupport = new TabularDataSupport(STATUS_VARIABLES_TYPE);
+            for (StatusVariable statusVariable : statusVariables) {
+                dataSupport.put(getCompositeData(statusVariable));
+            }
+            return dataSupport;
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getStatusVariables error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getStatusVariables error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return dataSupport;
     }
 
     public String[] getStatusVariableNames(String monitorableId) throws IllegalArgumentException, IOException {
-        return service.getStatusVariableNames(monitorableId);
+        try {
+            return service.getStatusVariableNames(monitorableId);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getStatusVariableNames error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getStatusVariableNames error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void switchEvents(String path, boolean on) throws IllegalArgumentException, IOException {
-        service.switchEvents(path, on);
+        try {
+            service.switchEvents(path, on);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("switchEvents error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("switchEvents error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public boolean resetStatusVariable(String path) throws IllegalArgumentException, IOException {
-        return service.resetStatusVariable(path);
+        try {
+            return service.resetStatusVariable(path);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("resetStatusVariable error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("resetStatusVariable error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public TabularData getRunningJobs() throws IOException {
-        MonitoringJob[] monitoringJobs = service.getRunningJobs();
-        TabularDataSupport dataSupport = new TabularDataSupport(MONITORING_JOBS_TYPE);
-        for (MonitoringJob monitoringJob : monitoringJobs) {
-            dataSupport.put(getCompositeData(monitoringJob));
+        try {
+            MonitoringJob[] monitoringJobs = service.getRunningJobs();
+            TabularDataSupport dataSupport = new TabularDataSupport(MONITORING_JOBS_TYPE);
+            for (MonitoringJob monitoringJob : monitoringJobs) {
+                dataSupport.put(getCompositeData(monitoringJob));
+            }
+            return dataSupport;
+        } catch (Exception e) {
+            logVisitor.warning("getRunningJobs error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return dataSupport;
     }
 
     private String getValueAsString(StatusVariable statusVariable) {
@@ -85,32 +140,24 @@ public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.
         return "";
     }
 
-    private CompositeData getCompositeData(StatusVariable statusVariable) throws IOException {
+    private CompositeData getCompositeData(StatusVariable statusVariable) throws OpenDataException {
         Map<String, Object> values = new HashMap<String, Object>();
-        try {
-            values.put(NAME, statusVariable.getID());
-            values.put(TYPE, statusVariable.getType());
-            values.put(COLLECTION_METHOD, statusVariable.getCollectionMethod());
-            values.put(TIMESTAMP, statusVariable.getTimeStamp().getTime());
-            values.put(VALUE, getValueAsString(statusVariable));
-            return new CompositeDataSupport(STATUS_VARIABLE_TYPE, values);
-        } catch (Exception e) {
-            throw new IOException(e);
-        }
+        values.put(NAME, statusVariable.getID());
+        values.put(TYPE, statusVariable.getType());
+        values.put(COLLECTION_METHOD, statusVariable.getCollectionMethod());
+        values.put(TIMESTAMP, statusVariable.getTimeStamp().getTime());
+        values.put(VALUE, getValueAsString(statusVariable));
+        return new CompositeDataSupport(STATUS_VARIABLE_TYPE, values);
     }
 
-    private CompositeData getCompositeData(MonitoringJob monitoringJob) throws IOException {
+    private CompositeData getCompositeData(MonitoringJob monitoringJob) throws OpenDataException {
         Map<String, Object> values = new HashMap<String, Object>();
-        try {
-            values.put(INITIATOR, monitoringJob.getInitiator());
-            values.put(REPORT_COUNT, monitoringJob.getReportCount());
-            values.put(SCHEDULE, monitoringJob.getSchedule());
-            values.put(STATUS_VARIABLE_NAMES, monitoringJob.getStatusVariableNames());
-            values.put(LOCAL, monitoringJob.isLocal());
-            values.put(RUNNING, monitoringJob.isRunning());
-            return new CompositeDataSupport(MONITORING_JOB_TYPE, values);
-        } catch (Exception e) {
-            throw new IOException(e);
-        }
+        values.put(INITIATOR, monitoringJob.getInitiator());
+        values.put(REPORT_COUNT, monitoringJob.getReportCount());
+        values.put(SCHEDULE, monitoringJob.getSchedule());
+        values.put(STATUS_VARIABLE_NAMES, monitoringJob.getStatusVariableNames());
+        values.put(LOCAL, monitoringJob.isLocal());
+        values.put(RUNNING, monitoringJob.isRunning());
+        return new CompositeDataSupport(MONITORING_JOB_TYPE, values);
     }
 }

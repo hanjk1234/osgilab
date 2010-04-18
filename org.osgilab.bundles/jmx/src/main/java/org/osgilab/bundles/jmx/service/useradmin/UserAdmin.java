@@ -34,114 +34,177 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
     }
 
     public void addCredential(String key, byte[] value, String username) throws IOException {
-        Role role = service.getRole(username);
-        if (role == null || role.getType() != Role.USER) {
-            throw new IllegalArgumentException(username + " is not User name");
-        }
-        Dictionary credentials = ((User) role).getCredentials();
-        if (credentials != null) {
-            credentials.put(key, value);
+        try {
+            Role role = service.getRole(username);
+            if (role == null || role.getType() != Role.USER) {
+                throw new IllegalArgumentException(username + " is not User name");
+            }
+            Dictionary credentials = ((User) role).getCredentials();
+            if (credentials != null) {
+                credentials.put(key, value);
+            }
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("addCredential error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("addCredential error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public void addCredentialString(String key, String value, String username) throws IOException {
-        Role role = service.getRole(username);
-        if (role == null || role.getType() != Role.USER) {
-            throw new IllegalArgumentException(username + " is not User name");
-        }
-        Dictionary credentials = ((User) role).getCredentials();
-        if (credentials != null) {
-            credentials.put(key, value);
+        try {
+            Role role = service.getRole(username);
+            if (role == null || role.getType() != Role.USER) {
+                throw new IllegalArgumentException(username + " is not User name");
+            }
+            Dictionary credentials = ((User) role).getCredentials();
+            if (credentials != null) {
+                credentials.put(key, value);
+            }
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("addCredentialString error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("addCredentialString error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public boolean addMember(String groupname, String rolename) throws IOException {
-        Role role = service.getRole(groupname);
-        if (role != null && role.getType() == Role.GROUP) {
-            Role member = service.getRole(rolename);
-            if (member != null) {
-                return ((Group) role).addMember(member);
+        try {
+            Role role = service.getRole(groupname);
+            if (role != null && role.getType() == Role.GROUP) {
+                Role member = service.getRole(rolename);
+                if (member != null) {
+                    return ((Group) role).addMember(member);
+                }
             }
+            return false;
+        } catch (Exception e) {
+            logVisitor.warning("addMember error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return false;
     }
 
     public void addPropertyString(String key, String value, String rolename) throws IOException {
-        Role role = service.getRole(rolename);
-        if (role != null) {
-            Dictionary properties = role.getProperties();
-            if (properties != null) {
-                properties.put(key, value);
+        try {
+            Role role = service.getRole(rolename);
+            if (role != null) {
+                Dictionary properties = role.getProperties();
+                if (properties != null) {
+                    properties.put(key, value);
+                }
             }
+        } catch (Exception e) {
+            logVisitor.warning("addPropertyString error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public void addProperty(String key, byte[] value, String rolename) throws IOException {
-        Role role = service.getRole(rolename);
-        if (role != null) {
-            Dictionary properties = role.getProperties();
-            if (properties != null) {
-                properties.put(key, value);
+        try {
+            Role role = service.getRole(rolename);
+            if (role != null) {
+                Dictionary properties = role.getProperties();
+                if (properties != null) {
+                    properties.put(key, value);
+                }
             }
+        } catch (Exception e) {
+            logVisitor.warning("addProperty error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public boolean addRequiredMember(String groupname, String rolename) throws IOException {
-        Role role = service.getRole(groupname);
-        if (role != null && role.getType() == Role.GROUP) {
-            Role requiredMember = service.getRole(rolename);
-            if (requiredMember != null) {
-                return ((Group) role).addRequiredMember(requiredMember);
+        try {
+            Role role = service.getRole(groupname);
+            if (role != null && role.getType() == Role.GROUP) {
+                Role requiredMember = service.getRole(rolename);
+                if (requiredMember != null) {
+                    return ((Group) role).addRequiredMember(requiredMember);
+                }
             }
+            return false;
+        } catch (Exception e) {
+            logVisitor.warning("addRequiredMember error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return false;
     }
 
     public void createUser(String name) throws IOException {
-        service.createRole(name, Role.USER);
+        try {
+            service.createRole(name, Role.USER);
+        } catch (Exception e) {
+            logVisitor.warning("createUser error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void createGroup(String name) throws IOException {
-        service.createRole(name, Role.GROUP);
+        try {
+            service.createRole(name, Role.GROUP);
+        } catch (Exception e) {
+            logVisitor.warning("createGroup error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public void createRole(String name) throws IOException {
-        service.createRole(name, Role.ROLE);
+        try {
+            service.createRole(name, Role.ROLE);
+        } catch (Exception e) {
+            logVisitor.warning("createRole error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public CompositeData getAuthorization(String username) throws IOException {
-        Role role = service.getRole(username);
-        if (role == null || role.getType() != Role.USER) {
-            throw new IllegalArgumentException(username + " is not User name");
-        }
-        Authorization authorization = service.getAuthorization((User) role);
-        Map<String, Object> values = new HashMap<String, Object>();
         try {
+            Role role = service.getRole(username);
+            if (role == null || role.getType() != Role.USER) {
+                throw new IllegalArgumentException(username + " is not User name");
+            }
+            Authorization authorization = service.getAuthorization((User) role);
+            Map<String, Object> values = new HashMap<String, Object>();
             String name = authorization.getName();
             values.put(NAME, name);
             Role authRole = service.getRole(name);
             values.put(TYPE, authRole.getType());
             return new CompositeDataSupport(AUTORIZATION_TYPE, values);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getAuthorization error", e);
+            throw e;
         } catch (Exception e) {
-            throw new IOException(e);
+            logVisitor.warning("getAuthorization error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public TabularData getCredentials(String username) throws IOException {
-        Role role = service.getRole(username);
-        if (role == null || role.getType() != Role.USER) {
-            throw new IllegalArgumentException(username + " is not User name");
+        try {
+            Role role = service.getRole(username);
+            if (role == null || role.getType() != Role.USER) {
+                throw new IllegalArgumentException(username + " is not User name");
+            }
+            return Utils.getProperties(((User) role).getCredentials());
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getCredentials error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getCredentials error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return Utils.getProperties(((User) role).getCredentials());
     }
 
     public CompositeData getGroup(String groupname) throws IOException {
-        Role role = service.getRole(groupname);
-        if (role == null || role.getType() != Role.GROUP) {
-            throw new IllegalArgumentException(groupname + " is not Group name");
-        }
-        Group group = (Group) role;
         try {
+            Role role = service.getRole(groupname);
+            if (role == null || role.getType() != Role.GROUP) {
+                throw new IllegalArgumentException(groupname + " is not Group name");
+            }
+            Group group = (Group) role;
             Map<String, Object> values = new HashMap<String, Object>();
             values.put(NAME, group.getName());
             values.put(TYPE, group.getProperties());
@@ -150,175 +213,260 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             values.put(MEMBERS, getRoleNames(group.getMembers()));
             values.put(REQUIRED_MEMBERS, getRoleNames(group.getRequiredMembers()));
             return new CompositeDataSupport(GROUP_TYPE, values);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getGroup error", e);
+            throw e;
         } catch (Exception e) {
-            throw new IOException(e);
+            logVisitor.warning("getGroup error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public String[] listGroups() throws IOException {
         try {
             return getRoleNames(null, Role.GROUP);
-        } catch (InvalidSyntaxException e) {
-            throw new IOException(e);
+        } catch (Exception e) {
+            logVisitor.warning("listGroups error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public String[] getGroups(String filter) throws IOException {
         try {
             return getRoleNames(filter, Role.GROUP);
-        } catch (InvalidSyntaxException e) {
-            throw new IOException(e);
+        } catch (Exception e) {
+            logVisitor.warning("getGroups error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public String[] getImpliedRoles(String username) throws IOException {
-        Role role = service.getRole(username);
-        if (role == null || role.getType() != Role.USER) {
-            throw new IllegalArgumentException(username + " is not User name");
-        }
-        Authorization authorization = service.getAuthorization((User) role);
-        if (authorization != null) {
-            return authorization.getRoles();
-        } else {
-            return new String[0];
+        try {
+            Role role = service.getRole(username);
+            if (role == null || role.getType() != Role.USER) {
+                throw new IllegalArgumentException(username + " is not User name");
+            }
+            Authorization authorization = service.getAuthorization((User) role);
+            if (authorization != null) {
+                return authorization.getRoles();
+            } else {
+                return new String[0];
+            }
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getImpliedRoles error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getImpliedRoles error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public String[] getMembers(String groupname) throws IOException {
-        Role role = service.getRole(groupname);
-        if (role == null || role.getType() != Role.GROUP) {
-            throw new IllegalArgumentException(groupname + " is not Group name");
+        try {
+            Role role = service.getRole(groupname);
+            if (role == null || role.getType() != Role.GROUP) {
+                throw new IllegalArgumentException(groupname + " is not Group name");
+            }
+            return getRoleNames(((Group) role).getMembers());
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getMembers error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getMembers error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return getRoleNames(((Group) role).getMembers());
     }
 
     public TabularData getProperties(String rolename) throws IOException {
-        Role role = service.getRole(rolename);
-        return Utils.getProperties(role != null ? role.getProperties() : null);
+        try {
+            Role role = service.getRole(rolename);
+            return Utils.getProperties(role != null ? role.getProperties() : null);
+        } catch (Exception e) {
+            logVisitor.warning("getProperties error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public String[] getRequiredMembers(String groupname) throws IOException {
-        Role role = service.getRole(groupname);
-        if (role == null || role.getType() != Role.GROUP) {
-            throw new IllegalArgumentException(groupname + " is not Group name");
+        try {
+            Role role = service.getRole(groupname);
+            if (role == null || role.getType() != Role.GROUP) {
+                throw new IllegalArgumentException(groupname + " is not Group name");
+            }
+            return getRoleNames(((Group) role).getRequiredMembers());
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getRequiredMembers error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("getRequiredMembers error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return getRoleNames(((Group) role).getRequiredMembers());
     }
 
     public CompositeData getRole(String name) throws IOException {
-        Role role = service.getRole(name);
-        if (role != null) {
-            try {
+        try {
+            Role role = service.getRole(name);
+            if (role != null) {
                 Map<String, Object> values = new HashMap<String, Object>();
                 values.put(NAME, role.getName());
                 values.put(TYPE, role.getProperties());
                 values.put(PROPERTIES, Utils.getProperties(role.getProperties()));
                 return new CompositeDataSupport(ROLE_TYPE, values);
-            } catch (Exception e) {
-                throw new IOException(e);
             }
+            return null;
+        } catch (Exception e) {
+            logVisitor.warning("getRole error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return null;
     }
 
     public String[] listRoles() throws IOException {
         try {
             return getRoleNames(null, Role.ROLE);
-        } catch (InvalidSyntaxException e) {
-            throw new IOException(e);
+        } catch (Exception e) {
+            logVisitor.warning("listRoles error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public String[] getRoles(String filter) throws IOException {
         try {
             return getRoleNames(filter, Role.ROLE);
-        } catch (InvalidSyntaxException e) {
-            throw new IOException(e);
+        } catch (Exception e) {
+            logVisitor.warning("getRoles error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public CompositeData getUser(String username) throws IOException {
-        Role role = service.getRole(username);
-        if (role == null || role.getType() != Role.USER) {
-            throw new IllegalArgumentException(username + " is not User name");
-        }
-        User user = (User) role;
         try {
+            Role role = service.getRole(username);
+            if (role == null || role.getType() != Role.USER) {
+                throw new IllegalArgumentException(username + " is not User name");
+            }
+            User user = (User) role;
             Map<String, Object> values = new HashMap<String, Object>();
             values.put(NAME, user.getName());
             values.put(TYPE, user.getProperties());
             values.put(PROPERTIES, Utils.getProperties(user.getProperties()));
             values.put(CREDENTIALS, Utils.getProperties(user.getCredentials()));
             return new CompositeDataSupport(USER_TYPE, values);
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("getUser error", e);
+            throw e;
         } catch (Exception e) {
-            throw new IOException(e);
+            logVisitor.warning("getUser error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public String getUserWithProperty(String key, String value) throws IOException {
-        User user = service.getUser(key, value);
-        if (user != null) {
-            return user.getName();
-        } else {
-            return null;
+        try {
+            User user = service.getUser(key, value);
+            if (user != null) {
+                return user.getName();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            logVisitor.warning("getUserWithProperty error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public String[] listUsers() throws IOException {
         try {
             return getRoleNames(null, Role.USER);
-        } catch (InvalidSyntaxException e) {
-            throw new IOException(e);
+        } catch (Exception e) {
+            logVisitor.warning("listUsers error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public String[] getUsers(String filter) throws IOException {
         try {
             return getRoleNames(filter, Role.USER);
-        } catch (InvalidSyntaxException e) {
-            throw new IOException(e);
+        } catch (Exception e) {
+            logVisitor.warning("getUsers error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public void removeCredential(String key, String username) throws IOException {
-        Role role = service.getRole(username);
-        if (role == null || role.getType() != Role.USER) {
-            throw new IllegalArgumentException(username + " is not User name");
-        }
-        Dictionary credentials = ((User) role).getCredentials();
-        if (credentials != null) {
-            credentials.remove(key);
+        try {
+            Role role = service.getRole(username);
+            if (role == null || role.getType() != Role.USER) {
+                throw new IllegalArgumentException(username + " is not User name");
+            }
+            Dictionary credentials = ((User) role).getCredentials();
+            if (credentials != null) {
+                credentials.remove(key);
+            }
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("removeCredential error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("removeCredential error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public boolean removeMember(String groupname, String rolename) throws IOException {
-        Role role = service.getRole(groupname);
-        if (role == null || role.getType() != Role.GROUP) {
-            throw new IllegalArgumentException(groupname + " is not Group name");
+        try {
+            Role role = service.getRole(groupname);
+            if (role == null || role.getType() != Role.GROUP) {
+                throw new IllegalArgumentException(groupname + " is not Group name");
+            }
+            return ((Group) role).removeMember(service.getRole(rolename));
+        } catch (IllegalArgumentException e) {
+            logVisitor.warning("removeMember error", e);
+            throw e;
+        } catch (Exception e) {
+            logVisitor.warning("removeMember error", e);
+            throw new IOException(e.getMessage(), e);
         }
-        return ((Group) role).removeMember(service.getRole(rolename));
     }
 
     public void removeProperty(String key, String rolename) throws IOException {
-        Role role = service.getRole(rolename);
-        if (role != null) {
-            Dictionary properties = role.getProperties();
-            if (properties != null) {
-                properties.remove(key);
+        try {
+            Role role = service.getRole(rolename);
+            if (role != null) {
+                Dictionary properties = role.getProperties();
+                if (properties != null) {
+                    properties.remove(key);
+                }
             }
+        } catch (Exception e) {
+            logVisitor.warning("removeProperty error", e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
     public boolean removeRole(String name) throws IOException {
-        return removeRole(name, Role.ROLE);
+        try {
+            return removeRole(name, Role.ROLE);
+        } catch (Exception e) {
+            logVisitor.warning("removeRole error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public boolean removeGroup(String name) throws IOException {
-        return removeRole(name, Role.GROUP);
+        try {
+            return removeRole(name, Role.GROUP);
+        } catch (Exception e) {
+            logVisitor.warning("removeGroup error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     public boolean removeUser(String name) throws IOException {
-        return removeRole(name, Role.USER);
+        try {
+            return removeRole(name, Role.USER);
+        } catch (Exception e) {
+            logVisitor.warning("removeUser error", e);
+            throw new IOException(e.getMessage(), e);
+        }
     }
 
     private String[] getRoleNames(String filter, int type) throws InvalidSyntaxException {
