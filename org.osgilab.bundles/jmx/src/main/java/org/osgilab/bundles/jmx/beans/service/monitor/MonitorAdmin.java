@@ -3,11 +3,12 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.bundles.jmx.service.monitor;
+package org.osgilab.bundles.jmx.beans.service.monitor;
 
 import org.osgi.service.monitor.MonitoringJob;
 import org.osgi.service.monitor.StatusVariable;
 import org.osgilab.bundles.jmx.beans.ServiceAbstractMBean;
+import org.osgilab.bundles.jmx.service.monitor.MonitorAdminMBean;
 
 import javax.management.NotCompliantMBeanException;
 import javax.management.openmbean.*;

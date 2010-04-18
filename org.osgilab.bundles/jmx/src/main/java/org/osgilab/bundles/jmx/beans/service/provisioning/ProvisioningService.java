@@ -3,7 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.bundles.jmx.service.provisioning;
+package org.osgilab.bundles.jmx.beans.service.provisioning;
 
 import org.osgi.jmx.service.provisioning.ProvisioningServiceMBean;
 import org.osgilab.bundles.jmx.Utils;

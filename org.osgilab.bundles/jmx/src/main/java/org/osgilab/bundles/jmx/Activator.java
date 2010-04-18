@@ -204,27 +204,27 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
 
     private void registerCompendiumTrackers() {
         configurationAdminTracker = new ServiceTracker(bc, ConfigurationAdmin.class.getName(),
-                new CompendiumServiceCustomizer<ConfigurationAdmin>(org.osgilab.bundles.jmx.service.cm.ConfigurationAdmin.class,
+                new CompendiumServiceCustomizer<ConfigurationAdmin>(org.osgilab.bundles.jmx.beans.service.cm.ConfigurationAdmin.class,
                         ConfigurationAdminMBean.OBJECTNAME));
         configurationAdminTracker.open();
 
         permissionAdminTracker = new ServiceTracker(bc, PermissionAdmin.class.getName(),
-                new CompendiumServiceCustomizer<PermissionAdmin>(org.osgilab.bundles.jmx.service.permissionadmin.PermissionAdmin.class,
+                new CompendiumServiceCustomizer<PermissionAdmin>(org.osgilab.bundles.jmx.beans.service.permissionadmin.PermissionAdmin.class,
                         PermissionAdminMBean.OBJECTNAME));
         permissionAdminTracker.open();
 
         provisioningServiceTracker = new ServiceTracker(bc, ProvisioningService.class.getName(),
-                new CompendiumServiceCustomizer<ProvisioningService>(org.osgilab.bundles.jmx.service.provisioning.ProvisioningService.class,
+                new CompendiumServiceCustomizer<ProvisioningService>(org.osgilab.bundles.jmx.beans.service.provisioning.ProvisioningService.class,
                         ProvisioningServiceMBean.OBJECTNAME));
         provisioningServiceTracker.open();
 
         userAdminTracker = new ServiceTracker(bc, UserAdmin.class.getName(),
-                new CompendiumServiceCustomizer<UserAdmin>(org.osgilab.bundles.jmx.service.useradmin.UserAdmin.class,
+                new CompendiumServiceCustomizer<UserAdmin>(org.osgilab.bundles.jmx.beans.service.useradmin.UserAdmin.class,
                         UserAdminMBean.OBJECTNAME));
         userAdminTracker.open();
 
         monitorAdminTracker = new ServiceTracker(bc, MonitorAdmin.class.getName(),
-                new CompendiumServiceCustomizer<MonitorAdmin>(org.osgilab.bundles.jmx.service.monitor.MonitorAdmin.class,
+                new CompendiumServiceCustomizer<MonitorAdmin>(org.osgilab.bundles.jmx.beans.service.monitor.MonitorAdmin.class,
                         MonitorAdminMBean.OBJECTNAME));
         monitorAdminTracker.open();
     }

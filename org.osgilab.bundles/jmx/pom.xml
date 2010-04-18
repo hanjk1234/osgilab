@@ -90,7 +90,9 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.osgi.jmx*</Export-Package>
+                        <Export-Package>
+                            org.osgi.jmx*,
+                            org.osgilab.bundles.jmx.service.monitor;version=${project.version}</Export-Package>
                         <Import-Package>
                             javax.management*,
                             !org.osgi.jmx*,
@@ -112,31 +114,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>run</id>
-            <build>
-                <defaultGoal>pax:provision</defaultGoal>
-                <plugins>
-                    <plugin>
-                        <groupId>org.ops4j</groupId>
-                        <artifactId>maven-pax-plugin</artifactId>
-                        <version>1.4</version>
-                        <configuration>
-                            <framework>equinox</framework>
-                            <provision>
-                                <param>--workingDirectory=target/runner</param>
-                                <param>mvn:org.apache.felix/org.apache.felix.prefs/1.0.4@3</param>
-                                <param>mvn:org.eclipse.equinox/log/1.0.100-v20070226@3</param>
-                                <param>mvn:org.eclipse.equinox/cm/3.2.0-v20070116@3</param>
-                                <param>mvn:org.osgilab.bundles/monitoradmin/1.0.0@3</param>
-                            </provision>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-    
 </project>

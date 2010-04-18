@@ -3,7 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.bundles.jmx.service.useradmin;
+package org.osgilab.bundles.jmx.beans.service.useradmin;
 
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.jmx.service.useradmin.UserAdminMBean;

@@ -3,7 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.bundles.jmx.service.permissionadmin;
+package org.osgilab.bundles.jmx.beans.service.permissionadmin;
 
 import org.osgi.jmx.service.permissionadmin.PermissionAdminMBean;
 import org.osgi.service.permissionadmin.PermissionInfo;
