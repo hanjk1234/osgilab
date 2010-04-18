@@ -4,3 +4,5 @@
 - Framework - updateBundlesFromURL,installBundlesFromURL,setBundleStartLevels should throw IAE if arrays size not equal or bundle id is wrong
 - UserAdmin - for methods with filter, removeXXX, addXXX IAE should be thrown
 - ServiceState - SERVICE_EVENT_TYPE - BUNDLE_ID is missed in javadoc and spec
+- PackageStateMBean - getImportingBundles,isRemovalPending IAE id bundleId is wrong
+- PackageStateMBean - listServices remove from throws list IAE

@@ -27,10 +27,10 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.osgilab.bundles.jmx.beans.LogVisitor;
 import org.osgilab.bundles.jmx.beans.OsgiVisitor;
 import org.osgilab.bundles.jmx.beans.ServiceAbstractMBean;
-import org.osgilab.bundles.jmx.framework.BundleState;
-import org.osgilab.bundles.jmx.framework.Framework;
-import org.osgilab.bundles.jmx.framework.PackageState;
-import org.osgilab.bundles.jmx.framework.ServiceState;
+import org.osgilab.bundles.jmx.beans.framework.BundleState;
+import org.osgilab.bundles.jmx.beans.framework.Framework;
+import org.osgilab.bundles.jmx.beans.framework.PackageState;
+import org.osgilab.bundles.jmx.beans.framework.ServiceState;
 import org.osgilab.bundles.jmx.service.monitor.MonitorAdminMBean;
 
 import javax.management.*;
