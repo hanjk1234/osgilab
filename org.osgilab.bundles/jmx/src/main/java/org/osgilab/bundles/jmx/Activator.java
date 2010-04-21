@@ -174,14 +174,14 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
             provisioningServiceTracker = null;
         }
 
-        if (permissionAdminTracker != null) {
-            permissionAdminTracker.close();
-            permissionAdminTracker = null;
-        }
-
         if (configurationAdminTracker != null) {
             configurationAdminTracker.close();
             configurationAdminTracker = null;
+        }
+
+        if (permissionAdminTracker != null) {
+            permissionAdminTracker.close();
+            permissionAdminTracker = null;
         }
     }
 
@@ -203,40 +203,40 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
     }
 
     private void registerCompendiumTrackers() {
-        configurationAdminTracker = new ServiceTracker(bc, ConfigurationAdmin.class.getName(),
-                new CompendiumServiceCustomizer<ConfigurationAdmin>(org.osgilab.bundles.jmx.beans.service.cm.ConfigurationAdmin.class,
-                        ConfigurationAdminMBean.OBJECTNAME));
-        configurationAdminTracker.open();
-
-        permissionAdminTracker = new ServiceTracker(bc, PermissionAdmin.class.getName(),
+        permissionAdminTracker = new ServiceTracker(bc, "org.osgi.service.permissionadmin.PermissionAdmin",
                 new CompendiumServiceCustomizer<PermissionAdmin>(org.osgilab.bundles.jmx.beans.service.permissionadmin.PermissionAdmin.class,
                         PermissionAdminMBean.OBJECTNAME));
         permissionAdminTracker.open();
 
-        provisioningServiceTracker = new ServiceTracker(bc, ProvisioningService.class.getName(),
+        configurationAdminTracker = new ServiceTracker(bc, "org.osgi.service.cm.ConfigurationAdmin",
+                new CompendiumServiceCustomizer<ConfigurationAdmin>(org.osgilab.bundles.jmx.beans.service.cm.ConfigurationAdmin.class,
+                        ConfigurationAdminMBean.OBJECTNAME));
+        configurationAdminTracker.open();
+
+        provisioningServiceTracker = new ServiceTracker(bc, "org.osgi.service.provisioning.ProvisioningService",
                 new CompendiumServiceCustomizer<ProvisioningService>(org.osgilab.bundles.jmx.beans.service.provisioning.ProvisioningService.class,
                         ProvisioningServiceMBean.OBJECTNAME));
         provisioningServiceTracker.open();
 
-        userAdminTracker = new ServiceTracker(bc, UserAdmin.class.getName(),
+        userAdminTracker = new ServiceTracker(bc, "org.osgi.service.useradmin.UserAdmin",
                 new CompendiumServiceCustomizer<UserAdmin>(org.osgilab.bundles.jmx.beans.service.useradmin.UserAdmin.class,
                         UserAdminMBean.OBJECTNAME));
         userAdminTracker.open();
 
-        monitorAdminTracker = new ServiceTracker(bc, MonitorAdmin.class.getName(),
+        monitorAdminTracker = new ServiceTracker(bc, "org.osgi.service.monitor.MonitorAdmin",
                 new CompendiumServiceCustomizer<MonitorAdmin>(org.osgilab.bundles.jmx.beans.service.monitor.MonitorAdmin.class,
                         MonitorAdminMBean.OBJECTNAME));
         monitorAdminTracker.open();
     }
 
     private void registerCoreTrackers() {
-        packageAdminTracker = new ServiceTracker(bc, PackageAdmin.class.getName(), null);
+        packageAdminTracker = new ServiceTracker(bc, "org.osgi.service.packageadmin.PackageAdmin", null);
         packageAdminTracker.open();
 
-        startLevelTracker = new ServiceTracker(bc, StartLevel.class.getName(), null);
+        startLevelTracker = new ServiceTracker(bc, "org.osgi.service.startlevel.StartLevel", null);
         startLevelTracker.open();
 
-        frameworkTracker = new ServiceTracker(bc, org.osgi.framework.launch.Framework.class.getName(), null);
+        frameworkTracker = new ServiceTracker(bc, "org.osgi.framework.launch.Framework", null);
         frameworkTracker.open();
     }
 

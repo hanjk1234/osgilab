@@ -6,7 +6,7 @@
 
     <groupId>org.osgilab.bundles</groupId>
     <artifactId>jmx</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
 
 
     <packaging>bundle</packaging>
@@ -98,7 +98,7 @@
                             javax.management*,
                             !org.osgi.jmx*,
                             org.osgi.framework*,
-                            org.osgi.service*,                            
+                            org.osgi.service*;resolution:=optional,                            
                             org.osgi.util*
                         </Import-Package>
                         <Bundle-Activator>org.osgilab.bundles.jmx.Activator</Bundle-Activator>

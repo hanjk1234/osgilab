@@ -105,8 +105,14 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
                         packageInfo = new PackageInfo(exportedPackage.getName(), exportedPackage.getVersion(), exportedPackage.isRemovalPending());
                         packages.put(key, packageInfo);
                     }
-                    packageInfo.exportingBundles.add(exportedPackage.getExportingBundle());
-                    packageInfo.importingBundles.addAll(Arrays.asList(exportedPackage.getImportingBundles()));
+                    Bundle exportingBundle = exportedPackage.getExportingBundle();
+                    if (exportingBundle != null) {
+                        packageInfo.exportingBundles.add(exportingBundle);
+                    }
+                    Bundle[] importingBundles = exportedPackage.getImportingBundles();
+                    if (importingBundles != null) {
+                        packageInfo.importingBundles.addAll(Arrays.asList(importingBundles));
+                    }
                 }
             }
             Collection<PackageInfo> packageInfos = packages.values();
