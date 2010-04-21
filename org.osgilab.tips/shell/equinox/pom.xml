@@ -14,8 +14,8 @@
     <artifactId>equinox</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>OSGi Lab Tips&amp;Tricks: Shell - Equinox console adaptor</name>
-    <description>OSGi Lab Tips and Tricks: Shell - Equinox console adaptor</description>
+    <name>OSGi Lab Tips&amp;Tricks: Shell - Equinox console adapter</name>
+    <description>OSGi Lab Tips and Tricks: Shell - Equinox console adapter</description>
 
     <dependencies>
         <dependency>
@@ -42,6 +42,15 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <version>2.0.1</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-Activator>org.osgilab.tips.shell.equinox.Activator</Bundle-Activator>
+                        <Bundle-License>http://code.google.com/p/osgilab/wiki/License</Bundle-License>
+                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
+                        <_removeheaders>Bnd-LastModified, Built-By, Private-Package, Tool, Build-Jdk, Include-Resource
+                        </_removeheaders>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>
