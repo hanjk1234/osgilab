@@ -33,6 +33,11 @@
             <artifactId>osgi</artifactId>
             <version>3.5.1.R35x_v20090827</version>
         </dependency>
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.11.0.GA</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -44,10 +49,18 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <Export-Package/>
+                        <Import-Package>
+                            org.osgi*,
+                            org.eclipse.osgi.framework.console*,
+                            !com.sun.jdi*
+                        </Import-Package>
                         <Bundle-Activator>org.osgilab.tips.shell.equinox.Activator</Bundle-Activator>
                         <Bundle-License>http://code.google.com/p/osgilab/wiki/License</Bundle-License>
                         <Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
-                        <_removeheaders>Bnd-LastModified, Built-By, Private-Package, Tool, Build-Jdk, Include-Resource
+                        <Embed-Dependency>*;artifactId=javassist;inline=false</Embed-Dependency>
+                        <_removeheaders>Bnd-LastModified, Built-By, Private-Package, Tool,
+                            Build-Jdk, Include-Resource, Embed-Dependency
                         </_removeheaders>
                     </instructions>
                 </configuration>

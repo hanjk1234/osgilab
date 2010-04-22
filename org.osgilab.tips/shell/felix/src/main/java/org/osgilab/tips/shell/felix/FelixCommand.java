@@ -67,7 +67,7 @@ public class FelixCommand implements Command {
         }
         try {
             // invoke command method
-            PrintWriter writer = new PrintWriter(out);
+            PrintWriter writer = new PrintWriter(out, true);
             method.invoke(service, writer, args);
             writer.flush();
         } catch (Exception e) {

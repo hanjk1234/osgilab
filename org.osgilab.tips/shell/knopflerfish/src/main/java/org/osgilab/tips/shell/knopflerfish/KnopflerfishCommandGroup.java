@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2010 Dmytro Pishchukhin (http://osgilab.org)
+ * This program is made available under the terms of the MIT License.
+ */
+
 package org.osgilab.tips.shell.knopflerfish;
 
 import org.knopflerfish.service.console.CommandGroup;
@@ -6,10 +11,7 @@ import org.knopflerfish.service.console.Session;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +27,7 @@ public class KnopflerfishCommandGroup implements CommandGroup {
     private String groupName;
     private Object service;
 
-    private SortedMap<String, String> commands = new TreeMap<String, String>();
+    private SortedSet<String> commandHelps = new TreeSet<String>();
 
     /**
      * Command Group constructor
@@ -50,9 +52,8 @@ public class KnopflerfishCommandGroup implements CommandGroup {
 
     public String getLongHelp() {
         StringBuilder builder = new StringBuilder();
-        Set<String> keys = commands.keySet();
-        for (String key : keys) {
-            builder.append(commands.get(key)).append('\n');
+        for (String command : commandHelps) {
+            builder.append(command).append('\n');
         }
         return builder.toString();
     }
@@ -87,11 +88,10 @@ public class KnopflerfishCommandGroup implements CommandGroup {
     /**
      * Add command to group
      *
-     * @param commandName command name
      * @param commandHelp command help
      */
-    public void addCommand(String commandName, String commandHelp) {
-        commands.put(commandName, commandHelp);
+    public void addCommandHelp(String commandHelp) {
+        commandHelps.add(commandHelp);
     }
 
     /**
@@ -100,6 +100,6 @@ public class KnopflerfishCommandGroup implements CommandGroup {
      * @return commands count
      */
     public int getCommandsCount() {
-        return commands.size();
+        return commandHelps.size();
     }
 }

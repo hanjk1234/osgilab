@@ -124,7 +124,7 @@ public class Activator implements BundleActivator {
                         String commandHelp = commandInfo[1];
                         // if command info links to wrong method - ignore command
                         if (isValidCommandMethod(service, commandName)) {
-                            commandGroup.addCommand(commandName, commandHelp);
+                            commandGroup.addCommandHelp(commandHelp);
                         }
                     }
                 }
