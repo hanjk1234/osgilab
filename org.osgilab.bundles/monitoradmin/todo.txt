@@ -1,2 +1,0 @@
-- recompile for JSE 1.5
-- switch to OSGi API 4.0.1
