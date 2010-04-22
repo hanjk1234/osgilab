@@ -8,7 +8,7 @@
 
     <groupId>org.osgilab.bundles</groupId>
     <artifactId>monitoradmin</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>bundle</packaging>
     <name>OSGi Lab MonitorAdmin</name>
     <description>OSGi MonitorAdmin API Reference Implementation</description>
@@ -47,12 +47,12 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
-            <version>4.2.0</version>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.compendium</artifactId>
-            <version>4.2.0</version>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -73,16 +73,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>6</source>
-                    <target>6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                    </archive>
+                    <source>1.5</source>
+                    <target>1.5</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -97,7 +89,7 @@
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId};singleton:=true
                         </Bundle-SymbolicName>
                         <Bundle-License>http://code.google.com/p/osgilab/wiki/License</Bundle-License>
-                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
+                        <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
                         <_removeheaders>Bnd-LastModified, Built-By, Private-Package, Tool, Build-Jdk, Include-Resource
                         </_removeheaders>
                     </instructions>

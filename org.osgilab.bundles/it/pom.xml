@@ -61,6 +61,7 @@
                 </property>
             </activation>
             <build>
+                <defaultGoal>install</defaultGoal>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -84,8 +85,8 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <source>6</source>
-                            <target>6</target>
+                            <source>1.5</source>
+                            <target>1.5</target>
                         </configuration>
                     </plugin>
                     <plugin>

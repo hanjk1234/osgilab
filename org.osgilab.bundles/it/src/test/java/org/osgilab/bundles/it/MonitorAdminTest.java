@@ -23,12 +23,12 @@ public class MonitorAdminTest {
     @Configuration
     public static Option[] configuration() {
         return options(
-                frameworks(equinox()),
+                frameworks(equinox(), felix(), knopflerfish().version("3.0.0")),
                 provision(
-                        mavenBundle().groupId("org.osgi").artifactId("org.osgi.compendium").version("4.2.0"),
-                        bundle("http://mirror.selfnet.de/eclipse/equinox/drops/R-3.5.2-201002111343/org.eclipse.equinox.event_1.1.101.R35x_v20100209.jar"),
-                        bundle("http://mirror.selfnet.de/eclipse/equinox/drops/R-3.5.2-201002111343/org.eclipse.equinox.log_1.2.0.v20090520-1800.jar"),
-                        mavenBundle().groupId("org.osgilab.bundles").artifactId("monitoradmin").version("1.0.0")
+                        mavenBundle().groupId("org.osgi").artifactId("org.osgi.compendium").version("4.1.0"),
+                        mavenBundle().groupId("org.apache.felix").artifactId("org.apache.felix.eventadmin").version("1.2.2"),
+                        mavenBundle().groupId("org.apache.felix").artifactId("org.apache.felix.log").version("1.0.0"),
+                        mavenBundle().groupId("org.osgilab.bundles").artifactId("monitoradmin").version("1.0.1")
                 )
         );
     }

@@ -1,0 +1,18 @@
+1.0.1
+- recompile with J2SE5
+- use OSGi specification 4.1.0 dependencies
+
+--------------------------
+1.0.0
+Implemented functionality:
+* String getDescription(String path)
+* String getMonitorableNames()
+* MonitoringJob getRunningJobs()
+* StatusVariable getStatusVariable(String path)
+* String getStatusVariableNames(String monitorableId)
+* StatusVariable getStatusVariables(String monitorableId)
+* boolean resetStatusVariable(String path)
+* MonitoringJob startJob(String initiator, String statusVariables, int count)
+* MonitoringJob startScheduledJob(String initiator, String statusVariables, int schedule, int count)
+* void switchEvents(String path, boolean on)
+* StatusVariable notification events
