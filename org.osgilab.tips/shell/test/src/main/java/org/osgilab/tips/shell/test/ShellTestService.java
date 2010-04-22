@@ -8,7 +8,7 @@ package org.osgilab.tips.shell.test;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 
 /**
  * @author dmytro.pishchukhin
@@ -20,7 +20,7 @@ public class ShellTestService {
         this.bc = bc;
     }
 
-    public void bndinfo(PrintStream out, String... args) {
+    public void bndinfo(PrintWriter out, String... args) {
         if (args == null || args.length != 1) {
             out.println("Bundle id argument is missed");
             return;
@@ -38,14 +38,14 @@ public class ShellTestService {
         }
     }
 
-    public void bndsinfo(PrintStream out, String... args) {
+    public void bndsinfo(PrintWriter out, String... args) {
         Bundle[] bundles = bc.getBundles();
         for (Bundle bundle : bundles) {
             printBundleInfo(bundle, out);
         }
     }
 
-    private void printBundleInfo(Bundle bundle, PrintStream out) {
+    private void printBundleInfo(Bundle bundle, PrintWriter out) {
         StringBuilder builder = new StringBuilder();
         builder.append("Bundle ID: ").append(bundle.getBundleId()).append('\n');
         builder.append("Symbolic Name: ").append(bundle.getSymbolicName()).append('\n');

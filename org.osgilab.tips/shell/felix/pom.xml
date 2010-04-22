@@ -21,12 +21,12 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
-            <version>4.2.0</version>
+            <version>4.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.compendium</artifactId>
-            <version>4.2.0</version>
+            <version>4.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
@@ -54,27 +54,4 @@
             </plugin>
         </plugins>
     </build>
-    
-   <profiles>
-        <profile>
-            <id>run</id>
-            <build>
-                <defaultGoal>pax:provision</defaultGoal>
-                <plugins>
-                    <plugin>
-                        <groupId>org.ops4j</groupId>
-                        <artifactId>maven-pax-plugin</artifactId>
-                        <version>1.4</version>
-                        <configuration>
-                            <framework>felix</framework>
-                            <provision>
-                                <param>--workingDirectory=target/runner</param>
-                                <param>mvn:org.osgilab.tips.shell/test/${project.version}@3</param>
-                            </provision>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles> 
 </project>
