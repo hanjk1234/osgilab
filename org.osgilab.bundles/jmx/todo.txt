@@ -1,0 +1,2 @@
+- recompile for JSE 1.5
+- add enterprise.jar and readme.txt to sources
