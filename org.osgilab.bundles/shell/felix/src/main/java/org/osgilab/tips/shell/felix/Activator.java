@@ -91,8 +91,8 @@ public class Activator implements BundleActivator {
                 // get service ranking propety. if not null - use it on Command services registration
                 Integer ranking = (Integer) reference.getProperty(Constants.SERVICE_RANKING);
                 String[][] commands = (String[][]) commandsDescription;
+                List<ServiceRegistration> registrations = new ArrayList<ServiceRegistration>();
                 for (String[] commandInfo : commands) {
-                    List<ServiceRegistration> registrations = new ArrayList<ServiceRegistration>();
                     // if command info is invalid - ignore command
                     if (commandInfo != null) {
                         if (commandInfo.length != 2) {
@@ -116,11 +116,12 @@ public class Activator implements BundleActivator {
                             }
                         }
                     }
-                    if (!registrations.isEmpty()) {
-                        commandRegistrations.put(reference, registrations);
-                    }
                 }
-                return service;
+                if (!registrations.isEmpty()) {
+                    commandRegistrations.put(reference, registrations);
+                    return service;
+                }
+                return null;
             }
         }
 

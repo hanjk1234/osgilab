@@ -19,6 +19,7 @@ import java.util.*;
 
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
+import static org.ops4j.pax.exam.container.def.PaxRunnerOptions.cleanCaches;
 
 /**
  * Abstract Shell test
@@ -28,15 +29,14 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 @RunWith(JUnit4TestRunner.class)
 public abstract class AbstractShellTest {
     // OSGi framework test configutation
-
     @Configuration
     public Option[] configuration() {
         return options(
-                mavenBundle().groupId("org.osgi").artifactId("org.osgi.compendium").version("4.0.1")
+                cleanCaches(),
+                mavenBundle().groupId("org.osgi").artifactId("org.osgi.compendium").version("4.0.1").startLevel(1)
         );
     }
 
-    @Configuration
     public abstract Option[] getShellSpecificConfiguration();
 
     // injected BundleContext
@@ -93,6 +93,6 @@ public abstract class AbstractShellTest {
     }
 
     @Test
-    public abstract void testCommandsRegistration();
+    public abstract void testCommandsRegistration() throws Exception;
 
 }
