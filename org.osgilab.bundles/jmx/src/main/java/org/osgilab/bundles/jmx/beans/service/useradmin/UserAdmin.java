@@ -48,7 +48,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             throw e;
         } catch (Exception e) {
             logVisitor.warning("addCredential error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -67,7 +67,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             throw e;
         } catch (Exception e) {
             logVisitor.warning("addCredentialString error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return false;
         } catch (Exception e) {
             logVisitor.warning("addMember error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -98,7 +98,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             }
         } catch (Exception e) {
             logVisitor.warning("addPropertyString error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -113,7 +113,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             }
         } catch (Exception e) {
             logVisitor.warning("addProperty error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -129,7 +129,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return false;
         } catch (Exception e) {
             logVisitor.warning("addRequiredMember error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -138,7 +138,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             service.createRole(name, Role.USER);
         } catch (Exception e) {
             logVisitor.warning("createUser error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -147,7 +147,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             service.createRole(name, Role.GROUP);
         } catch (Exception e) {
             logVisitor.warning("createGroup error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -156,7 +156,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             service.createRole(name, Role.ROLE);
         } catch (Exception e) {
             logVisitor.warning("createRole error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -178,7 +178,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getAuthorization error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -194,7 +194,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getCredentials error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -218,7 +218,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getGroup error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -227,7 +227,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return getRoleNames(null, Role.GROUP);
         } catch (Exception e) {
             logVisitor.warning("listGroups error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -236,7 +236,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return getRoleNames(filter, Role.GROUP);
         } catch (Exception e) {
             logVisitor.warning("getGroups error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -257,7 +257,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getImpliedRoles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -273,7 +273,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getMembers error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -283,7 +283,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return Utils.getProperties(role != null ? role.getProperties() : null);
         } catch (Exception e) {
             logVisitor.warning("getProperties error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -299,7 +299,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getRequiredMembers error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -316,7 +316,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return null;
         } catch (Exception e) {
             logVisitor.warning("getRole error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -325,7 +325,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return getRoleNames(null, Role.ROLE);
         } catch (Exception e) {
             logVisitor.warning("listRoles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -334,7 +334,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return getRoleNames(filter, Role.ROLE);
         } catch (Exception e) {
             logVisitor.warning("getRoles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -356,7 +356,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getUser error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -370,7 +370,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             }
         } catch (Exception e) {
             logVisitor.warning("getUserWithProperty error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -379,7 +379,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return getRoleNames(null, Role.USER);
         } catch (Exception e) {
             logVisitor.warning("listUsers error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -388,7 +388,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return getRoleNames(filter, Role.USER);
         } catch (Exception e) {
             logVisitor.warning("getUsers error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -407,7 +407,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             throw e;
         } catch (Exception e) {
             logVisitor.warning("removeCredential error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -423,7 +423,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             throw e;
         } catch (Exception e) {
             logVisitor.warning("removeMember error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -438,7 +438,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             }
         } catch (Exception e) {
             logVisitor.warning("removeProperty error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -447,7 +447,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return removeRole(name, Role.ROLE);
         } catch (Exception e) {
             logVisitor.warning("removeRole error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -456,7 +456,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return removeRole(name, Role.GROUP);
         } catch (Exception e) {
             logVisitor.warning("removeGroup error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -465,7 +465,7 @@ public class UserAdmin extends ServiceAbstractMBean<org.osgi.service.useradmin.U
             return removeRole(name, Role.USER);
         } catch (Exception e) {
             logVisitor.warning("removeUser error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 

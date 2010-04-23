@@ -49,7 +49,7 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getObjectClass error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getBundleIdentifier error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getProperties error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -112,7 +112,7 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
             return dataSupport;
         } catch (Exception e) {
             logVisitor.warning("listServices error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -128,7 +128,7 @@ public class ServiceState extends AbstractMBean implements ServiceStateMBean, No
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getUsingBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 

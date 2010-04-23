@@ -42,7 +42,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getFrameworkStartLevel error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -58,7 +58,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getInitialBundleStartLevel error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -68,7 +68,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             return bundle.getBundleId();
         } catch (Exception e) {
             logVisitor.warning("installBundle error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -78,7 +78,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             return bundle.getBundleId();
         } catch (Exception e) {
             logVisitor.warning("installBundleFromURL error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -118,7 +118,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             return new CompositeDataSupport(BATCH_INSTALL_RESULT_TYPE, values);
         } catch (Exception e) {
             logVisitor.warning("Batch installBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -158,7 +158,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             return new CompositeDataSupport(BATCH_INSTALL_RESULT_TYPE, values);
         } catch (Exception e) {
             logVisitor.warning("Batch installBundlesFromURL error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -178,7 +178,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("refreshBundle error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -205,7 +205,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("refreshBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -228,7 +228,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("resolveBundle error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -257,7 +257,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("resolveBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -274,7 +274,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             }
         } catch (Exception e) {
             logVisitor.warning("restartFramework error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -294,7 +294,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("setBundleStartLevel error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -344,7 +344,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
         } catch (Exception e) {
             logVisitor.warning("setBundleStartLevels error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -360,7 +360,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("setFrameworkStartLevel error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -376,7 +376,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("setInitialBundleStartLevel error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -393,7 +393,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             }
         } catch (Exception e) {
             logVisitor.warning("shutdownFramework error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -406,7 +406,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             try {
                 bundle.start();
             } catch (Exception e) {
-                throw new IOException("Unable to start bundle: " + bundleIdentifier, e);
+                throw new IOException("Unable to start bundle: " + bundleIdentifier);
             }
         } catch (IllegalArgumentException e) {
             logVisitor.warning("startBundle error", e);
@@ -416,7 +416,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("startBundle error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -461,7 +461,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
         } catch (Exception e) {
             logVisitor.warning("startBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -474,7 +474,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             try {
                 bundle.stop();
             } catch (Exception e) {
-                throw new IOException("Unable to stop bundle: " + bundleIdentifier, e);
+                throw new IOException("Unable to stop bundle: " + bundleIdentifier);
             }
         } catch (IllegalArgumentException e) {
             logVisitor.warning("stopBundle error", e);
@@ -484,7 +484,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("stopBundle error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -528,7 +528,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
         } catch (Exception e) {
             logVisitor.warning("stopBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -541,7 +541,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             try {
                 bundle.uninstall();
             } catch (Exception e) {
-                throw new IOException("Unable to uninstall bundle: " + bundleIdentifier, e);
+                throw new IOException("Unable to uninstall bundle: " + bundleIdentifier);
             }
         } catch (IllegalArgumentException e) {
             logVisitor.warning("uninstallBundle error", e);
@@ -551,7 +551,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("uninstallBundle error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -595,7 +595,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
         } catch (Exception e) {
             logVisitor.warning("uninstallBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -608,7 +608,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             try {
                 bundle.update();
             } catch (Exception e) {
-                throw new IOException("Unable to update bundle: " + bundleIdentifier, e);
+                throw new IOException("Unable to update bundle: " + bundleIdentifier);
             }
         } catch (IllegalArgumentException e) {
             logVisitor.warning("updateBundle error", e);
@@ -618,7 +618,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("updateBundle error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -631,7 +631,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             try {
                 bundle.update(new URL(url).openStream());
             } catch (Exception e) {
-                throw new IOException("Unable to update bundle: " + bundleIdentifier, e);
+                throw new IOException("Unable to update bundle: " + bundleIdentifier);
             }
         } catch (IllegalArgumentException e) {
             logVisitor.warning("updateBundleFromURL error", e);
@@ -641,7 +641,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("updateBundleFromURL error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -685,7 +685,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
         } catch (Exception e) {
             logVisitor.warning("updateBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -730,7 +730,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             return new CompositeDataSupport(BATCH_ACTION_RESULT_TYPE, values);
         } catch (Exception e) {
             logVisitor.warning("updateBundlesFromURL error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -742,7 +742,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
             }
         } catch (Exception e) {
             logVisitor.warning("updateFramework error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 }

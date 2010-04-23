@@ -37,7 +37,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("createFactoryConfiguration error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -51,7 +51,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("createFactoryConfigurationForLocation error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -63,7 +63,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("delete error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -75,7 +75,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("deleteForLocation error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -95,7 +95,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("deleteConfigurations error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -107,7 +107,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getBundleLocation error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getFactoryPid error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -131,7 +131,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getFactoryPidForLocation error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -143,7 +143,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getProperties error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -155,7 +155,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getPropertiesForLocation error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -180,7 +180,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getConfigurations error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -192,7 +192,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("setBundleLocation error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -205,7 +205,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("update error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -218,7 +218,7 @@ public class ConfigurationAdmin extends ServiceAbstractMBean<org.osgi.service.cm
             throw e;
         } catch (Exception e) {
             logVisitor.warning("updateForLocation error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 

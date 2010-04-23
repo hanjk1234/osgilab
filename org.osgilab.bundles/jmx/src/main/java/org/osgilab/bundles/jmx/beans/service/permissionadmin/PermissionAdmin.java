@@ -29,7 +29,7 @@ public class PermissionAdmin extends ServiceAbstractMBean<org.osgi.service.permi
             return service.getLocations();
         } catch (Exception e) {
             logVisitor.warning("listLocations error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -38,7 +38,7 @@ public class PermissionAdmin extends ServiceAbstractMBean<org.osgi.service.permi
             return getPermissions(service.getPermissions(location));
         } catch (Exception e) {
             logVisitor.warning("getPermissions error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -47,7 +47,7 @@ public class PermissionAdmin extends ServiceAbstractMBean<org.osgi.service.permi
             service.setDefaultPermissions(getPermissions(encodedPermissions));
         } catch (Exception e) {
             logVisitor.warning("setDefaultPermissions error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -56,7 +56,7 @@ public class PermissionAdmin extends ServiceAbstractMBean<org.osgi.service.permi
             return getPermissions(service.getDefaultPermissions());
         } catch (Exception e) {
             logVisitor.warning("listDefaultPermissions error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ public class PermissionAdmin extends ServiceAbstractMBean<org.osgi.service.permi
             service.setPermissions(location, getPermissions(encodedPermissions));
         } catch (Exception e) {
             logVisitor.warning("setPermissions error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 

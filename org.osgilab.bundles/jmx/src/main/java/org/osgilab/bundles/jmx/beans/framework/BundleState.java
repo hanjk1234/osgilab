@@ -59,7 +59,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getRequiredBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -107,7 +107,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("listBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -130,7 +130,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getExportedPackages error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -153,7 +153,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getFragments error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -169,7 +169,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getHeaders error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -192,7 +192,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getHosts error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -215,7 +215,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getImportedPackages error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -231,7 +231,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getLastModified error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -247,7 +247,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getRegisteredServices error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -270,7 +270,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getRequiringBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -286,7 +286,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getServicesInUse error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -309,7 +309,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getStartLevel error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -325,7 +325,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getState error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -341,7 +341,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getSymbolicName error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -364,7 +364,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("isPersistentlyStarted error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -387,7 +387,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("isFragment error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -410,7 +410,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("isRemovalPending error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -433,7 +433,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("isRequired error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -449,7 +449,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getLocation error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -465,7 +465,7 @@ public class BundleState extends AbstractMBean implements BundleStateMBean, Noti
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getVersion error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 

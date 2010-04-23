@@ -35,7 +35,7 @@ public class ProvisioningService extends ServiceAbstractMBean<org.osgi.service.p
             throw e;
         } catch (Exception e) {
             logVisitor.warning("addInformationFromZip error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -44,7 +44,7 @@ public class ProvisioningService extends ServiceAbstractMBean<org.osgi.service.p
             service.addInformation(Utils.convertToDictionary(tabularData, true));
         } catch (Exception e) {
             logVisitor.warning("addInformation error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -53,7 +53,7 @@ public class ProvisioningService extends ServiceAbstractMBean<org.osgi.service.p
             return Utils.getProperties(service.getInformation());
         } catch (Exception e) {
             logVisitor.warning("listInformation error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -62,7 +62,7 @@ public class ProvisioningService extends ServiceAbstractMBean<org.osgi.service.p
             service.setInformation(Utils.convertToDictionary(tabularData, true));
         } catch (Exception e) {
             logVisitor.warning("setInformation error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 }

@@ -58,7 +58,7 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getExportingBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getImportingBundles error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -131,7 +131,7 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("listPackages error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -157,7 +157,7 @@ public class PackageState extends AbstractMBean implements PackageStateMBean {
             throw e;
         } catch (Exception e) {
             logVisitor.warning("isRemovalPending error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 

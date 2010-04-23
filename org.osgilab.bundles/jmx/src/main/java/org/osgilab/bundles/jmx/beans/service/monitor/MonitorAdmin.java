@@ -34,7 +34,7 @@ public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getDescription error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -47,7 +47,7 @@ public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getStatusVariable error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -56,7 +56,7 @@ public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.
             return service.getMonitorableNames();
         } catch (Exception e) {
             logVisitor.warning("getMonitorableNames error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -73,7 +73,7 @@ public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getStatusVariables error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -85,7 +85,7 @@ public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.
             throw e;
         } catch (Exception e) {
             logVisitor.warning("getStatusVariableNames error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.
             throw e;
         } catch (Exception e) {
             logVisitor.warning("switchEvents error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -109,7 +109,7 @@ public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.
             throw e;
         } catch (Exception e) {
             logVisitor.warning("resetStatusVariable error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -123,7 +123,7 @@ public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.
             return dataSupport;
         } catch (Exception e) {
             logVisitor.warning("getRunningJobs error", e);
-            throw new IOException(e.getMessage(), e);
+            throw new IOException(e.getMessage());
         }
     }
 
