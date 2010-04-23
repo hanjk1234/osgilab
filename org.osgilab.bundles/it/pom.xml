@@ -50,6 +50,24 @@
             <version>1.2.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.shell</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>osgi</artifactId>
+            <version>3.5.1.R35x_v20090827</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.knopflerfish</groupId>
+            <artifactId>console_api</artifactId>
+            <version>2.0.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -94,16 +112,6 @@
                             <testFailureIgnore>true</testFailureIgnore>
                             <failIfNoTests>false</failIfNoTests>
                             <reportFormat>plain</reportFormat>
-                            <systemProperties>
-                                <property>
-                                    <name>http.proxyHost</name>
-                                    <value>wwwproxy.bahn-net.db.de</value>
-                                </property>
-                                <property>
-                                    <name>http.proxyPort</name>
-                                    <value>8080</value>
-                                </property>
-                            </systemProperties>
                         </configuration>
                     </plugin>
                     <plugin>
