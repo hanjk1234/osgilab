@@ -21,6 +21,5 @@
         <module>equinox</module>
         <module>felix</module>
         <module>knopflerfish</module>
-        <module>test</module>
     </modules>
 </project>
