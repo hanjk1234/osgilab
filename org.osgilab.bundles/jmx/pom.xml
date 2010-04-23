@@ -5,7 +5,7 @@
 
     <groupId>org.osgilab.bundles</groupId>
     <artifactId>jmx</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
 
 
     <packaging>bundle</packaging>
@@ -38,9 +38,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://code.google.com/p/osgilab/source/browse/#svn/tags/jmx-1.0.1</url>
-        <connection>scm:svn:http://code.google.com/p/osgilab/svn/tags/jmx-1.0.1</connection>
-        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/tags/jmx-1.0.1</developerConnection>
+        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.bundles/jmx</url>
+        <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.bundles/jmx</connection>
+        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.bundles/jmx</developerConnection>
     </scm>
 
     <dependencies>
@@ -85,7 +85,7 @@
                     <instructions>
                         <Export-Package>
                             org.osgi.jmx*,
-                            org.osgilab.bundles.jmx.service.monitor;version=${project.version}
+                            org.osgilab.bundles.jmx.service.monitor;version=1.0
                         </Export-Package>
                         <Import-Package>
                             javax.management*,
