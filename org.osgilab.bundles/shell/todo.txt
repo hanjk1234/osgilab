@@ -1,2 +1,0 @@
-- test service use in IT
-- add console_api-2.0.1.jar to knopflerfish bundle sources
