@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.osgilab.bundles.shell</groupId>
     <artifactId>knopflerfish</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>OSGi Lab Shell - Knopflerfish console adapter</name>
     <description>OSGi Lab Shell - Knopflerfish console adapter</description>
@@ -36,9 +35,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://osgilab.googlecode.com/svn/tags/shell-knopflerfish-1.0.0</url>
-        <connection>scm:svn:http://osgilab.googlecode.com/svn/tags/shell-knopflerfish-1.0.0</connection>
-        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/tags/shell-knopflerfish-1.0.0
+        <url>http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/shell/knopflerfish</url>
+        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/shell/knopflerfish</connection>
+        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/shell/knopflerfish
         </developerConnection>
     </scm>
 
@@ -96,7 +95,7 @@
             </plugin>
         </plugins>
     </build>
-
+    
     <distributionManagement>
         <repository>
             <id>sonatype-nexus-staging</id>
