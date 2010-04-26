@@ -7,7 +7,7 @@
 
     <groupId>org.osgilab.bundles</groupId>
     <artifactId>monitoradmin</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>OSGi Lab MonitorAdmin</name>
     <description>OSGi MonitorAdmin API Reference Implementation</description>
@@ -38,9 +38,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://osgilab.googlecode.com/svn/tags/monitoradmin-1.0.1</url>
-        <connection>scm:svn:http://osgilab.googlecode.com/svn/tags/monitoradmin-1.0.1</connection>
-        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/tags/monitoradmin-1.0.1</developerConnection>
+        <url>http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/monitoradmin</url>
+        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/monitoradmin</connection>
+        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/monitoradmin</developerConnection>
     </scm>
 
     <dependencies>
@@ -140,7 +140,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.0-alpha-4</version>
+                        <version>1.0</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

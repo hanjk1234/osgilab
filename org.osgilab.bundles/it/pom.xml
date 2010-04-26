@@ -27,6 +27,11 @@
             <version>4.2.0</version>
         </dependency>
         <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.enterprise</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.5</version>
@@ -78,6 +83,40 @@
                     <name>it</name>
                 </property>
             </activation>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.osgilab.bundles</groupId>
+                    <artifactId>monitoradmin</artifactId>
+                    <version>1.0.1</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.osgilab.bundles</groupId>
+                    <artifactId>jmx</artifactId>
+                    <version>1.0.1</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.osgilab.bundles.shell</groupId>
+                    <artifactId>equinox</artifactId>
+                    <version>1.0.0</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.osgilab.bundles.shell</groupId>
+                    <artifactId>felix</artifactId>
+                    <version>1.0.0</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.osgilab.bundles.shell</groupId>
+                    <artifactId>knopflerfish</artifactId>
+                    <version>1.0.0</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
             <build>
                 <defaultGoal>install</defaultGoal>
                 <plugins>
@@ -140,6 +179,12 @@
                     </plugin>
                 </plugins>
             </build>
+            <repositories>
+                <repository>
+                    <id>sonatype-staging</id>
+                    <url>http://oss.sonatype.org/content/groups/staging</url>
+                </repository>
+            </repositories>
         </profile>
     </profiles>
 
