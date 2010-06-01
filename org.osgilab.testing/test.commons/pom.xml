@@ -10,11 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.osgilab.testing</groupId>
-    <artifactId>test.assertions</artifactId>
+    <artifactId>test.commons</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>OSGi Lab Testing - Test Assertions</name>
-    <description>OSGi Lab Testing - Test Assertions</description>
+    <name>OSGi Lab Testing - Test Commons</name>
+    <description>OSGi Lab Testing - Test Commons</description>
 
     <developers>
         <developer>
@@ -41,8 +41,8 @@
     </issueManagement>
 
     <scm>
-        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing/test.assertions</url>
-        <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/test.assertions</connection>
+        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing/test.commons</url>
+        <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/test.commons</connection>
         <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/test.assertions</developerConnection>
     </scm>
 
@@ -54,6 +54,10 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
         </dependency>
     </dependencies>
 </project>

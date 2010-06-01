@@ -3,12 +3,12 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.testing.test.assertions;
+package org.osgilab.testing.test.commons.assertions;
 
 /**
  * @author dmytro.pishchukhin
  */
-public class BundleAssert extends OSGiAssert {
+public class BundleAssert {
     public static void assertBundleState(long bundleId, int state) {
     }
 
