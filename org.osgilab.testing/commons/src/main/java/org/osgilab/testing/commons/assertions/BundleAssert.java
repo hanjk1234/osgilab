@@ -168,5 +168,5 @@ public class BundleAssert extends OSGiAssert {
         Assert.assertNotNull(message, bundle);
     }
 
-    // todo: assertFragment, assertHost
+    // todo: assertBundleNotAvailable
 }

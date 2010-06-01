@@ -7,19 +7,34 @@ package org.osgilab.testing.commons.assertions;
 
 import org.junit.Assert;
 import org.osgi.framework.BundleContext;
-import org.osgilab.testing.commons.utils.BundleContextUtil;
 
 /**
  * Abstract OSGi Asset class with BundleContext Handling
  * @author dpishchukhin
  */
-abstract class OSGiAssert {
+public abstract class OSGiAssert {
     /**
-     * Asserts BundleContext from BundleContextUtil before return.
+     * BundleContext value
+     */
+    private static BundleContext bc;
+
+    /**
+     * Initialize utility class by BundleContext value
+     * @param bc BundleContext value
+     * @throws IllegalStateException utility class is already initialized
+     */
+    public static void init(BundleContext bc) {
+        if (OSGiAssert.bc != null) {
+            throw new IllegalStateException("BundleContext is already initialized");
+        }
+        OSGiAssert.bc = bc;
+    }
+
+    /**
+     * Asserts BundleContext before return.
      * @return BundleContext
      */
     protected static BundleContext getBundleContext() {
-        BundleContext bc = BundleContextUtil.getInstance().getBundleContext();
         Assert.assertNotNull("BundleContext is null", bc);
         return bc;
     }

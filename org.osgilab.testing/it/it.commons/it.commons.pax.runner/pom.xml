@@ -41,9 +41,69 @@
     </issueManagement>
 
     <scm>
-        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.runner</url>
-        <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.runner</connection>
-        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.runner</developerConnection>
+        <url>
+            http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.runner
+        </url>
+        <connection>
+            scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.runner
+        </connection>
+        <developerConnection>
+            scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.runner
+        </developerConnection>
     </scm>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.osgilab.testing</groupId>
+            <artifactId>commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-junit</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-container-default</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>maven-paxexam-plugin</artifactId>
+                <version>1.2.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-config</id>
+                        <goals>
+                            <goal>generate-depends-file</goal>
+                            <goal>generate-config</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <options>
+                        <workingDirectory>${project.build.directory}/paxexam</workingDirectory>
+                    </options>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
