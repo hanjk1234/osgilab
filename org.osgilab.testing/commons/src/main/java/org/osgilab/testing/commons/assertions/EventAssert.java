@@ -3,7 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.testing.test.commons.assertions;
+package org.osgilab.testing.commons.assertions;
 
 /**
  * @author dmytro.pishchukhin

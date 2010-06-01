@@ -8,8 +8,9 @@
     <artifactId>testing</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>test.commons</module>
+        <module>commons</module>
         <module>test.conditions</module>
+        <module>it</module>
     </modules>
 
     <packaging>pom</packaging>

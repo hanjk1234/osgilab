@@ -3,7 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.testing.test.commons.utils;
+package org.osgilab.testing.commons.utils;
 
 import org.osgi.framework.BundleContext;
 

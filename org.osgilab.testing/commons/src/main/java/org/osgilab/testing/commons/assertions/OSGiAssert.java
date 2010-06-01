@@ -3,11 +3,11 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.testing.test.commons.assertions;
+package org.osgilab.testing.commons.assertions;
 
 import org.junit.Assert;
 import org.osgi.framework.BundleContext;
-import org.osgilab.testing.test.commons.utils.BundleContextUtil;
+import org.osgilab.testing.commons.utils.BundleContextUtil;
 
 /**
  * Abstract OSGi Asset class with BundleContext Handling

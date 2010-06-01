@@ -3,12 +3,12 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.testing.test.commons.assertions;
+package org.osgilab.testing.commons.assertions;
 
 import org.junit.Assert;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
-import org.osgilab.testing.test.commons.utils.BundleUtils;
+import org.osgilab.testing.commons.utils.BundleUtils;
 
 /**
  * A set of OSGi Bundle specific assertion methods useful for writing tests.
