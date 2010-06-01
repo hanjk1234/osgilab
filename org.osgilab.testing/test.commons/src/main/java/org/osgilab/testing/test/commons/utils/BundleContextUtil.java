@@ -29,7 +29,7 @@ public class BundleContextUtil {
      * @throws IllegalStateException utility class is already initialized
      */
     public static void init(BundleContext bc) {
-        if (bc != null) {
+        if (getInstance().bc != null) {
             throw new IllegalStateException("BundleContext is already initialized");
         }
         getInstance().bc = bc;
