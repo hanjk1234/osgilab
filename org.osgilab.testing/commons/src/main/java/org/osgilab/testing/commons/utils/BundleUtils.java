@@ -34,7 +34,7 @@ public class BundleUtils {
      * @throws NullPointerException BundleContext or symbolicName are <code>null</code>
      */
     public static Bundle findBundle(BundleContext bc, String symbolicName) {
-        return null;
+        return null; // todo
     }
 
     /**
@@ -46,6 +46,6 @@ public class BundleUtils {
      * @throws NullPointerException BundleContext, symbolicName or version are <code>null</code>
      */
     public static Bundle findBundle(BundleContext bc, String symbolicName, Version version) {
-        return null;
+        return null; // todo
     }
 }

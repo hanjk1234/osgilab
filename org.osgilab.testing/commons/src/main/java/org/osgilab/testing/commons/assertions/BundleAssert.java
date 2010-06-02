@@ -18,6 +18,12 @@ import org.osgilab.testing.commons.utils.BundleUtils;
  */
 public class BundleAssert extends OSGiAssert {
     /**
+     * Utility class. Only static methods are available.
+     */
+    private BundleAssert() {
+    }
+
+    /**
      * Asserts that Bundle with bundleId has given state value. If it not as expected
      * {@link AssertionError} without a message is thrown
      *
@@ -133,7 +139,7 @@ public class BundleAssert extends OSGiAssert {
      * Asserts that Bundle with symbolic name is available in OS. If it not as expected
      * {@link AssertionError} is thrown with the given message
      *
-     * @param message message
+     * @param message      message
      * @param symbolicName symbolic name
      */
     public static void assertBundleAvailable(String message, String symbolicName) {
@@ -147,7 +153,7 @@ public class BundleAssert extends OSGiAssert {
      * {@link AssertionError} without a message is thrown
      *
      * @param symbolicName symbolic name
-     * @param version version
+     * @param version      version
      */
     public static void assertBundleAvailable(String symbolicName, Version version) {
         assertBundleAvailable(null, symbolicName, version);
@@ -157,9 +163,9 @@ public class BundleAssert extends OSGiAssert {
      * Asserts that Bundle with symbolic name and version is available in OS. If it not as expected
      * {@link AssertionError} is thrown with the given message
      *
-     * @param message message
+     * @param message      message
      * @param symbolicName symbolic name
-     * @param version version
+     * @param version      version
      */
     public static void assertBundleAvailable(String message, String symbolicName, Version version) {
         Assert.assertNotNull("SymbolicName is null", symbolicName);
@@ -168,5 +174,76 @@ public class BundleAssert extends OSGiAssert {
         Assert.assertNotNull(message, bundle);
     }
 
-    // todo: assertBundleNotAvailable
+    /**
+     * Asserts that Bundle with bundleId is unavailable in OS. If it not as expected
+     * {@link AssertionError} without a message is thrown
+     *
+     * @param bundleId bundle id
+     */
+    public static void assertBundleUnavailable(long bundleId) {
+        assertBundleUnavailable(null, bundleId);
+    }
+
+    /**
+     * Asserts that Bundle with bundleId is unavailable in OS. If it not as expected
+     * {@link AssertionError} is thrown with the given message
+     *
+     * @param message  message
+     * @param bundleId bundle id
+     */
+    public static void assertBundleUnavailable(String message, long bundleId) {
+        Bundle bundle = BundleUtils.findBundle(getBundleContext(), bundleId);
+        Assert.assertNull(message, bundle);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name is unavailable in OS. If it not as expected
+     * {@link AssertionError} without a message is thrown
+     *
+     * @param symbolicName symbolic name
+     */
+    public static void assertBundleUnavailable(String symbolicName) {
+        assertBundleUnavailable(null, symbolicName);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name is unavailable in OS. If it not as expected
+     * {@link AssertionError} is thrown with the given message
+     *
+     * @param message      message
+     * @param symbolicName symbolic name
+     */
+    public static void assertBundleUnavailable(String message, String symbolicName) {
+        Assert.assertNotNull("SymbolicName is null", symbolicName);
+        Bundle bundle = BundleUtils.findBundle(getBundleContext(), symbolicName);
+        Assert.assertNull(message, bundle);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name and version is unavailable in OS. If it not as expected
+     * {@link AssertionError} without a message is thrown
+     *
+     * @param symbolicName symbolic name
+     * @param version      version
+     */
+    public static void assertBundleUnavailable(String symbolicName, Version version) {
+        assertBundleUnavailable(null, symbolicName, version);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name and version is unavailable in OS. If it not as expected
+     * {@link AssertionError} is thrown with the given message
+     *
+     * @param message      message
+     * @param symbolicName symbolic name
+     * @param version      version
+     */
+    public static void assertBundleUnavailable(String message, String symbolicName, Version version) {
+        Assert.assertNotNull("SymbolicName is null", symbolicName);
+        Assert.assertNotNull("Version is null", version);
+        Bundle bundle = BundleUtils.findBundle(getBundleContext(), symbolicName, version);
+        Assert.assertNull(message, bundle);
+    }
+
+    // todo: add assertBundleEventXXX
 }
