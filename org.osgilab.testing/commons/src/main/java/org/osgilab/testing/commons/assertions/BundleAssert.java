@@ -12,9 +12,13 @@ import org.osgilab.testing.commons.utils.BundleUtils;
 
 /**
  * A set of OSGi Bundle specific assertion methods useful for writing tests.
+ * <p/>
+ * Before use it should be initialized
+ * {@link org.osgilab.testing.commons.assertions.OSGiAssert#init(org.osgi.framework.BundleContext)}
  *
  * @author dmytro.pishchukhin
  * @see AssertionError
+ * @see org.osgilab.testing.commons.assertions.OSGiAssert
  */
 public class BundleAssert extends OSGiAssert {
     /**
@@ -97,7 +101,6 @@ public class BundleAssert extends OSGiAssert {
      */
     public static void assertBundleState(String message, int state, String symbolicName, Version version) {
         Assert.assertNotNull("SymbolicName is null", symbolicName);
-        Assert.assertNotNull("Version is null", version);
         Bundle bundle = BundleUtils.findBundle(getBundleContext(), symbolicName, version);
         Assert.assertNotNull(String.format("Unknown bundle with SymbolicName: %s and version: %s", symbolicName, version), bundle);
         Assert.assertEquals(message, state, bundle.getState());
@@ -169,7 +172,6 @@ public class BundleAssert extends OSGiAssert {
      */
     public static void assertBundleAvailable(String message, String symbolicName, Version version) {
         Assert.assertNotNull("SymbolicName is null", symbolicName);
-        Assert.assertNotNull("Version is null", version);
         Bundle bundle = BundleUtils.findBundle(getBundleContext(), symbolicName, version);
         Assert.assertNotNull(message, bundle);
     }
@@ -240,10 +242,9 @@ public class BundleAssert extends OSGiAssert {
      */
     public static void assertBundleUnavailable(String message, String symbolicName, Version version) {
         Assert.assertNotNull("SymbolicName is null", symbolicName);
-        Assert.assertNotNull("Version is null", version);
         Bundle bundle = BundleUtils.findBundle(getBundleContext(), symbolicName, version);
         Assert.assertNull(message, bundle);
     }
 
-    // todo: add assertBundleEventXXX
+    // todo: add assertFragment, assertNotFragment
 }

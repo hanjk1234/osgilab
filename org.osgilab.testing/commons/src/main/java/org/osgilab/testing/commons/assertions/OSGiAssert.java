@@ -10,6 +10,7 @@ import org.osgi.framework.BundleContext;
 
 /**
  * Abstract OSGi Asset class with BundleContext Handling
+ *
  * @author dpishchukhin
  */
 public abstract class OSGiAssert {
@@ -19,7 +20,8 @@ public abstract class OSGiAssert {
     private static BundleContext bc;
 
     /**
-     * Initialize utility class by BundleContext value
+     * Initialize all OSGi assertions with BundleContext value
+     *
      * @param bc BundleContext value
      * @throws IllegalStateException utility class is already initialized
      */
@@ -32,6 +34,7 @@ public abstract class OSGiAssert {
 
     /**
      * Asserts BundleContext before return.
+     *
      * @return BundleContext
      */
     protected static BundleContext getBundleContext() {

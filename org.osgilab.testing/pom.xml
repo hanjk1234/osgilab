@@ -35,11 +35,12 @@
         <system>Google</system>
         <url>http://code.google.com/p/osgilab/issues</url>
     </issueManagement>
-    
+
     <scm>
         <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing</url>
         <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing</connection>
-        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing</developerConnection>
+        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing
+        </developerConnection>
     </scm>
 
     <dependencyManagement>

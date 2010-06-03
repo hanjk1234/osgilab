@@ -6,7 +6,14 @@
 package org.osgilab.testing.commons.assertions;
 
 /**
+ * A set of OSGi services specific assertion methods useful for writing tests.
+ * <p/>
+ * Before use it should be initialized
+ * {@link org.osgilab.testing.commons.assertions.OSGiAssert#init(org.osgi.framework.BundleContext)}
+ *
  * @author dmytro.pishchukhin
+ * @see AssertionError
+ * @see org.osgilab.testing.commons.assertions.OSGiAssert
  */
 public class ServiceAssert {
     public static void assertServiceAvailable(String[] classes, String filter) {

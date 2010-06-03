@@ -12,7 +12,7 @@
     <groupId>org.osgilab.testing</groupId>
     <artifactId>it</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>    
+    <packaging>pom</packaging>
 
     <name>OSGi Lab Testing - Integration Test</name>
     <description>OSGi Lab Testing - Integration Test</description>
@@ -44,7 +44,8 @@
     <scm>
         <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing/it</url>
         <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it</connection>
-        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it</developerConnection>
+        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it
+        </developerConnection>
     </scm>
 
     <modules>

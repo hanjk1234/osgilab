@@ -43,11 +43,12 @@
     <scm>
         <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing/it/it.commons</url>
         <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons</connection>
-        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons</developerConnection>
+        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons
+        </developerConnection>
     </scm>
-    
+
     <modules>
         <module>it.commons.pax.runner</module>
     </modules>
-          
+
 </project>

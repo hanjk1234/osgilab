@@ -21,5 +21,5 @@ public @interface Wait {
 
     TimeUnit timeUnit() default TimeUnit.MILLISECONDS;
 
-    
+
 }
