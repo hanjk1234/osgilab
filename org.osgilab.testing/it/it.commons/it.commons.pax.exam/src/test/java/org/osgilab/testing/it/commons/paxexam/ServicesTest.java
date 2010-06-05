@@ -25,8 +25,8 @@ public class ServicesTest extends AbstractTest {
         ServiceAssert.assertServiceUnavailable("org.osgi.service.monitor.MonitorAdmin");
 
         // assert PackageAdmin service is available in OSGi registry
-        ServiceAssert.assertServiceAvailable(FilterUtils.createClassFilter(PackageAdmin.class));
+        ServiceAssert.assertServiceAvailable(FilterUtils.create(PackageAdmin.class));
         // assert MonitorAdmin service is unavailable in OSGi registry
-        ServiceAssert.assertServiceUnavailable(FilterUtils.createClassFilter("org.osgi.service.monitor.MonitorAdmin"));
+        ServiceAssert.assertServiceUnavailable(FilterUtils.create("org.osgi.service.monitor.MonitorAdmin"));
     }
 }

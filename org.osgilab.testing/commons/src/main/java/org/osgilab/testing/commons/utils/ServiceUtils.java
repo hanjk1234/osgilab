@@ -458,7 +458,7 @@ public class ServiceUtils {
      *                                invalid filter string that cannot be parsed
      */
     public static <T> T getService(BundleContext bc, Class<T> clazz, Filter filter) throws InvalidSyntaxException {
-        ServiceTracker tracker = new ServiceTracker(bc, FilterUtils.createClassFilter(clazz, filter), null);
+        ServiceTracker tracker = new ServiceTracker(bc, FilterUtils.create(clazz, filter), null);
         tracker.open();
         try {
             //noinspection unchecked
@@ -503,7 +503,7 @@ public class ServiceUtils {
      *                                  invalid filter string that cannot be parsed
      */
     public static <T> T getService(BundleContext bc, Class<T> clazz, Filter filter, long timeout, TimeUnit timeUnit) throws InvalidSyntaxException {
-        ServiceTracker tracker = new ServiceTracker(bc, FilterUtils.createClassFilter(clazz, filter), null);
+        ServiceTracker tracker = new ServiceTracker(bc, FilterUtils.create(clazz, filter), null);
         tracker.open();
         try {
             //noinspection unchecked
