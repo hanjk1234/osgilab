@@ -5,7 +5,7 @@
 
 package org.osgilab.testing.commons.assertions;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 import org.osgi.service.packageadmin.PackageAdmin;

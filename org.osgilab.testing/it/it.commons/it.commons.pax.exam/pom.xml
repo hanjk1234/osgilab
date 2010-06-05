@@ -42,13 +42,13 @@
 
     <scm>
         <url>
-            http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.runner
+            http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.exam
         </url>
         <connection>
-            scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.runner
+            scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.exam
         </connection>
         <developerConnection>
-            scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.runner
+            scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons/it.commons.pax.exam
         </developerConnection>
     </scm>
 
@@ -61,6 +61,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>

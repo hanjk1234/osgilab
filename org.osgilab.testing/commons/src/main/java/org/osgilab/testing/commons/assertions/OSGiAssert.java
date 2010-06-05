@@ -5,7 +5,7 @@
 
 package org.osgilab.testing.commons.assertions;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -29,9 +29,6 @@ public abstract class OSGiAssert {
      * @throws IllegalStateException utility class is already initialized
      */
     public static void init(BundleContext bc) {
-        if (OSGiAssert.bc != null) {
-            throw new IllegalStateException("BundleContext is already initialized");
-        }
         OSGiAssert.bc = bc;
     }
 

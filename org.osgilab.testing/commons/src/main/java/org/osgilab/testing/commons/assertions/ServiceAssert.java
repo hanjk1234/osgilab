@@ -5,7 +5,7 @@
 
 package org.osgilab.testing.commons.assertions;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.osgi.framework.Filter;
 import org.osgilab.testing.commons.utils.ServiceUtils;
 

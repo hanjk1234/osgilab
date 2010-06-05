@@ -49,6 +49,7 @@
 
     <modules>
         <module>it.commons.pax.exam</module>
+        <module>it.commons.spring.osgi</module>
     </modules>
 
 </project>
