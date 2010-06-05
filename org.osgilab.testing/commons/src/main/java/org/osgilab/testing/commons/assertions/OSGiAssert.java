@@ -12,6 +12,9 @@ import org.osgi.framework.BundleContext;
  * Abstract OSGi Asset class with BundleContext Handling
  *
  * @author dpishchukhin
+ * @version 1.0
+ * @see java.lang.AssertionError
+ * @see org.osgi.framework.BundleContext
  */
 public abstract class OSGiAssert {
     /**

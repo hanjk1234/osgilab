@@ -15,7 +15,6 @@ import org.osgi.framework.BundleContext;
 import org.osgilab.testing.commons.assertions.OSGiAssert;
 
 import static org.ops4j.pax.exam.CoreOptions.*;
-import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 
 /**
  * Abstract test with all initializations

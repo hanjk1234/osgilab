@@ -12,7 +12,8 @@ package org.osgilab.testing.commons.assertions;
  * {@link org.osgilab.testing.commons.assertions.OSGiAssert#init(org.osgi.framework.BundleContext)}
  *
  * @author dmytro.pishchukhin
- * @see AssertionError
+ * @version 1.0
+ * @see java.lang.AssertionError
  * @see org.osgilab.testing.commons.assertions.OSGiAssert
  */
 public class ServiceAssert {
