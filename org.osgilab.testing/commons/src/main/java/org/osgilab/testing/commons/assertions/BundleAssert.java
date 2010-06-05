@@ -8,7 +8,9 @@ package org.osgilab.testing.commons.assertions;
 import org.junit.Assert;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
+import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgilab.testing.commons.utils.BundleUtils;
+import org.osgilab.testing.commons.utils.ServiceUtils;
 
 /**
  * A set of OSGi Bundle specific assertion methods useful for writing tests.
@@ -108,7 +110,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with bundleId is available in OS. If it not as expected
+     * Asserts that Bundle with bundleId is available in OSGi framework. If it not as expected
      * {@link AssertionError} without a message is thrown
      *
      * @param bundleId bundle id
@@ -118,7 +120,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with bundleId is available in OS. If it not as expected
+     * Asserts that Bundle with bundleId is available in OSGi framework. If it not as expected
      * {@link AssertionError} is thrown with the given message
      *
      * @param message  message
@@ -130,7 +132,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with symbolic name is available in OS. If it not as expected
+     * Asserts that Bundle with symbolic name is available in OSGi framework. If it not as expected
      * {@link AssertionError} without a message is thrown
      *
      * @param symbolicName symbolic name
@@ -140,7 +142,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with symbolic name is available in OS. If it not as expected
+     * Asserts that Bundle with symbolic name is available in OSGi framework. If it not as expected
      * {@link AssertionError} is thrown with the given message
      *
      * @param message      message
@@ -153,7 +155,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with symbolic name and version is available in OS. If it not as expected
+     * Asserts that Bundle with symbolic name and version is available in OSGi framework. If it not as expected
      * {@link AssertionError} without a message is thrown
      *
      * @param symbolicName symbolic name
@@ -164,7 +166,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with symbolic name and version is available in OS. If it not as expected
+     * Asserts that Bundle with symbolic name and version is available in OSGi framework. If it not as expected
      * {@link AssertionError} is thrown with the given message
      *
      * @param message      message
@@ -178,7 +180,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with bundleId is unavailable in OS. If it not as expected
+     * Asserts that Bundle with bundleId is unavailable in OSGi framework. If it not as expected
      * {@link AssertionError} without a message is thrown
      *
      * @param bundleId bundle id
@@ -188,7 +190,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with bundleId is unavailable in OS. If it not as expected
+     * Asserts that Bundle with bundleId is unavailable in OSGi framework. If it not as expected
      * {@link AssertionError} is thrown with the given message
      *
      * @param message  message
@@ -200,7 +202,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with symbolic name is unavailable in OS. If it not as expected
+     * Asserts that Bundle with symbolic name is unavailable in OSGi framework. If it not as expected
      * {@link AssertionError} without a message is thrown
      *
      * @param symbolicName symbolic name
@@ -210,7 +212,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with symbolic name is unavailable in OS. If it not as expected
+     * Asserts that Bundle with symbolic name is unavailable in OSGi framework. If it not as expected
      * {@link AssertionError} is thrown with the given message
      *
      * @param message      message
@@ -223,7 +225,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with symbolic name and version is unavailable in OS. If it not as expected
+     * Asserts that Bundle with symbolic name and version is unavailable in OSGi framework. If it not as expected
      * {@link AssertionError} without a message is thrown
      *
      * @param symbolicName symbolic name
@@ -234,7 +236,7 @@ public class BundleAssert extends OSGiAssert {
     }
 
     /**
-     * Asserts that Bundle with symbolic name and version is unavailable in OS. If it not as expected
+     * Asserts that Bundle with symbolic name and version is unavailable in OSGi framework. If it not as expected
      * {@link AssertionError} is thrown with the given message
      *
      * @param message      message
@@ -247,5 +249,168 @@ public class BundleAssert extends OSGiAssert {
         Assert.assertNull(message, bundle);
     }
 
-    // todo: add assertFragment, assertNotFragment
+    /**
+     * Asserts that Bundle with bundleId is fragment bundle. If it not as expected
+     * {@link AssertionError} without a message is thrown
+     *
+     * @param bundleId bundle id
+     */
+    public static void assertFragment(long bundleId) {
+        assertFragment(null, bundleId);
+    }
+
+    /**
+     * Asserts that Bundle with bundleId is fragment bundle. If it not as expected
+     * {@link AssertionError} is thrown with the given message
+     *
+     * @param message  message
+     * @param bundleId bundle id
+     */
+    public static void assertFragment(String message, long bundleId) {
+        Bundle bundle = BundleUtils.findBundle(getBundleContext(), bundleId);
+        Assert.assertNotNull(String.format("Unknown bundle with ID: %d", bundleId), bundle);
+        PackageAdmin packageAdmin = ServiceUtils.getService(getBundleContext(), PackageAdmin.class);
+        Assert.assertNotNull("PackageAdmin is unavailable", packageAdmin);
+        int type = packageAdmin.getBundleType(bundle);
+        Assert.assertTrue(message, (type & PackageAdmin.BUNDLE_TYPE_FRAGMENT) != 0);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name is fragment bundle. If it not as expected
+     * {@link AssertionError} without a message is thrown
+     *
+     * @param symbolicName symbolic name
+     */
+    public static void assertFragment(String symbolicName) {
+        assertFragment(null, symbolicName);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name is fragment bundle. If it not as expected
+     * {@link AssertionError} is thrown with the given message
+     *
+     * @param message      message
+     * @param symbolicName symbolic name
+     */
+    public static void assertFragment(String message, String symbolicName) {
+        Assert.assertNotNull("SymbolicName is null", symbolicName);
+        Bundle bundle = BundleUtils.findBundle(getBundleContext(), symbolicName);
+        Assert.assertNotNull(String.format("Unknown bundle with SymbolicName: %s", symbolicName), bundle);
+        PackageAdmin packageAdmin = ServiceUtils.getService(getBundleContext(), PackageAdmin.class);
+        Assert.assertNotNull("PackageAdmin is unavailable", packageAdmin);
+        int type = packageAdmin.getBundleType(bundle);
+        Assert.assertTrue(message, (type & PackageAdmin.BUNDLE_TYPE_FRAGMENT) != 0);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name and version is fragment bundle. If it not as expected
+     * {@link AssertionError} without a message is thrown
+     *
+     * @param symbolicName symbolic name
+     * @param version      version
+     */
+    public static void assertFragment(String symbolicName, Version version) {
+        assertFragment(null, symbolicName, version);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name and version is fragment bundle. If it not as expected
+     * {@link AssertionError} is thrown with the given message
+     *
+     * @param message      message
+     * @param symbolicName symbolic name
+     * @param version      version
+     */
+    public static void assertFragment(String message, String symbolicName, Version version) {
+        Assert.assertNotNull("SymbolicName is null", symbolicName);
+        Bundle bundle = BundleUtils.findBundle(getBundleContext(), symbolicName, version);
+        Assert.assertNotNull(String.format("Unknown bundle with SymbolicName: %s and version: %s", symbolicName, version), bundle);
+        PackageAdmin packageAdmin = ServiceUtils.getService(getBundleContext(), PackageAdmin.class);
+        Assert.assertNotNull("PackageAdmin is unavailable", packageAdmin);
+        int type = packageAdmin.getBundleType(bundle);
+        Assert.assertTrue(message, (type & PackageAdmin.BUNDLE_TYPE_FRAGMENT) != 0);
+    }
+
+    /**
+     * Asserts that Bundle with bundleId is not a fragment bundle. If it not as expected
+     * {@link AssertionError} without a message is thrown
+     *
+     * @param bundleId bundle id
+     */
+    public static void assertNotFragment(long bundleId) {
+        assertNotFragment(null, bundleId);
+    }
+
+    /**
+     * Asserts that Bundle with bundleId is not a fragment bundle. If it not as expected
+     * {@link AssertionError} is thrown with the given message
+     *
+     * @param message  message
+     * @param bundleId bundle id
+     */
+    public static void assertNotFragment(String message, long bundleId) {
+        Bundle bundle = BundleUtils.findBundle(getBundleContext(), bundleId);
+        Assert.assertNotNull(String.format("Unknown bundle with ID: %d", bundleId), bundle);
+        PackageAdmin packageAdmin = ServiceUtils.getService(getBundleContext(), PackageAdmin.class);
+        Assert.assertNotNull("PackageAdmin is unavailable", packageAdmin);
+        int type = packageAdmin.getBundleType(bundle);
+        Assert.assertTrue(message, (type & PackageAdmin.BUNDLE_TYPE_FRAGMENT) != 0);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name is not a fragment bundle. If it not as expected
+     * {@link AssertionError} without a message is thrown
+     *
+     * @param symbolicName symbolic name
+     */
+    public static void assertNotFragment(String symbolicName) {
+        assertNotFragment(null, symbolicName);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name is not a fragment bundle. If it not as expected
+     * {@link AssertionError} is thrown with the given message
+     *
+     * @param message      message
+     * @param symbolicName symbolic name
+     */
+    public static void assertNotFragment(String message, String symbolicName) {
+        Assert.assertNotNull("SymbolicName is null", symbolicName);
+        Bundle bundle = BundleUtils.findBundle(getBundleContext(), symbolicName);
+        Assert.assertNotNull(String.format("Unknown bundle with SymbolicName: %s", symbolicName), bundle);
+        PackageAdmin packageAdmin = ServiceUtils.getService(getBundleContext(), PackageAdmin.class);
+        Assert.assertNotNull("PackageAdmin is unavailable", packageAdmin);
+        int type = packageAdmin.getBundleType(bundle);
+        Assert.assertTrue(message, (type & PackageAdmin.BUNDLE_TYPE_FRAGMENT) != 0);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name and version is not a fragment bundle. If it not as expected
+     * {@link AssertionError} without a message is thrown
+     *
+     * @param symbolicName symbolic name
+     * @param version      version
+     */
+    public static void assertNotFragment(String symbolicName, Version version) {
+        assertNotFragment(null, symbolicName, version);
+    }
+
+    /**
+     * Asserts that Bundle with symbolic name and version is not a fragment bundle. If it not as expected
+     * {@link AssertionError} is thrown with the given message
+     *
+     * @param message      message
+     * @param symbolicName symbolic name
+     * @param version      version
+     */
+    public static void assertNotFragment(String message, String symbolicName, Version version) {
+        Assert.assertNotNull("SymbolicName is null", symbolicName);
+        Bundle bundle = BundleUtils.findBundle(getBundleContext(), symbolicName, version);
+        Assert.assertNotNull(String.format("Unknown bundle with SymbolicName: %s and version: %s", symbolicName, version), bundle);
+        PackageAdmin packageAdmin = ServiceUtils.getService(getBundleContext(), PackageAdmin.class);
+        Assert.assertNotNull("PackageAdmin is unavailable", packageAdmin);
+        int type = packageAdmin.getBundleType(bundle);
+        Assert.assertTrue(message, (type & PackageAdmin.BUNDLE_TYPE_FRAGMENT) != 0);
+    }
+
 }

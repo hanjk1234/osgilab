@@ -7,13 +7,20 @@ package org.osgilab.testing.commons.utils;
 
 import org.osgi.framework.*;
 import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * OSGi Services utilities class
  *
  * @author dmytro.pishchukhin
+ * @version 1.0
+ * @see org.osgi.framework.BundleContext
+ * @see org.osgi.util.tracker.ServiceTracker
+ * @see org.osgi.util.tracker.ServiceTrackerCustomizer
+ * @see org.osgi.framework.Filter
  */
 public class ServiceUtils {
     /**
@@ -70,22 +77,30 @@ public class ServiceUtils {
      *                                  <code>timeUnit</code> are <code>null</code>
      */
     public static ServiceReference getServiceReference(BundleContext bc, Filter filter, long timeout, TimeUnit timeUnit) {
-        return null; // todo
+        final ReentrantLock lock = new ReentrantLock();
+        long timeoutInMillis = timeUnit.toMillis(timeout);
+        ServiceTracker tracker = new ServiceTracker(bc, filter, new ServiceTrackerCustomizerWithLock(bc, lock));
+        tracker.open();
+        try {
+            return waitForServiceReference(tracker, timeoutInMillis, lock);
+        } catch (InterruptedException e) {
+            return null;
+        } finally {
+            tracker.close();
+        }
     }
 
     /**
-     * Get ServiceReference by filter
+     * Get ServiceReference by class name
      *
-     * @param bc     BundleContext
-     * @param filter filter
+     * @param bc        BundleContext
+     * @param className className
      * @return ServiceReference instance or <code>null</code>
      *
-     * @throws InvalidSyntaxException If <code>filter</code> contains an
-     *                                invalid filter string that cannot be parsed
-     * @throws NullPointerException   If <code>bc</code> or <code>filter</code> are <code>null</code>
+     * @throws NullPointerException If <code>bc</code> or <code>className</code> are <code>null</code>
      */
-    public static ServiceReference getServiceReference(BundleContext bc, String filter) throws InvalidSyntaxException {
-        ServiceTracker tracker = new ServiceTracker(bc, FrameworkUtil.createFilter(filter), null);
+    public static ServiceReference getServiceReference(BundleContext bc, String className) {
+        ServiceTracker tracker = new ServiceTracker(bc, className, null);
         tracker.open();
         try {
             return tracker.getServiceReference();
@@ -95,41 +110,45 @@ public class ServiceUtils {
     }
 
     /**
-     * Get ServiceReference by filter with timeout.
+     * Get ServiceReference by class name with timeout.
      *
-     * @param bc      BundleContext
-     * @param filter  filter
-     * @param timeout time interval in milliseconds to wait. If zero, the method will wait indefinately.
+     * @param bc        BundleContext
+     * @param className className
+     * @param timeout   time interval in milliseconds to wait. If zero, the method will wait indefinately.
      * @return ServiceReference instance or <code>null</code>
      *
-     * @throws InvalidSyntaxException   If <code>filter</code> contains an
-     *                                  invalid filter string that cannot be parsed
      * @throws IllegalArgumentException If the value of timeout is negative
-     * @throws NullPointerException     If <code>bc</code> or <code>filter</code> are <code>null</code>
+     * @throws NullPointerException     If <code>bc</code> or <code>className</code> are <code>null</code>
      */
-    public static ServiceReference getServiceReference(BundleContext bc, String filter, long timeout)
-            throws InvalidSyntaxException {
-        return getServiceReference(bc, filter, timeout, TimeUnit.MILLISECONDS);
+    public static ServiceReference getServiceReference(BundleContext bc, String className, long timeout) {
+        return getServiceReference(bc, className, timeout, TimeUnit.MILLISECONDS);
     }
 
     /**
-     * Get ServiceReference by filter with timeout.
+     * Get ServiceReference by class name with timeout.
      *
-     * @param bc       BundleContext
-     * @param filter   filter
-     * @param timeout  time interval to wait. If zero, the method will wait indefinately.
-     * @param timeUnit time unit for the time interval
+     * @param bc        BundleContext
+     * @param className className
+     * @param timeout   time interval to wait. If zero, the method will wait indefinately.
+     * @param timeUnit  time unit for the time interval
      * @return ServiceReference instance or <code>null</code>
      *
-     * @throws InvalidSyntaxException   If <code>filter</code> contains an
-     *                                  invalid filter string that cannot be parsed
      * @throws IllegalArgumentException If the value of timeout is negative
-     * @throws NullPointerException     If <code>bc</code>, <code>filter</code> or
+     * @throws NullPointerException     If <code>bc</code>, <code>className</code> or
      *                                  <code>timeUnit</code> are <code>null</code>
      */
-    public static ServiceReference getServiceReference(BundleContext bc, String filter, long timeout, TimeUnit timeUnit)
-            throws InvalidSyntaxException {
-        return getServiceReference(bc, FrameworkUtil.createFilter(filter), timeout, timeUnit);
+    public static ServiceReference getServiceReference(BundleContext bc, String className, long timeout, TimeUnit timeUnit) {
+        final ReentrantLock lock = new ReentrantLock();
+        long timeoutInMillis = timeUnit.toMillis(timeout);
+        ServiceTracker tracker = new ServiceTracker(bc, className, new ServiceTrackerCustomizerWithLock(bc, lock));
+        tracker.open();
+        try {
+            return waitForServiceReference(tracker, timeoutInMillis, lock);
+        } catch (InterruptedException e) {
+            return null;
+        } finally {
+            tracker.close();
+        }
     }
 
     /**
@@ -180,7 +199,17 @@ public class ServiceUtils {
      *                                  <code>timeUnit</code> are <code>null</code>
      */
     public static ServiceReference getServiceReference(BundleContext bc, Class clazz, long timeout, TimeUnit timeUnit) {
-        return null; // todo
+        final ReentrantLock lock = new ReentrantLock();
+        long timeoutInMillis = timeUnit.toMillis(timeout);
+        ServiceTracker tracker = new ServiceTracker(bc, clazz.getName(), new ServiceTrackerCustomizerWithLock(bc, lock));
+        tracker.open();
+        try {
+            return waitForServiceReference(tracker, timeoutInMillis, lock);
+        } catch (InterruptedException e) {
+            return null;
+        } finally {
+            tracker.close();
+        }
     }
 
     /**
@@ -243,18 +272,16 @@ public class ServiceUtils {
     }
 
     /**
-     * Get service instance by filter
+     * Get service instance by class name
      *
-     * @param bc     BundleContext
-     * @param filter filter
+     * @param bc        BundleContext
+     * @param className className
      * @return service instance or <code>null</code>
      *
-     * @throws InvalidSyntaxException If <code>filter</code> contains an
-     *                                invalid filter string that cannot be parsed
-     * @throws NullPointerException   If <code>bc</code> or <code>filter</code> are <code>null</code>
+     * @throws NullPointerException If <code>bc</code> or <code>className</code> are <code>null</code>
      */
-    public static Object getService(BundleContext bc, String filter) throws InvalidSyntaxException {
-        ServiceTracker tracker = new ServiceTracker(bc, FrameworkUtil.createFilter(filter), null);
+    public static Object getService(BundleContext bc, String className) {
+        ServiceTracker tracker = new ServiceTracker(bc, className, null);
         tracker.open();
         try {
             return tracker.getService();
@@ -264,39 +291,35 @@ public class ServiceUtils {
     }
 
     /**
-     * Get service instance by filter with timeout.
+     * Get service instance by class name with timeout.
      *
-     * @param bc      BundleContext
-     * @param filter  filter
-     * @param timeout time interval in milliseconds to wait. If zero, the method will wait indefinately.
+     * @param bc        BundleContext
+     * @param className className
+     * @param timeout   time interval in milliseconds to wait. If zero, the method will wait indefinately.
      * @return service instance or <code>null</code>
      *
-     * @throws InvalidSyntaxException   If <code>filter</code> contains an
-     *                                  invalid filter string that cannot be parsed
      * @throws IllegalArgumentException If the value of timeout is negative
-     * @throws NullPointerException     If <code>bc</code> or <code>filter</code> are <code>null</code>
+     * @throws NullPointerException     If <code>bc</code> or <code>className</code> are <code>null</code>
      */
-    public static Object getService(BundleContext bc, String filter, long timeout) throws InvalidSyntaxException {
-        return getService(bc, filter, timeout, TimeUnit.MILLISECONDS);
+    public static Object getService(BundleContext bc, String className, long timeout) {
+        return getService(bc, className, timeout, TimeUnit.MILLISECONDS);
     }
 
     /**
-     * Get service instance by filter with timeout.
+     * Get service instance by className with timeout.
      *
      * @param bc       BundleContext
-     * @param filter   filter
+     * @param className   className
      * @param timeout  time interval to wait. If zero, the method will wait indefinately.
      * @param timeUnit time unit for the time interval
      * @return service instance or <code>null</code>
      *
-     * @throws InvalidSyntaxException   If <code>filter</code> contains an
-     *                                  invalid filter string that cannot be parsed
      * @throws IllegalArgumentException If the value of timeout is negative
-     * @throws NullPointerException     If <code>bc</code>, <code>filter</code> or
+     * @throws NullPointerException     If <code>bc</code>, <code>className</code> or
      *                                  <code>timeUnit</code> are <code>null</code>
      */
-    public static Object getService(BundleContext bc, String filter, long timeout, TimeUnit timeUnit) throws InvalidSyntaxException {
-        ServiceTracker tracker = new ServiceTracker(bc, FrameworkUtil.createFilter(filter), null);
+    public static Object getService(BundleContext bc, String className, long timeout, TimeUnit timeUnit) {
+        ServiceTracker tracker = new ServiceTracker(bc, className, null);
         tracker.open();
         try {
             return tracker.waitForService(timeUnit.toMillis(timeout));
@@ -489,6 +512,63 @@ public class ServiceUtils {
             return null;
         } finally {
             tracker.close();
+        }
+    }
+
+    /**
+     * Wait for at least one ServiceReference to be tracked by ServiceTracker
+     *
+     * @param tracker         ServiceTracker
+     * @param timeoutInMillis time interval in milliseconds to wait.
+     *                        If zero, the method will wait indefinately.
+     * @param lock            external lock that is used to handle new service adding to ServiceTracker
+     * @return ServiceReference instance or <code>null</code>
+     *
+     * @throws IllegalArgumentException If the value of timeout is negative.
+     * @throws InterruptedException     If another thread has interrupted the current thread.
+     */
+    private static ServiceReference waitForServiceReference(ServiceTracker tracker, long timeoutInMillis, ReentrantLock lock)
+            throws InterruptedException {
+        if (timeoutInMillis < 0) {
+            throw new IllegalArgumentException("timeout value is negative");
+        }
+        ServiceReference reference = tracker.getServiceReference();
+        if (reference == null) {
+            lock.wait(timeoutInMillis);
+            return tracker.getServiceReference();
+        } else {
+            return reference;
+        }
+    }
+
+    /**
+     * ServiceTrackerCustomizer with lock support.
+     *
+     * @see java.util.concurrent.locks.ReentrantLock
+     * @see org.osgi.util.tracker.ServiceTrackerCustomizer
+     */
+    private static class ServiceTrackerCustomizerWithLock implements ServiceTrackerCustomizer {
+        private final BundleContext bc;
+        private final ReentrantLock lock;
+
+        public ServiceTrackerCustomizerWithLock(BundleContext bc, ReentrantLock lock) {
+            this.bc = bc;
+            this.lock = lock;
+        }
+
+        public Object addingService(ServiceReference serviceReference) {
+            try {
+                return bc.getService(serviceReference);
+            } finally {
+                // uplock the lock
+                lock.unlock();
+            }
+        }
+
+        public void modifiedService(ServiceReference serviceReference, Object o) {
+        }
+
+        public void removedService(ServiceReference serviceReference, Object o) {
         }
     }
 }

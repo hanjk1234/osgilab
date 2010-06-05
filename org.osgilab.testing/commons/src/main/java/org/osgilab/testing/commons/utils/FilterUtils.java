@@ -105,6 +105,50 @@ public class FilterUtils {
     }
 
     /**
+     * Create AND filter for service class name and custom filter
+     *
+     * @param className service class name
+     * @param filter    custom filter
+     * @return new AND filter
+     *
+     * @throws InvalidSyntaxException If it is unable to create filter
+     * @throws NullPointerException   If <code>className</code> or <code>filter</code> are <code>null</code>
+     * @see Constants#OBJECTCLASS
+     */
+    public static Filter createClassFilter(String className, Filter filter) throws InvalidSyntaxException {
+        return createAndFilter(createClassFilter(className), filter);
+    }
+
+    /**
+     * Create AND filter for service class name and custom filter
+     *
+     * @param className service class name
+     * @param filter    custom filter
+     * @return new AND filter
+     *
+     * @throws InvalidSyntaxException If it is unable to create filter
+     * @throws NullPointerException   If <code>className</code> or <code>filter</code> are <code>null</code>
+     * @see Constants#OBJECTCLASS
+     */
+    public static Filter createClassFilter(String className, String filter) throws InvalidSyntaxException {
+        return createAndFilter(createClassFilter(className), filter);
+    }
+
+    /**
+     * Create filter for service class name
+     *
+     * @param className service class name
+     * @return new AND filter
+     *
+     * @throws InvalidSyntaxException If it is unable to create filter
+     * @throws NullPointerException   If <code>className</code> is <code>null</code>
+     * @see Constants#OBJECTCLASS
+     */
+    public static Filter createClassFilter(String className) throws InvalidSyntaxException {
+        return createEqualsFilter(Constants.OBJECTCLASS, className);
+    }
+
+    /**
      * Create AND filter for two filters
      *
      * @param filter1 filter 1
