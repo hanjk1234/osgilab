@@ -3,7 +3,7 @@
  * This program is made available under the terms of the MIT License.
  */
 
-package org.osgilab.testing.it.commons.paxrunner;
+package org.osgilab.testing.it.commons.paxexam;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;

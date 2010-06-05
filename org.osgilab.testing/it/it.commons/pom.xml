@@ -48,7 +48,7 @@
     </scm>
 
     <modules>
-        <module>it.commons.pax.runner</module>
+        <module>it.commons.pax.exam</module>
     </modules>
 
 </project>
