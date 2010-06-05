@@ -40,16 +40,10 @@
         <url>http://code.google.com/p/osgilab/issues</url>
     </issueManagement>
 
-    <scm>
-        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing/it/it.commons</url>
-        <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons</connection>
-        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons
-        </developerConnection>
-    </scm>
-
     <modules>
         <module>it.commons.pax.exam</module>
         <module>it.commons.spring.osgi</module>
+        <module>it.commons.test.bundle</module>
     </modules>
 
 </project>

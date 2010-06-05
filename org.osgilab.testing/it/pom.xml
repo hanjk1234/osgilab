@@ -41,13 +41,6 @@
         <url>http://code.google.com/p/osgilab/issues</url>
     </issueManagement>
 
-    <scm>
-        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing/it</url>
-        <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it</connection>
-        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it
-        </developerConnection>
-    </scm>
-
     <modules>
         <module>it.commons</module>
     </modules>

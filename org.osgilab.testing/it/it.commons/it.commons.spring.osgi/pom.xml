@@ -40,18 +40,6 @@
         <url>http://code.google.com/p/osgilab/issues</url>
     </issueManagement>
 
-    <scm>
-        <url>
-            http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing/it/it.commons/it.commons.spring.osgi
-        </url>
-        <connection>
-            scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons/it.commons.spring.osgi
-        </connection>
-        <developerConnection>
-            scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing/it/it.commons/it.commons.spring.osgi
-        </developerConnection>
-    </scm>
-
     <dependencies>
         <dependency>
             <groupId>org.osgilab.testing</groupId>

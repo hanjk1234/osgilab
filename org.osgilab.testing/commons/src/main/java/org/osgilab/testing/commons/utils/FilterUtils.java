@@ -101,7 +101,7 @@ public class FilterUtils {
      * @see Constants#OBJECTCLASS
      */
     public static Filter create(Class clazz) throws InvalidSyntaxException {
-        return equals(Constants.OBJECTCLASS, clazz.getName());
+        return eq(Constants.OBJECTCLASS, clazz.getName());
     }
 
     /**
@@ -145,7 +145,7 @@ public class FilterUtils {
      * @see Constants#OBJECTCLASS
      */
     public static Filter create(String className) throws InvalidSyntaxException {
-        return equals(Constants.OBJECTCLASS, className);
+        return eq(Constants.OBJECTCLASS, className);
     }
 
     /**
@@ -268,7 +268,7 @@ public class FilterUtils {
      * @throws InvalidSyntaxException If it is unable to create filter
      * @throws NullPointerException   If <code>key</code> or <code>value</code> are <code>null</code>
      */
-    public static Filter equals(String key, Object value) throws InvalidSyntaxException {
+    public static Filter eq(String key, Object value) throws InvalidSyntaxException {
         return FrameworkUtil.createFilter(String.format(EQUALS_FILTER_TEMPLATE, key, value));
     }
 
