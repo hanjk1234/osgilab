@@ -35,9 +35,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://code.google.com/p/osgilab/source/browse/#svn/tags/testing.commons-1.0.0</url>
-        <connection>scm:svn:http://code.google.com/p/osgilab/svn/tags/testing.commons-1.0.0</connection>
-        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/tags/testing.commons-1.0.0
+        <url>http://osgilab.googlecode.com/svn/tags/testing.commons-1.0.0</url>
+        <connection>scm:svn:http://osgilab.googlecode.com/svn/tags/testing.commons-1.0.0</connection>
+        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/tags/testing.commons-1.0.0
         </developerConnection>
     </scm>
 
@@ -98,7 +98,7 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.0</version>
                 <configuration>
-                    <tagBase>http://code.google.com/p/osgilab/svn/tags</tagBase>
+                    <tagBase>http://osgilab.googlecode.com/svn/tags</tagBase>
                     <mavenExecutorId>forked-path</mavenExecutorId>
                 </configuration>
             </plugin>
