@@ -9,7 +9,8 @@
 
     <name>OSGi Lab Testing - Test Commons</name>
     <description>OSGi Lab Testing - Test Commons</description>
-
+    <url>http://osgilab.org</url>
+    
     <developers>
         <developer>
             <name>Dmytro Pishchukhin</name>
