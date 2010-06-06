@@ -4,13 +4,13 @@
 
     <groupId>org.osgilab.testing</groupId>
     <artifactId>commons</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>OSGi Lab Testing - Test Commons</name>
     <description>OSGi Lab Testing - Test Commons</description>
     <url>http://osgilab.org</url>
-    
+
     <developers>
         <developer>
             <name>Dmytro Pishchukhin</name>
@@ -36,9 +36,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://osgilab.googlecode.com/svn/tags/testing.commons-1.0.0</url>
-        <connection>scm:svn:http://osgilab.googlecode.com/svn/tags/testing.commons-1.0.0</connection>
-        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/tags/testing.commons-1.0.0
+        <url>http://osgilab.googlecode.com/svn/trunk/org.osgilab.testing/commons</url>
+        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.testing/commons</connection>
+        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.testing/commons
         </developerConnection>
     </scm>
 
