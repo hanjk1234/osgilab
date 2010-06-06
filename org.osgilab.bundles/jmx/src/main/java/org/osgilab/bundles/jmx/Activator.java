@@ -120,7 +120,7 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
     /**
      * Compendium services MBean registration map.
      */
-    private Map<String,ServiceAbstractMBean> compendiumServices = new HashMap<String, ServiceAbstractMBean>();
+    private Map<String, ServiceAbstractMBean> compendiumServices = new HashMap<String, ServiceAbstractMBean>();
 
     public void start(BundleContext context) throws Exception {
         bc = context;
@@ -252,7 +252,7 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         bc.removeBundleListener(bundleState);
         server.unregisterMBean(new ObjectName(BundleStateMBean.OBJECTNAME));
         bundleState.uninit();
-        
+
         server.unregisterMBean(new ObjectName(FrameworkMBean.OBJECTNAME));
         framework.uninit();
     }
@@ -364,7 +364,7 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
     }
 
     public org.osgi.framework.launch.Framework getFramework() {
-        return (org.osgi.framework.launch.Framework) frameworkTracker.getService(); 
+        return (org.osgi.framework.launch.Framework) frameworkTracker.getService();
     }
 
     public Bundle[] getBundles() {

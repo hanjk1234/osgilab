@@ -40,7 +40,8 @@
     <scm>
         <url>http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/monitoradmin</url>
         <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/monitoradmin</connection>
-        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/monitoradmin</developerConnection>
+        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/monitoradmin
+        </developerConnection>
     </scm>
 
     <dependencies>

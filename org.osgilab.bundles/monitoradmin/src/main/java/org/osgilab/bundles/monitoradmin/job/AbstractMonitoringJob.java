@@ -15,7 +15,7 @@ import java.util.Set;
 
 /**
  * Abstract MonitoringJob
- * 
+ *
  * @author dmytro.pishchukhin
  */
 public abstract class AbstractMonitoringJob implements MonitoringJob {
@@ -86,6 +86,7 @@ public abstract class AbstractMonitoringJob implements MonitoringJob {
 
     /**
      * Does job handle StatusVariable update event
+     *
      * @param path StatusVariable path
      * @return <code>true</code> - handles, otherwise - <code>false</code>
      */
@@ -93,7 +94,8 @@ public abstract class AbstractMonitoringJob implements MonitoringJob {
 
     /**
      * Handle StatusVariable update event
-     * @param monitorableId monitorableId
+     *
+     * @param monitorableId  monitorableId
      * @param statusVariable statusVariable
      */
     public abstract void handleUpdateEvent(String monitorableId, StatusVariable statusVariable);

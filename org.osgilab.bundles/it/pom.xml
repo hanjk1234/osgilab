@@ -179,12 +179,6 @@
                     </plugin>
                 </plugins>
             </build>
-            <repositories>
-                <repository>
-                    <id>sonatype-staging</id>
-                    <url>http://oss.sonatype.org/content/groups/staging</url>
-                </repository>
-            </repositories>
         </profile>
     </profiles>
 

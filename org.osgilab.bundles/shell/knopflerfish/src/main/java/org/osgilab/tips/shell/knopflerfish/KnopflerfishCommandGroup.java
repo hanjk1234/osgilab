@@ -11,7 +11,9 @@ import org.knopflerfish.service.console.Session;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

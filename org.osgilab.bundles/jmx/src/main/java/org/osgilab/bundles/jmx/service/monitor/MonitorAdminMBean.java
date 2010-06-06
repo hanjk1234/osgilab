@@ -70,7 +70,7 @@ public interface MonitorAdminMBean {
     /**
      * The Composite Type for a <code>StatusVariable</code>. It contains the following items:
      * <ul>
-     * <li>{@link MonitorAdminMBean#NAME}</li> 
+     * <li>{@link MonitorAdminMBean#NAME}</li>
      * <li>{@link MonitorAdminMBean#TYPE}</li>
      * <li>{@link MonitorAdminMBean#COLLECTION_METHOD}</li>
      * <li>{@link MonitorAdminMBean#TIMESTAMP}</li>
@@ -87,7 +87,7 @@ public interface MonitorAdminMBean {
     /**
      * The Tabular Type for a list of <code>StatusVAriable</code>s. The row type is {@link MonitorAdminMBean#STATUS_VARIABLE_TYPE}
      */
-    TabularType STATUS_VARIABLES_TYPE = Item.tabularType(STATUS_VARIABLES, "A list of StatusVariables", STATUS_VARIABLE_TYPE, 
+    TabularType STATUS_VARIABLES_TYPE = Item.tabularType(STATUS_VARIABLES, "A list of StatusVariables", STATUS_VARIABLE_TYPE,
             NAME);
 
     /**
@@ -170,6 +170,7 @@ public interface MonitorAdminMBean {
      *
      * @param path the full path of the <code>StatusVariable</code> in [Monitorable_ID]/[StatusVariable_ID] format
      * @return the human readable description of this <code>StatusVariable</code> or <code>null</code> if it is not set
+     *
      * @throws IllegalArgumentException if path is <code>null</code> or otherwise invalid, or points to a non-existing <code>StatusVariable</code>
      * @throws IOException              if the operation fails
      */
@@ -181,6 +182,7 @@ public interface MonitorAdminMBean {
      *
      * @param path the full path of the <code>StatusVariable</code> in [Monitorable_ID]/[StatusVariable_ID] format
      * @return <code>StatusVariable</code> typed by {@link MonitorAdminMBean#STATUS_VARIABLE_TYPE}
+     *
      * @throws IllegalArgumentException if path is <code>null</code> or otherwise invalid, or points to a non-existing <code>StatusVariable</code>
      * @throws IOException              if the operation fails
      */
@@ -192,6 +194,7 @@ public interface MonitorAdminMBean {
      * It cannot be <code>null</code>, an empty array is returned if no <code>Monitorable</code> services are registered.
      *
      * @return the array of <code>Monitorable</code> names
+     *
      * @throws IOException if the operation fails
      */
     java.lang.String[] getMonitorableNames() throws IOException;
@@ -203,6 +206,7 @@ public interface MonitorAdminMBean {
      *
      * @param monitorableId the identifier of a <code>Monitorable</code> instance
      * @return <code>StatusVariable</code>s typed by {@link MonitorAdminMBean#STATUS_VARIABLES_TYPE}
+     *
      * @throws IllegalArgumentException if monitorableId  is <code>null</code> or otherwise invalid, or points to a non-existing <code>Monitorable</code>
      * @throws IOException              if the operation fails
      */
@@ -215,6 +219,7 @@ public interface MonitorAdminMBean {
      *
      * @param monitorableId the identifier of a <code>Monitorable</code> instance
      * @return a list of <code>StatusVariable</code> objects names published by the specified <code>Monitorable</code>
+     *
      * @throws IllegalArgumentException if monitorableId  is <code>null</code> or otherwise invalid, or points to a non-existing <code>Monitorable</code>
      * @throws IOException              if the operation fails
      */
@@ -236,6 +241,7 @@ public interface MonitorAdminMBean {
      *
      * @param path the identifier of the <code>StatusVariable</code> in [Monitorable_id]/[StatusVariable_id] format
      * @return <code>true</code> if the <code>Monitorable</code> could successfully reset the given <code>StatusVariable</code>, <code>false</code> otherwise
+     *
      * @throws IllegalArgumentException if path is <code>null</code> or otherwise invalid, or points to a non-existing <code>StatusVariable</code>
      * @throws IOException              if the operation fails
      */
@@ -246,6 +252,7 @@ public interface MonitorAdminMBean {
      * The returned Tabular Data is typed by {@link MonitorAdminMBean#MONITORING_JOBS_TYPE}
      *
      * @return <code>MonitoringJob</code>s typed by {@link MonitorAdminMBean#MONITORING_JOBS_TYPE}
+     *
      * @throws IOException if the operation fails
      */
     TabularData getRunningJobs() throws IOException;

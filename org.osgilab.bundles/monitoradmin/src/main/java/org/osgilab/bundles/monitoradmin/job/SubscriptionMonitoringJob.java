@@ -21,7 +21,7 @@ public class SubscriptionMonitoringJob extends AbstractMonitoringJob {
     private Map<String, Integer> countStatesMap = new HashMap<String, Integer>();
 
     public SubscriptionMonitoringJob(MonitoringJobVisitor visitor, LogVisitor logVisitor, String initiator,
-                                        String[] statusVariablePaths, int count) {
+                                     String[] statusVariablePaths, int count) {
         super(visitor, logVisitor, initiator, statusVariablePaths, count);
         // initialize counts map
         for (String statusVariablePath : statusVariablePaths) {
@@ -31,7 +31,7 @@ public class SubscriptionMonitoringJob extends AbstractMonitoringJob {
 
     @Override
     public void cancel() {
-        isRunning = false;   
+        isRunning = false;
         logVisitor.info("Job Canceled: " + this, null);
     }
 

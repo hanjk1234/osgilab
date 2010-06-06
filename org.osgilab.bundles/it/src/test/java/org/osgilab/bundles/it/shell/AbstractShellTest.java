@@ -29,6 +29,7 @@ import static org.ops4j.pax.exam.container.def.PaxRunnerOptions.cleanCaches;
 @RunWith(JUnit4TestRunner.class)
 public abstract class AbstractShellTest {
     // OSGi framework test configutation
+
     @Configuration
     public Option[] configuration() {
         return options(

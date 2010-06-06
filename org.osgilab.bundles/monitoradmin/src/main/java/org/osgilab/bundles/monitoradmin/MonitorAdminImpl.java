@@ -47,6 +47,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      * @param path the full path of the <code>StatusVariable</code> in
      *             [Monitorable_ID]/[StatusVariable_ID] format
      * @return the <code>StatusVariable</code> object
+     *
      * @throws java.lang.IllegalArgumentException
      *                                     if <code>path</code> is
      *                                     <code>null</code> or otherwise invalid, or points to a
@@ -83,6 +84,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      * @return the human readable description of this
      *         <code>StatusVariable</code> or <code>null</code> if it is not
      *         set
+     *
      * @throws java.lang.IllegalArgumentException
      *                                     if <code>path</code> is
      *                                     <code>null</code> or otherwise invalid, or points to a
@@ -166,6 +168,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      *                      instance
      * @return a list of <code>StatusVariable</code> objects published
      *         by the specified <code>Monitorable</code>
+     *
      * @throws java.lang.IllegalArgumentException
      *          if <code>monitorableId</code>
      *          is <code>null</code> or otherwise invalid, or points to a
@@ -213,6 +216,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      *                      instance
      * @return a list of <code>StatusVariable</code> objects names
      *         published by the specified <code>Monitorable</code>
+     *
      * @throws java.lang.IllegalArgumentException
      *          if <code>monitorableId</code>
      *          is <code>null</code> or otherwise invalid, or points to a
@@ -250,6 +254,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      * @return <code>true</code> if the <code>Monitorable</code> could
      *         successfully reset the given <code>StatusVariable</code>,
      *         <code>false</code> otherwise
+     *
      * @throws java.lang.IllegalArgumentException
      *                                     if <code>path</code> is
      *                                     <code>null</code> or otherwise invalid, or points to a
@@ -379,6 +384,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      * @param count           the number of measurements to be taken, or 0 for the
      *                        measurement to run until explicitly stopped
      * @return the successfully started job object, cannot be <code>null</code>
+     *
      * @throws java.lang.IllegalArgumentException
      *                                     if the list of
      *                                     <code>StatusVariable</code> names contains an invalid or
@@ -454,6 +460,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      * @param count           the number of changes that must happen to a
      *                        <code>StatusVariable</code> before a new notification is sent
      * @return the successfully started job object, cannot be <code>null</code>
+     *
      * @throws java.lang.IllegalArgumentException
      *                                     if the list of
      *                                     <code>StatusVariable</code> names contains an invalid or
@@ -566,6 +573,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
 
     /**
      * Get array with paths that are disabled for notificatios with switchEvents() method
+     *
      * @return array with StatusVariable paths
      */
     public String[] getDisabledNotificationPaths() {
@@ -636,6 +644,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      *
      * @param monitorableId id that is userd to filter services
      * @return Monitorable service with specified monitorableId.
+     *
      * @throws IllegalArgumentException monitorableId is <code>null</code> or monitorableId points
      *                                  to non-existing service or monitorableId is invalid
      */

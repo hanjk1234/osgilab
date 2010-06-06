@@ -28,6 +28,7 @@ import static org.ops4j.pax.exam.CoreOptions.*;
 @RunWith(JUnit4TestRunner.class)
 public class MonitorAdminTest {
     // OSGi framework test configutation
+
     @Configuration
     public static Option[] configuration() {
         return options(

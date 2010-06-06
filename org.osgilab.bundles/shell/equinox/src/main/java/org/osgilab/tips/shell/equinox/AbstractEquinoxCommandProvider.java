@@ -43,6 +43,7 @@ public abstract class AbstractEquinoxCommandProvider implements CommandProvider 
 
     /**
      * Fetch command line arguments from source
+     *
      * @param interpreter argument source
      * @return not <code>null</code> arguments array
      */
@@ -57,6 +58,7 @@ public abstract class AbstractEquinoxCommandProvider implements CommandProvider 
 
     /**
      * Run command method
+     *
      * @param commandName command name
      * @param interpreter interpreter
      */

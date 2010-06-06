@@ -15,7 +15,7 @@ import java.io.InputStream;
 
 /**
  * OSGi visitor interface. It is used to access OSGi specific services.
- * 
+ *
  * @author dpishchukhin
  */
 public interface OsgiVisitor {

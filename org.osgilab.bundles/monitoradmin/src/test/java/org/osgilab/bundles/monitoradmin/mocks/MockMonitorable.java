@@ -9,7 +9,10 @@ import org.osgi.service.monitor.MonitorListener;
 import org.osgi.service.monitor.Monitorable;
 import org.osgi.service.monitor.StatusVariable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * @author dpishchukhin
@@ -67,16 +70,16 @@ public class MockMonitorable implements Monitorable {
         if (statusVariable != null) {
             switch (statusVariable.getType()) {
                 case StatusVariable.TYPE_BOOLEAN:
-                    setStatusVariables(new StatusVariable(statusVariable.getID(),  statusVariable.getCollectionMethod(), false));
+                    setStatusVariables(new StatusVariable(statusVariable.getID(), statusVariable.getCollectionMethod(), false));
                     break;
                 case StatusVariable.TYPE_FLOAT:
-                    setStatusVariables(new StatusVariable(statusVariable.getID(),  statusVariable.getCollectionMethod(), 0));
+                    setStatusVariables(new StatusVariable(statusVariable.getID(), statusVariable.getCollectionMethod(), 0));
                     break;
                 case StatusVariable.TYPE_INTEGER:
-                    setStatusVariables(new StatusVariable(statusVariable.getID(),  statusVariable.getCollectionMethod(), 0));
+                    setStatusVariables(new StatusVariable(statusVariable.getID(), statusVariable.getCollectionMethod(), 0));
                     break;
                 case StatusVariable.TYPE_STRING:
-                    setStatusVariables(new StatusVariable(statusVariable.getID(),  statusVariable.getCollectionMethod(), ""));
+                    setStatusVariables(new StatusVariable(statusVariable.getID(), statusVariable.getCollectionMethod(), ""));
                     break;
             }
             if (notifiableVariables.contains(s) && listener != null) {
@@ -96,16 +99,16 @@ public class MockMonitorable implements Monitorable {
         if (statusVariable != null) {
             switch (statusVariable.getType()) {
                 case StatusVariable.TYPE_BOOLEAN:
-                    setStatusVariables(new StatusVariable(statusVariable.getID(),  statusVariable.getCollectionMethod(), Boolean.valueOf(value)));
+                    setStatusVariables(new StatusVariable(statusVariable.getID(), statusVariable.getCollectionMethod(), Boolean.valueOf(value)));
                     break;
                 case StatusVariable.TYPE_FLOAT:
-                    setStatusVariables(new StatusVariable(statusVariable.getID(),  statusVariable.getCollectionMethod(), Float.valueOf(value)));
+                    setStatusVariables(new StatusVariable(statusVariable.getID(), statusVariable.getCollectionMethod(), Float.valueOf(value)));
                     break;
                 case StatusVariable.TYPE_INTEGER:
-                    setStatusVariables(new StatusVariable(statusVariable.getID(),  statusVariable.getCollectionMethod(), Integer.valueOf(value)));
+                    setStatusVariables(new StatusVariable(statusVariable.getID(), statusVariable.getCollectionMethod(), Integer.valueOf(value)));
                     break;
                 case StatusVariable.TYPE_STRING:
-                    setStatusVariables(new StatusVariable(statusVariable.getID(),  statusVariable.getCollectionMethod(), value));
+                    setStatusVariables(new StatusVariable(statusVariable.getID(), statusVariable.getCollectionMethod(), value));
                     break;
             }
             if (notifiableVariables.contains(s) && listener != null) {

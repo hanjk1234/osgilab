@@ -108,22 +108,22 @@ public class UtilsTest {
         Assert.assertEquals("true,false", Utils.serializeToString(new Boolean[]{Boolean.TRUE, Boolean.FALSE}));
         Assert.assertEquals("1,2", Utils.serializeToString(new Byte[]{(byte) 1, (byte) 2}));
         Assert.assertEquals("1,2", Utils.serializeToString(new Character[]{'1', '2'}));
-        Assert.assertEquals((double) 1 + "," + (double) 2, Utils.serializeToString(new Double[]{(double)1, (double)2}));
-        Assert.assertEquals((float) 1 + "," + (float) 2, Utils.serializeToString(new Float[]{(float)1, (float)2}));
+        Assert.assertEquals((double) 1 + "," + (double) 2, Utils.serializeToString(new Double[]{(double) 1, (double) 2}));
+        Assert.assertEquals((float) 1 + "," + (float) 2, Utils.serializeToString(new Float[]{(float) 1, (float) 2}));
         Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new Integer[]{1, 2}));
-        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new Long[]{(long)1, (long)2}));
-        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new Short[]{(short)1, (short)2}));
+        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new Long[]{(long) 1, (long) 2}));
+        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new Short[]{(short) 1, (short) 2}));
 
         Assert.assertEquals("\"1\",\"2\"", Utils.serializeToString(new String[]{"1", "2"}));
 
         Assert.assertEquals("true,false", Utils.serializeToString(new boolean[]{true, false}));
         Assert.assertEquals("1,2", Utils.serializeToString(new byte[]{1, 2}));
         Assert.assertEquals("1,2", Utils.serializeToString(new char[]{'1', '2'}));
-        Assert.assertEquals((double) 1 + "," + (double) 2, Utils.serializeToString(new double[]{(double)1, (double)2}));
-        Assert.assertEquals((float) 1 + "," + (float) 2, Utils.serializeToString(new float[]{(float)1, (float)2}));
+        Assert.assertEquals((double) 1 + "," + (double) 2, Utils.serializeToString(new double[]{(double) 1, (double) 2}));
+        Assert.assertEquals((float) 1 + "," + (float) 2, Utils.serializeToString(new float[]{(float) 1, (float) 2}));
         Assert.assertEquals("1,2", Utils.serializeToString(new int[]{1, 2}));
-        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new long[]{(long)1, (long)2}));
-        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new short[]{(short)1, (short)2}));
+        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new long[]{(long) 1, (long) 2}));
+        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new short[]{(short) 1, (short) 2}));
 
         Assert.assertEquals("1,2", Utils.serializeToString(new Vector<BigDecimal>(Arrays.asList(new BigDecimal(1), new BigDecimal(2)))));
         Assert.assertEquals("1,2", Utils.serializeToString(new Vector<BigInteger>(Arrays.asList(new BigInteger("1"), new BigInteger("2")))));
@@ -131,8 +131,8 @@ public class UtilsTest {
         Assert.assertEquals((double) 1 + "," + (double) 2, Utils.serializeToString(new Vector<Double>(Arrays.asList((double) 1, (double) 2))));
         Assert.assertEquals((float) 1 + "," + (float) 2, Utils.serializeToString(new Vector<Float>(Arrays.asList((float) 1, (float) 2))));
         Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new Vector<Integer>(Arrays.asList(1, 2))));
-        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new Vector<Long>(Arrays.asList((long)1, (long)2))));
-        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new Vector<Short>(Arrays.asList((short)1, (short)2))));
+        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new Vector<Long>(Arrays.asList((long) 1, (long) 2))));
+        Assert.assertEquals(1 + "," + 2, Utils.serializeToString(new Vector<Short>(Arrays.asList((short) 1, (short) 2))));
 
         Assert.assertEquals("\"1\",\"2\"", Utils.serializeToString(new Vector<String>(Arrays.asList("1", "2"))));
         Assert.assertEquals("\"1\",\"true\"", Utils.serializeToString(new Vector(Arrays.asList("1", Boolean.TRUE))));
@@ -200,7 +200,7 @@ public class UtilsTest {
         Assert.assertTrue(arrayObject instanceof double[]);
         double[] doubleArray1 = (double[]) arrayObject;
         Assert.assertEquals(2, doubleArray1.length);
-        Assert.assertEquals((double)1, doubleArray1[0], 0);
-        Assert.assertEquals((double)2, doubleArray1[1], 0);
+        Assert.assertEquals((double) 1, doubleArray1[0], 0);
+        Assert.assertEquals((double) 2, doubleArray1[1], 0);
     }
 }

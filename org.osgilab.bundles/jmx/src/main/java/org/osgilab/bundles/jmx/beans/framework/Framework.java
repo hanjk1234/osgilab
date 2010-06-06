@@ -450,7 +450,7 @@ public class Framework extends AbstractMBean implements FrameworkMBean {
                     errorDetails = e.getMessage();
                     break;
                 }
-            }                 
+            }
 
             Map<String, Object> values = new HashMap<String, Object>();
             values.put(REMAINING, bundles.toArray(new Long[bundles.size()]));

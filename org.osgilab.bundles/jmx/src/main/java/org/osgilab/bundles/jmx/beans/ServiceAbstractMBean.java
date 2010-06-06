@@ -9,6 +9,7 @@ import javax.management.NotCompliantMBeanException;
 
 /**
  * Abstract Compendium Service MBean
+ *
  * @author dpishchukhin
  */
 public abstract class ServiceAbstractMBean<T> extends AbstractMBean {

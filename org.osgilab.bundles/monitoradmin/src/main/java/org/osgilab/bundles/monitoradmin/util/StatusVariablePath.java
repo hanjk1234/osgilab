@@ -17,6 +17,7 @@ public class StatusVariablePath {
 
     /**
      * Initialize object and parse input path value
+     *
      * @param path path value
      * @throws IllegalArgumentException path is <code>null</code> or invalid
      */
@@ -29,7 +30,8 @@ public class StatusVariablePath {
 
     /**
      * Initialize object from monitorableId and status variable Id
-     * @param monitorableId monitorableId value
+     *
+     * @param monitorableId    monitorableId value
      * @param statusVariableId status variable Id value
      * @throws IllegalArgumentException ids are <code>null</code> or invalid;
      */
@@ -73,8 +75,9 @@ public class StatusVariablePath {
      *
      * @param path status variable path
      * @return non-nullable array with ids
+     *
      * @throws IllegalArgumentException path is <code>null</code> or invalid
-     * (contains more or less than one separator '/' or parsed IDs are empty or invalid)
+     *                                  (contains more or less than one separator '/' or parsed IDs are empty or invalid)
      */
     protected String[] parseIds(String path) throws IllegalArgumentException {
         if (path == null) {

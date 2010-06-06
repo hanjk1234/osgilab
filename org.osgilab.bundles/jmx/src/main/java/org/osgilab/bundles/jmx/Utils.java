@@ -29,6 +29,7 @@ public class Utils {
      *
      * @param value object value
      * @return one of value {@link JmxConstants#TYPE_ITEM}
+     *
      * @throws IllegalArgumentException if type is out of defined scope
      */
     public static String getValueType(Object value) {
@@ -120,8 +121,9 @@ public class Utils {
      * Deserialized to String value
      *
      * @param value string value
-     * @param type one of value {@link JmxConstants#TYPE_ITEM}
+     * @param type  one of value {@link JmxConstants#TYPE_ITEM}
      * @return deserialized object
+     *
      * @throws IllegalArgumentException if type is out of defined scope or unable to deserialize string
      */
     public static Object deserializeFromString(String value, String type) {
@@ -140,7 +142,7 @@ public class Utils {
             String[] values = value.split(",");
             Vector<Object> result = new Vector<Object>();
             for (String v : values) {
-                result.add(deserializeSimpleValue(v,  elementType));
+                result.add(deserializeSimpleValue(v, elementType));
             }
             return result;
         }
@@ -277,9 +279,10 @@ public class Utils {
 
     /**
      * Find the first <code>ExportedPackage</code> by name and version
-     * @param packages <code>ExportedPackage</code>s array
+     *
+     * @param packages    <code>ExportedPackage</code>s array
      * @param packageName package name
-     * @param version package version
+     * @param version     package version
      * @return package with name and version, otherwise - <code>null</code>
      */
     public static ExportedPackage findPackage(ExportedPackage[] packages, String packageName, Version version) {
@@ -296,9 +299,10 @@ public class Utils {
 
     /**
      * Find <code>ExportedPackage</code>s by name and version
-     * @param packages <code>ExportedPackage</code>s array
+     *
+     * @param packages    <code>ExportedPackage</code>s array
      * @param packageName package name
-     * @param version package version
+     * @param version     package version
      * @return non-<code>null</code> array with <code>ExportedPackage</code>s with name and version
      */
     public static ExportedPackage[] findPackages(ExportedPackage[] packages, String packageName, Version version) {
@@ -317,9 +321,10 @@ public class Utils {
     /**
      * Convert TabularData to properties
      *
-     * @param properties tabular data
+     * @param properties   tabular data
      * @param ignoreErrors ignore errors flag
      * @return <code>Dictionary</code> with properties
+     *
      * @throws IllegalArgumentException if <code>ignoreErrors</code> is <code>false</code> and unable to convert value from String by type
      */
     public static Dictionary convertToDictionary(TabularData properties, boolean ignoreErrors) {
@@ -347,6 +352,7 @@ public class Utils {
      *
      * @param properties properties
      * @return <code>TabularData</code> with properties
+     *
      * @throws IllegalArgumentException if property type is out of defined scope
      */
     public static TabularData getProperties(Dictionary properties) {

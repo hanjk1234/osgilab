@@ -8,7 +8,7 @@
     <groupId>org.osgilab</groupId>
     <artifactId>bundles</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    
+
     <packaging>pom</packaging>
     <name>OSGi Lab Bundles</name>
     <description>OSGi Lab Bundles with Integration tests</description>
@@ -24,7 +24,7 @@
         <name>OSGi Lab</name>
         <url>http://osgilab.org</url>
     </organization>
-    
+
     <licenses>
         <license>
             <name>LGPL</name>

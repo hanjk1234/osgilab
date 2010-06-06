@@ -23,7 +23,7 @@ public class ScheduledMonitoringJob extends AbstractMonitoringJob implements Run
     private ExecutorService executorService;
 
     public ScheduledMonitoringJob(MonitoringJobVisitor visitor, LogVisitor logVisitor, String initiator,
-                                     String[] statusVariablePaths, int schedule, int count) {
+                                  String[] statusVariablePaths, int schedule, int count) {
         super(visitor, logVisitor, initiator, statusVariablePaths, schedule, count);
         executorService = Executors.newSingleThreadExecutor();
         executorService.submit(this);

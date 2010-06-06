@@ -245,7 +245,7 @@ public class MonitorAdminImplTest {
         };
         monitorable.setStatusVariables(statusVariables);
         monitorable.setNotificationSupport("sv.id1", true);
-        
+
         map.put(new MonitorableMockServiceReference("com.acme.pid"), monitorable);
         osgiVisitor.setReferences(map);
 
@@ -428,7 +428,7 @@ public class MonitorAdminImplTest {
 
         MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
 
-        monitorable.setListener((MonitorListener)monitorAdmin);
+        monitorable.setListener((MonitorListener) monitorAdmin);
         monitorable.setMonitorableId("com.acme.pid");
 
         monitorable.setNewStatusVariableValue("sv.id1", "15");
@@ -479,7 +479,7 @@ public class MonitorAdminImplTest {
 
         MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
 
-        monitorable.setListener((MonitorListener)monitorAdmin);
+        monitorable.setListener((MonitorListener) monitorAdmin);
         monitorable.setMonitorableId("com.acme.pid");
 
         MonitoringJob job = monitorAdmin.startJob("init1", new String[]{"com.acme.pid/sv.id1"}, 1);
@@ -539,7 +539,7 @@ public class MonitorAdminImplTest {
 
         MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
 
-        monitorable.setListener((MonitorListener)monitorAdmin);
+        monitorable.setListener((MonitorListener) monitorAdmin);
         monitorable.setMonitorableId("com.acme.pid");
 
         monitorable.setNewStatusVariableValue("sv.id1", "15");

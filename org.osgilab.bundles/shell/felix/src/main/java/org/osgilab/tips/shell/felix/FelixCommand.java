@@ -29,8 +29,9 @@ public class FelixCommand implements Command {
 
     /**
      * Command constructor
-     * @param name command name
-     * @param usage command usage help
+     *
+     * @param name    command name
+     * @param usage   command usage help
      * @param service commands provider service instance
      * @throws NoSuchMethodException if unable to find method in service that links to command name
      */

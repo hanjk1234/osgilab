@@ -10,7 +10,9 @@ import org.eclipse.osgi.framework.console.CommandInterpreter;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,11 +40,13 @@ public class EquinoxCommandProviderGenerator {
 
     /**
      * Generate CommandProvider class and instance for this class based on parameters
-     * @param service commands service
+     *
+     * @param service   commands service
      * @param groupName group name
-     * @param commands commands map (name=help)
-     * @param suffix unique class suffix
+     * @param commands  commands map (name=help)
+     * @param suffix    unique class suffix
      * @return generated CommandProvider instance
+     *
      * @throws Exception if something went wrong
      */
     public static Object generate(Object service, String groupName, Map<String, String> commands, String suffix) throws Exception {
@@ -59,7 +63,7 @@ public class EquinoxCommandProviderGenerator {
                 CtClass serviceCtClass = POOL.getCtClass(Object.class.getName());
                 CtClass stringCtClass = POOL.getCtClass(String.class.getName());
                 CtClass setCtClass = POOL.getCtClass(Set.class.getName());
-                CtConstructor ctConstructor = new CtConstructor(new CtClass[] {
+                CtConstructor ctConstructor = new CtConstructor(new CtClass[]{
                         serviceCtClass, stringCtClass, setCtClass
                 }, ctClass);
                 ctConstructor.setModifiers(Modifier.PUBLIC);
@@ -71,7 +75,7 @@ public class EquinoxCommandProviderGenerator {
                 Set<String> names = commands.keySet();
                 for (String name : names) {
                     if (isMethodAvailable(service, name)) {
-                        CtMethod ctMethod = new CtMethod(CtClass.voidType, "_" + name, new CtClass[] {
+                        CtMethod ctMethod = new CtMethod(CtClass.voidType, "_" + name, new CtClass[]{
                                 interpreterCtClass
                         }, ctClass);
                         ctMethod.setModifiers(Modifier.PUBLIC);
@@ -105,6 +109,7 @@ public class EquinoxCommandProviderGenerator {
 
     /**
      * Detach generated class
+     *
      * @param suffix unique class suffix
      */
     public static void clean(String suffix) {

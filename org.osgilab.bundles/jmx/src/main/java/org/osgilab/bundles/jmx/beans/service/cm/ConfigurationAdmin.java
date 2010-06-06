@@ -12,7 +12,7 @@ import org.osgilab.bundles.jmx.Utils;
 import org.osgilab.bundles.jmx.beans.ServiceAbstractMBean;
 
 import javax.management.NotCompliantMBeanException;
-import javax.management.openmbean.*;
+import javax.management.openmbean.TabularData;
 import java.io.IOException;
 
 /**
