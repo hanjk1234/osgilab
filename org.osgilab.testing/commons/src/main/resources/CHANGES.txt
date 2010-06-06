@@ -1,0 +1,8 @@
+1.0.0
+Implemented functionality:
+* org.osgilab.testing.commons.assertions.BundleAssert - bundle assertions
+* org.osgilab.testing.commons.assertions.FilterAssert - filter assertions
+* org.osgilab.testing.commons.assertions.ServiceAssert - service assertions
+* org.osgilab.testing.commons.utils.BundleUtils - bundle utils that help to find bundle in OSGi Framework
+* org.osgilab.testing.commons.utils.FilterUtils - filter utils that help to create OSGi filters
+* org.osgilab.testing.commons.utils.ServiceUtils - server utils that help to find services and ServiceReferences in OSGi registry
