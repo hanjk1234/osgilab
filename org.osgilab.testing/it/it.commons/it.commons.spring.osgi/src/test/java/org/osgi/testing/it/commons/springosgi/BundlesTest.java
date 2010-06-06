@@ -25,9 +25,9 @@ public class BundlesTest extends AbstractTest {
         assertBundleUnavailable(100);
         // assert bundle with symbolic name "org.osgilab.testing.commons" is installed into OSGi framework
         assertBundleAvailable("org.osgilab.testing.commons");
-        // assert bundle with symbolic name "org.osgilab.testing.commons" and version "1.0.0.SNAPSHOT"
+        // assert bundle with symbolic name "org.osgilab.testing.commons" and version "1.0.0"
         // is installed into OSGi framework
-        assertBundleAvailable("org.osgilab.testing.commons", new Version("1.0.0.SNAPSHOT"));
+        assertBundleAvailable("org.osgilab.testing.commons", new Version("1.0.0"));
         // assert bundle with symbolic name "org.osgilab.testing.commons" and version "1.0.0"
         // is not installed into OSGi framework
         assertBundleUnavailable("org.osgilab.testing.commons", new Version("2.0.0"));

@@ -42,7 +42,7 @@ public abstract class AbstractTest {
                 // list of bundles that should be installd
                 provision(
                         mavenBundle().groupId("org.osgi").artifactId("org.osgi.compendium").version("4.0.1"),
-                        mavenBundle().groupId("org.osgilab.testing").artifactId("commons").version("1.0-SNAPSHOT")
+                        mavenBundle().groupId("org.osgilab.testing").artifactId("commons").version("1.0.0")
                 )
         );
     }

@@ -16,7 +16,7 @@ import org.springframework.osgi.test.AbstractConfigurableBundleCreatorTests;
 public abstract class AbstractTest extends AbstractConfigurableBundleCreatorTests {
     protected String[] getTestBundlesNames() {
         return new String[]{"org.junit, com.springsource.junit, 3.8.2",
-                "org.osgilab.testing, commons, 1.0-SNAPSHOT"};
+                "org.osgilab.testing, commons, 1.0.0"};
     }
 
     @Override
