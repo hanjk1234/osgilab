@@ -12,19 +12,19 @@ package org.osgilab.bundles.monitoradmin;
  */
 public interface ConstantsMonitorAdmin {
     /**
-     * MonitorAdmin events topic
+     * <code>MonitorAdmin</code> events topic
      */
     public final static String TOPIC = "org/osgi/service/monitor";
     /**
-     * Monitorable ID
+     * <code>Monitorable</code> ID
      */
     public final static String MON_MONITORABLE_PID = "mon.monitorable.pid";
     /**
-     * StatusVariable name
+     * <code>StatusVariable</code> name
      */
     public final static String MON_STATUSVARIABLE_NAME = "mon.statusvariable.name";
     /**
-     * StatusVariable value
+     * <code>StatusVariable</code> value
      */
     public final static String MON_STATUSVARIABLE_VALUE = "mon.statusvariable.value";
     /**

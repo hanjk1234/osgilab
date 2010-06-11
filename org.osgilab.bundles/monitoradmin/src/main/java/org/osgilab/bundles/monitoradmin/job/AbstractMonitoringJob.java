@@ -21,8 +21,11 @@ import java.util.Set;
 public abstract class AbstractMonitoringJob implements MonitoringJob {
     protected MonitoringJobVisitor visitor;
     protected LogVisitor logVisitor;
+    // job initiator
     private String initiator;
+    // list of monitoring StatusVariables
     protected Set<String> statusVariablePaths = new HashSet<String>();
+    // job state
     protected boolean isRunning;
     protected int schedule = 0;
     protected int count = 0;

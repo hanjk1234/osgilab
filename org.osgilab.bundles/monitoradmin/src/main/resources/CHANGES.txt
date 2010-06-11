@@ -1,3 +1,8 @@
+1.0.2
+- change POM packaging to JAR
+- 
+
+--------------------------
 1.0.1
 - recompile with J2SE5
 - use OSGi specification 4.1.0 dependencies

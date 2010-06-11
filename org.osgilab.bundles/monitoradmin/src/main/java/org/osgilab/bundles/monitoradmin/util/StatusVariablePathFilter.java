@@ -36,7 +36,13 @@ public class StatusVariablePathFilter extends StatusVariablePath {
         return Utils.validatePathFilterId(id);
     }
 
-    public boolean isIncluded(String monitorableId, String statusVariableId) {
+    /**
+     * Check that given monitorable Id and StatusVarialbe Id match Filter
+     * @param monitorableId monitorable Id
+     * @param statusVariableId StatusVariable Id
+     * @return result
+     */
+    public boolean match(String monitorableId, String statusVariableId) {
         return (monitorableWildcard ?
                 monitorableId.startsWith(this.monitorableId) :
                 monitorableId.equals(this.monitorableId))
@@ -46,10 +52,18 @@ public class StatusVariablePathFilter extends StatusVariablePath {
                         statusVariableId.endsWith(this.statusVariableId));
     }
 
+    /**
+     * Check that filter contains monitorable Id wildcard
+     * @return <code>true</code> - contains, otherwise - <code>false</code>
+     */
     public boolean isMonitorableWildcard() {
         return monitorableWildcard;
     }
 
+    /**
+     * Check that filter contains StatusVariable Id wildcard
+     * @return <code>true</code> - contains, otherwise - <code>false</code>
+     */
     public boolean isStatusVariableWildcard() {
         return statusVariableWildcard;
     }

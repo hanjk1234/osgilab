@@ -29,10 +29,19 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      * Set of StatusVariable paths for which events are disabled
      */
     private Set<String> disabledPaths = new HashSet<String>();
+    /**
+     * List of run jobs
+     */
     private final List<AbstractMonitoringJob> jobs = new ArrayList<AbstractMonitoringJob>();
     private OsgiVisitor osgiVisitor;
     private LogVisitor logVisitor;
 
+    /**
+     * Initialize MonitorAdmin implementation instance
+     *
+     * @param osgiVisitor osgi functionality visitor
+     * @param logVisitor loggers visitor
+     */
     public MonitorAdminImpl(OsgiVisitor osgiVisitor, LogVisitor logVisitor) {
         this.osgiVisitor = osgiVisitor;
         this.logVisitor = logVisitor;
@@ -332,7 +341,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
                 Iterator<String> iterator = disabledPaths.iterator();
                 while (iterator.hasNext()) {
                     StatusVariablePath statusVariablePath = new StatusVariablePath(iterator.next());
-                    if (filter.isIncluded(statusVariablePath.getMonitorableId(), statusVariablePath.getStatusVariableId())) {
+                    if (filter.match(statusVariablePath.getMonitorableId(), statusVariablePath.getStatusVariableId())) {
                         iterator.remove();
                     }
                 }
@@ -341,7 +350,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
                 for (String monitorableId : monitorableNames) {
                     String[] statusVariableNames = getStatusVariableNames(monitorableId);
                     for (String statusVariableId : statusVariableNames) {
-                        if (filter.isIncluded(monitorableId, statusVariableId)) {
+                        if (filter.match(monitorableId, statusVariableId)) {
                             disabledPaths.add(monitorableId + '/' + statusVariableId);
                         }
                     }
@@ -580,6 +589,11 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
         return disabledPaths.toArray(new String[disabledPaths.size()]);
     }
 
+    /**
+     * Check if events are disabled for given path
+     * @param path path to check
+     * @return if events are disabled - <code>true</code>, otherwise - <code>false</code>
+     */
     private boolean isEventEnabled(String path) {
         return !disabledPaths.contains(path);
     }
@@ -674,7 +688,10 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
         return osgiVisitor.getService(mostSuitableMonitorable);
     }
 
-    public void cancelJobs() {
+    /**
+     * Cancel all jobs externaly
+     */
+    void cancelJobs() {
         logVisitor.debug("ENTRY: cancelJobs", null);
         try {
             if (!jobs.isEmpty()) {

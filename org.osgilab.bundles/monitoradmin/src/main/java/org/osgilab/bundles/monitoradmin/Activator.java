@@ -22,8 +22,10 @@ import java.util.logging.Logger;
  * Monitor Admin activator
  *
  * @author dmytro.pishchukhin
+ * @see org.osgi.framework.BundleActivator
  */
 public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
+    // default logger
     private static final Logger LOG = Logger.getLogger(Activator.class.getName());
 
     // monitor admin instance
@@ -33,21 +35,26 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
     // monitor admin service registration
     private ServiceRegistration serviceRegistration;
 
+    // EventAdmin service tracker
     private ServiceTracker eventAdminTracker;
+    // LogService service tracker
     private ServiceTracker logServiceTracker;
 
 
     public void start(BundleContext bundleContext) throws Exception {
         bc = bundleContext;
 
+        // init LogService tracker
         logServiceTracker = new ServiceTracker(bc, LogService.class.getName(), null);
         logServiceTracker.open();
 
+        // init EventAdmin tracker
         eventAdminTracker = new ServiceTracker(bc, EventAdmin.class.getName(), null);
         eventAdminTracker.open();
 
         monitorAdmin = new MonitorAdminImpl(this, this);
 
+        // register MonitorAdmin implementation under MonitorAdmin and MonitorListener interfaces
         serviceRegistration = bundleContext.registerService(new String[]{MonitorAdmin.class.getName(),
                 MonitorListener.class.getName()}, monitorAdmin, null);
 
@@ -55,12 +62,15 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
     }
 
     public void stop(BundleContext bundleContext) throws Exception {
+        // unregister MonitorAdmin service
         if (serviceRegistration != null) {
             serviceRegistration.unregister();
             serviceRegistration = null;
         }
 
+        // uninit monitor admin instance
         if (monitorAdmin != null) {
+            // cancel started jobs
             monitorAdmin.cancelJobs();
             monitorAdmin = null;
         }
@@ -80,6 +90,12 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         bc = null;
     }
 
+    /**
+     * Publish DEBUG message. If <code>LogService</code> in unavailable message is published to default JUL logger
+     *
+     * @param message   message
+     * @param throwable exception
+     */
     public void debug(String message, Throwable throwable) {
         LogService logService = (LogService) logServiceTracker.getService();
         if (logService != null) {
@@ -89,6 +105,12 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         }
     }
 
+    /**
+     * Publish INFO message. If <code>LogService</code> in unavailable message is published to default JUL logger
+     *
+     * @param message   message
+     * @param throwable exception
+     */
     public void info(String message, Throwable throwable) {
         LogService logService = (LogService) logServiceTracker.getService();
         if (logService != null) {
@@ -98,6 +120,12 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         }
     }
 
+    /**
+     * Publish WARNING message. If <code>LogService</code> in unavailable message is published to default JUL logger
+     *
+     * @param message   message
+     * @param throwable exception
+     */
     public void warning(String message, Throwable throwable) {
         LogService logService = (LogService) logServiceTracker.getService();
         if (logService != null) {
@@ -107,6 +135,12 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         }
     }
 
+    /**
+     * Publish ERROR message. If <code>LogService</code> in unavailable message is published to default JUL logger
+     *
+     * @param message   message
+     * @param throwable exception
+     */
     public void error(String message, Throwable throwable) {
         LogService logService = (LogService) logServiceTracker.getService();
         if (logService != null) {

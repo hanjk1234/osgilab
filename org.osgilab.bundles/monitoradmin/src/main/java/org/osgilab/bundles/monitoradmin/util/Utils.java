@@ -24,6 +24,11 @@ public class Utils {
      */
     private static final Pattern FILTER_ID_VALIDATE_PATTERN = Pattern.compile("(\\*)|(((\\w|_|-)+)(\\.(\\w|_|-)*)*)(\\*)?");
 
+    /**
+     * Create service filter for given monitorable Id
+     * @param monitorableId monitorable id
+     * @return filter
+     */
     public static String createServicePidFilter(String monitorableId) {
         StringBuilder builder = new StringBuilder();
         builder.append('(');
@@ -34,10 +39,20 @@ public class Utils {
         return builder.toString();
     }
 
+    /**
+     * Validate Path Id
+     * @param id id
+     * @return validation result
+     */
     public static boolean validatePathId(String id) {
         return PATH_ID_VALIDATE_PATTERN.matcher(id).matches();
     }
 
+    /**
+     * Validate Path Filter Id
+     * @param id id
+     * @return validation result
+     */
     public static boolean validatePathFilterId(String id) {
         return FILTER_ID_VALIDATE_PATTERN.matcher(id).matches();
     }

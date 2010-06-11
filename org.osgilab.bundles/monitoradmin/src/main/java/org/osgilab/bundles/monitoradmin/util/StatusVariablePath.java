@@ -6,7 +6,7 @@
 package org.osgilab.bundles.monitoradmin.util;
 
 /**
- * Status Variable path
+ * Status Variable path object
  *
  * @author dmytro.pishchukhin
  */
@@ -56,14 +56,26 @@ public class StatusVariablePath {
     public StatusVariablePath() {
     }
 
+    /**
+     * Get monitorable Id
+     * @return monitorable Id
+     */
     public String getMonitorableId() {
         return monitorableId;
     }
 
+    /**
+     * Get StatusVariable Id
+     * @return StatusVariable Id
+     */
     public String getStatusVariableId() {
         return statusVariableId;
     }
 
+    /**
+     * Get full path
+     * @return path
+     */
     public String getPath() {
         return path;
     }

@@ -48,6 +48,7 @@ public class ScheduledMonitoringJob extends AbstractMonitoringJob implements Run
 
     public void run() {
         while (isRunning()) {
+            // run loop to fetch StatusVariables values and fire events
             if (count == 0 || ++measurementsTaken < count) {
                 try {
                     for (String path : statusVariablePaths) {
