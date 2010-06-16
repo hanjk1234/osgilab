@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.osgilab.tips</groupId>
+    <artifactId>pax.platforms</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+	<profiles>
+        <profile>
+            <id>felix</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <framework>felix</framework>
+                <platform>platform-felix-3.0.0.xml</platform>
+            </properties>
+        </profile>
+        <profile>
+            <id>equinox</id>
+            <properties>
+                <framework>equinox</framework>
+                <platform>platform-equinox-3.6.0.xml</platform>
+            </properties>
+        </profile>
+        <profile>
+            <id>knopflerfish</id>
+            <properties>
+                <framework>knopflerfish</framework>
+                <platform>platform-knopflerfish-3.0.0.xml</platform>
+            </properties>
+        </profile>
+	</profiles>
+
+	<build>
+		<defaultGoal>pax:provision</defaultGoal>
+		<plugins>
+			<plugin>
+				<groupId>org.ops4j</groupId>
+				<artifactId>maven-pax-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<runner>1.4.0</runner>
+					<framework>${framework}</framework>
+					<provision>
+						<param>--log=debug</param>
+						<param>--workingDirectory=target/runner</param>
+						<param>--ee=J2SE-1.5</param>
+						<param>--definitionURL=file:${platform}</param>
+					</provision>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
