@@ -1,29 +1,29 @@
 <platform>
   <name>Knopflerfish 3.0.0</name>
-  <system>http://www.knopflerfish.org/releases/3.0.0.rc-1/osgi/framework.jar</system>
+  <system>http://www.knopflerfish.org/releases/3.0.0/osgi/framework.jar</system>
 
   <profile name="minimal" default="true"/>
 
   <profile name="tui" extends="minimal">
     <bundle>
       <name>Knopflerfish Log API</name>
-      <url>http://www.knopflerfish.org/releases/3.0.0.rc-1/osgi/jars/log/log_api-3.0.0.jar</url>
+      <url>http://www.knopflerfish.org/releases/3.0.0/osgi/jars/log/log-3.0.1.jar</url>
     </bundle>
     <bundle>
       <name>Knopflerfish Config Admin API</name>
-      <url>http://www.knopflerfish.org/releases/3.0.0.rc-1/osgi/jars/cm/cm_api-3.0.0.jar</url>
+      <url>http://www.knopflerfish.org/releases/3.0.0/osgi/jars/cm/cm-3.0.1.jar</url>
     </bundle>
 	<bundle>
       <name>Knopflerfish Console</name>
-      <url>http://www.knopflerfish.org/releases/3.0.0.rc-1/osgi/jars/console/console_all-3.0.0.jar</url>
+      <url>http://www.knopflerfish.org/releases/3.0.0/osgi/jars/console/console_all-3.0.1.jar</url>
     </bundle>
     <bundle>
       <name>Knopflerfish Console TTY</name>
-      <url>http://www.knopflerfish.org/releases/3.0.0.rc-1/osgi/jars/consoletty/consoletty-3.0.0.jar</url>
+      <url>http://www.knopflerfish.org/releases/3.0.0/osgi/jars/consoletty/consoletty-3.0.1.jar</url>
     </bundle>
     <bundle>
       <name>Knopflerfish Framework Commands</name>
-      <url>http://www.knopflerfish.org/releases/3.0.0.rc-1/osgi/jars/frameworkcommands/frameworkcommands-3.0.3.jar</url>
+      <url>http://www.knopflerfish.org/releases/3.0.0/osgi/jars/frameworkcommands/frameworkcommands-3.0.3.jar</url>
     </bundle>
   </profile>
 
