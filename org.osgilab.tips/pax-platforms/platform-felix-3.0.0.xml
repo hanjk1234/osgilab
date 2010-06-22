@@ -1,6 +1,6 @@
 <platform>
-  <name>Felix 3.0.0</name>
-  <system>mvn:org.apache.felix/org.apache.felix.main/3.0.0</system>
+  <name>Felix 3.0.1</name>
+  <system>mvn:org.apache.felix/org.apache.felix.main/3.0.1</system>
 
   <packages>
     org.osgi.framework; version=1.5.0,
