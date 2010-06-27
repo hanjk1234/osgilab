@@ -12,6 +12,7 @@
     <packaging>pom</packaging>
     <name>OSGi Lab Bundles</name>
     <description>OSGi Lab Bundles with Integration tests</description>
+    <url>http://knowhowlab.org</url>
 
     <developers>
         <developer>
@@ -21,14 +22,14 @@
     </developers>
 
     <organization>
-        <name>OSGi Lab</name>
-        <url>http://osgilab.org</url>
+        <name>Know-How Lab</name>
+        <url>http://knowhowlab.org</url>
     </organization>
 
     <licenses>
         <license>
-            <name>LGPL</name>
-            <url>http://www.gnu.org/licenses/lgpl.txt</url>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
 

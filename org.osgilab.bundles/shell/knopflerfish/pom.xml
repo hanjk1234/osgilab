@@ -9,7 +9,7 @@
     <packaging>bundle</packaging>
     <name>OSGi Lab Shell - Knopflerfish console adapter</name>
     <description>OSGi Lab Shell - Knopflerfish console adapter</description>
-    <url>http://osgilab.org</url>
+    <url>http://knowhowlab.org</url>
 
     <developers>
         <developer>
@@ -19,14 +19,14 @@
     </developers>
 
     <organization>
-        <name>OSGi Lab</name>
-        <url>http://osgilab.org</url>
+        <name>Know-How Lab</name>
+        <url>http://knowhowlab.org</url>
     </organization>
 
     <licenses>
         <license>
-            <name>The MIT License</name>
-            <url>http://code.google.com/p/osgilab/wiki/License</url>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
 

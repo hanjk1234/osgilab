@@ -16,6 +16,26 @@
     <packaging>pom</packaging>
     <name>OSGi Lab Shell adapters</name>
     <description>OSGi Lab Shell adapters</description>
+    <url>http://knowhowlab.org</url>
+
+    <developers>
+        <developer>
+            <name>Dmytro Pishchukhin</name>
+            <timezone>GMT+1</timezone>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Know-How Lab</name>
+        <url>http://knowhowlab.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
 
     <modules>
         <module>equinox</module>
