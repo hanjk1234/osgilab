@@ -14,7 +14,27 @@
     <packaging>pom</packaging>
     <name>OSGi Lab Tips&amp;Tricks: JAXB</name>
     <description>OSGi Lab Tips and Tricks: JAXB</description>
+    <url>http://knowhowlab.org</url>
 
+    <developers>
+        <developer>
+            <name>Dmytro Pishchukhin</name>
+            <timezone>GMT+1</timezone>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Know-How Lab</name>
+        <url>http://knowhowlab.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    
     <build>
         <plugins>
             <plugin>

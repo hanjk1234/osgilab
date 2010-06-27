@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <name>OSGi Lab Tips&amp;Tricks: Profiling</name>
     <description>OSGi Lab Tips and Tricks: Profiling</description>
+    <url>http://knowhowlab.org</url>
 
     <developers>
         <developer>
@@ -17,6 +18,18 @@
             <timezone>GMT+1</timezone>
         </developer>
     </developers>
+
+    <organization>
+        <name>Know-How Lab</name>
+        <url>http://knowhowlab.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
 
     <properties>
         <!-- OSGi artifact version -->

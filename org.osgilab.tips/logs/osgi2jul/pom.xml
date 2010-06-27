@@ -15,7 +15,27 @@
     <packaging>bundle</packaging>
     <name>OSGi Lab Tips&amp;Tricks: Logs - OSGi to JUL Logs adaptor</name>
     <description>OSGi Lab Tips and Tricks: Logs - OSGi Log service to Java util logging adaptor</description>
+    <url>http://knowhowlab.org</url>
 
+    <developers>
+        <developer>
+            <name>Dmytro Pishchukhin</name>
+            <timezone>GMT+1</timezone>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Know-How Lab</name>
+        <url>http://knowhowlab.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+    
     <dependencies>
         <dependency>
             <groupId>org.osgi</groupId>
