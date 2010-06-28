@@ -18,10 +18,7 @@ package org.knowhowlab.osgi.experiments.gogo.equinox;
 
 import org.apache.felix.service.command.CommandProcessor;
 import org.eclipse.osgi.framework.console.CommandProvider;
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
+import org.osgi.framework.*;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
@@ -106,7 +103,10 @@ public class Activator implements BundleActivator {
             ServiceRegistration registration = registrations.get(reference);
             if (registration != null) {
                 // unregister service
+                // todo: check
+                String className = (String) registration.getReference().getProperty(Constants.OBJECTCLASS);
                 registration.unregister();
+                Utils.clean(className);
                 LOG.log(Level.INFO, String.format("GoGo shell for class: %s unregistered", service.getClass()));
             }
         }
