@@ -40,14 +40,13 @@ public class UtilsTest {
         Assert.assertNotNull(shellClass);
 
         Method[] methods = shellClass.getMethods();
-        Assert.assertEquals(2, methods.length);
 
         Method hello = findMethod(methods, "hello");
         Method print = findMethod(methods, "print");
         Assert.assertNotNull(hello);
         Assert.assertNotNull(print);
 
-        Assert.assertNull(findDescriptionAnnotation(hello));
+        Assert.assertNotNull(findDescriptionAnnotation(hello));
         Assert.assertNull(findDescriptionAnnotation(print));
     }
 

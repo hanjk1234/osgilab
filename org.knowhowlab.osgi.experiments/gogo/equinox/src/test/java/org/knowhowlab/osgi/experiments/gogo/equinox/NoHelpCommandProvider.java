@@ -24,7 +24,7 @@ import org.eclipse.osgi.framework.console.CommandProvider;
  */
 public class NoHelpCommandProvider implements CommandProvider {
     public String getHelp() {
-        return null;
+        return "hello [name] - print hello with given name";
     }
 
     public Object _hello(CommandInterpreter intp) {

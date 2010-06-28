@@ -78,7 +78,7 @@ public class Activator implements BundleActivator {
             if (shellInfo != null) {
                 try {
                     // create an instance of GoGo service
-                    Object instance = shellInfo.getShellClass().newInstance();
+                    Object instance = shellInfo.getShellClass().getConstructor(CommandProvider.class).newInstance(commandProvider);
                     // set service properties: scope and list of available commands
                     Dictionary<String, Object> props = new Hashtable<String, Object>();
                     props.put(CommandProcessor.COMMAND_SCOPE, shellInfo.getScope());
@@ -103,7 +103,6 @@ public class Activator implements BundleActivator {
             ServiceRegistration registration = registrations.get(reference);
             if (registration != null) {
                 // unregister service
-                // todo: check
                 String className = (String) registration.getReference().getProperty(Constants.OBJECTCLASS);
                 registration.unregister();
                 Utils.clean(className);
