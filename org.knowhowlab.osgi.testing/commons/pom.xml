@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.osgilab.testing</groupId>
+    <groupId>org.knowhowlab.osgi.testing</groupId>
     <artifactId>commons</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
-    <name>OSGi Lab Testing - Test Commons</name>
-    <description>OSGi Lab Testing - Test Commons</description>
+    <name>KnowHowLab OSGi Testing - Test Commons</name>
+    <description>KnowHowLab OSGi Testing - Test Commons</description>
     <url>http://knowhowlab.org</url>
 
     <developers>
@@ -36,9 +36,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://osgilab.googlecode.com/svn/trunk/org.osgilab.testing/commons</url>
-        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.testing/commons</connection>
-        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.testing/commons
+        <url>http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi.testing/commons</url>
+        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi.testing/commons</connection>
+        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi.testing/commons
         </developerConnection>
     </scm>
 
@@ -79,7 +79,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.osgilab.testing.commons*
+                            org.knowhowlab.osgi.testing.commons*
                         </Export-Package>
                         <Import-Package>
                             org.osgi*,

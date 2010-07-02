@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.osgi.testing.it.commons.springosgi;
+package org.knowhowlab.osgi.testing.it.commons.paxexam;
 
+import org.junit.Test;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 
@@ -27,7 +28,8 @@ import static org.knowhowlab.osgi.testing.commons.assertions.BundleAssert.*;
  * @author dmytro.pishchukhin
  */
 public class BundlesTest extends AbstractTest {
-    public void testSimple() {
+    @Test
+    public void simpleTest() {
         // assert bundle with id=1 is installed into OSGi framework
         assertBundleAvailable(1);
         // assert bundle with id=1 active
@@ -43,5 +45,4 @@ public class BundlesTest extends AbstractTest {
         // is not installed into OSGi framework
         assertBundleUnavailable("org.knowhowlab.osgi.testing.commons", new Version("2.0.0"));
     }
-
 }

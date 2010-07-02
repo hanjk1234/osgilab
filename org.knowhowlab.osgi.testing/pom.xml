@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.osgilab</groupId>
+    <groupId>org.knowhowlab.osgi</groupId>
     <artifactId>testing</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
-    <name>OSGi Lab Testing</name>
-    <description>OSGi Lab Unit/Integration testing tool</description>
+    <name>KnowHowLab OSGi Testing</name>
+    <description>KnowHowLab OSGi Unit/Integration testing tool</description>
     <url>http://knowhowlab.org</url>
 
     <developers>
@@ -38,9 +38,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.testing</url>
-        <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing</connection>
-        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.testing
+        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.knowhowlab.osgi.testing</url>
+        <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.knowhowlab.osgi.testing</connection>
+        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.knowhowlab.osgi.testing
         </developerConnection>
     </scm>
 

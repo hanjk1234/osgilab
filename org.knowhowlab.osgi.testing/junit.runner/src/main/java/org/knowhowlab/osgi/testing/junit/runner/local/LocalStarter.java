@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-package org.osgi.testing.it.commons.springosgi;
+package org.knowhowlab.osgi.testing.junit.runner.local;
 
-import org.knowhowlab.osgi.testing.commons.assertions.OSGiAssert;
-import org.springframework.osgi.test.AbstractConfigurableBundleCreatorTests;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 /**
- * Abstract test with all initializations
- *
  * @author dmytro.pishchukhin
  */
-public abstract class AbstractTest extends AbstractConfigurableBundleCreatorTests {
-    protected String[] getTestBundlesNames() {
-        return new String[]{"org.junit, com.springsource.junit, 3.8.2",
-                "org.knowhowlab.osgi.testing, commons, 1.0.1-SNAPSHOT"};
-    }
+public class LocalStarter {
+    public static void run() throws Exception {
+        final URLClassLoader cl = new URLClassLoader(new URL[]{new URL("file:org.eclipse.osgi_3.2.1.R32x_v20060717.jar")});
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                Thread.currentThread().setContextClassLoader(cl);
 
-    @Override
-    protected void onSetUp() throws Exception {
-        OSGiAssert.init(bundleContext);
+                
+            }
+        };
+        thread.start();
+        thread.join();
     }
 }

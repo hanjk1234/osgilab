@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-package org.osgi.testing.it.commons.springosgi;
-
-import org.knowhowlab.osgi.testing.commons.assertions.OSGiAssert;
-import org.springframework.osgi.test.AbstractConfigurableBundleCreatorTests;
+package org.knowhowlab.osgi.testing.it.commons.testbundle.service;
 
 /**
- * Abstract test with all initializations
+ * Echo service
  *
  * @author dmytro.pishchukhin
  */
-public abstract class AbstractTest extends AbstractConfigurableBundleCreatorTests {
-    protected String[] getTestBundlesNames() {
-        return new String[]{"org.junit, com.springsource.junit, 3.8.2",
-                "org.knowhowlab.osgi.testing, commons, 1.0.1-SNAPSHOT"};
-    }
-
-    @Override
-    protected void onSetUp() throws Exception {
-        OSGiAssert.init(bundleContext);
-    }
+public interface Echo {
+    String echo(String str);
 }

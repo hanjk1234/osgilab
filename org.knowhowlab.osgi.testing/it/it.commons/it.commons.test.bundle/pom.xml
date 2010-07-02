@@ -4,19 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>it.commons</artifactId>
-        <groupId>org.osgilab.testing.it</groupId>
+        <groupId>org.knowhowlab.osgi.testing.it</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.osgilab.testing.it</groupId>
+    <groupId>org.knowhowlab.osgi.testing.it</groupId>
     <artifactId>it.commons.test.bundle</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <packaging>bundle</packaging>
 
-    <name>OSGi Lab Testing - Integration Tests Commons: Test Bundle</name>
-    <description>OSGi Lab Testing - Integration Test Commons: Test Bundle</description>
+    <name>KnowHowLab OSGi Testing - Integration Tests Commons: Test Bundle</name>
+    <description>KnowHowLab OSGi Testing - Integration Test Commons: Test Bundle</description>
     <url>http://knowhowlab.org</url>
 
     <developers>
@@ -75,12 +75,12 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.osgi.testing.it.commons.testbundle.service
+                            org.knowhowlab.osgi.testing.it.commons.testbundle.service
                         </Export-Package>
                         <Import-Package>
                             org.osgi*
                         </Import-Package>
-                        <Bundle-Activator>org.osgi.testing.it.commons.testbundle.Activator</Bundle-Activator>
+                        <Bundle-Activator>org.knowhowlab.osgi.testing.it.commons.testbundle.Activator</Bundle-Activator>
                         <Bundle-License>http://code.google.com/p/osgilab/wiki/License</Bundle-License>
                         <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
                         <_removeheaders>

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.osgi.testing.it.commons.springosgi;
+package org.knowhowlab.osgi.testing.it.commons.paxexam;
 
+import org.junit.Test;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.knowhowlab.osgi.testing.commons.assertions.ServiceAssert;
@@ -27,7 +28,8 @@ import org.knowhowlab.osgi.testing.commons.utils.FilterUtils;
  * @author dmytro.pishchukhin
  */
 public class ServicesTest extends AbstractTest {
-    public void testSimple() throws InvalidSyntaxException {
+    @Test
+    public void simpleTest() throws InvalidSyntaxException {
         // assert PackageAdmin service is available in OSGi registry
         ServiceAssert.assertServiceAvailable(PackageAdmin.class);
         // assert MonitorAdmin service is unavailable in OSGi registry
@@ -38,5 +40,4 @@ public class ServicesTest extends AbstractTest {
         // assert MonitorAdmin service is unavailable in OSGi registry
         ServiceAssert.assertServiceUnavailable(FilterUtils.create("org.osgi.service.monitor.MonitorAdmin"));
     }
-
 }
