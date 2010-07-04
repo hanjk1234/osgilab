@@ -5,11 +5,11 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.osgilab.bundles</groupId>
+    <groupId>org.knowhowlab.osgi</groupId>
     <artifactId>monitoradmin</artifactId>
     <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>OSGi Lab MonitorAdmin</name>
+    <name>KnowHowLab OSGi MonitorAdmin</name>
     <description>OSGi MonitorAdmin API Reference Implementation</description>
     <url>http://knowhowlab.org</url>
 
@@ -38,9 +38,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/monitoradmin</url>
-        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/monitoradmin</connection>
-        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/monitoradmin
+        <url>http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/monitoradmin</url>
+        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/monitoradmin</connection>
+        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/monitoradmin
         </developerConnection>
     </scm>
 
@@ -106,11 +106,13 @@
                         <supportedProjectType>jar</supportedProjectType>
                     </supportedProjectTypes>
                     <instructions>
-                        <Export-Package/>
+                        <Export-Package>
+                            org.osgi.service.monitor;version="1.0"
+                        </Export-Package>
                         <Import-Package>
                             org.osgi*
                         </Import-Package>
-                        <Bundle-Activator>org.osgilab.bundles.monitoradmin.Activator</Bundle-Activator>
+                        <Bundle-Activator>org.knowhowlab.osgi.monitoradmin.Activator</Bundle-Activator>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId};singleton:=true
                         </Bundle-SymbolicName>
                         <Bundle-License>http://code.google.com/p/osgilab/wiki/License</Bundle-License>

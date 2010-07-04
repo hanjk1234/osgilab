@@ -13,4 +13,4 @@ Implemented functionality:
 * org.osgi.jmx.service.permissionadmin.PermissionAdminMBean
 * org.osgi.jmx.service.provisioning.ProvisioningServiceMBean
 * org.osgi.jmx.service.useradmin.UserAdminMBean
-* org.osgilab.bundles.jmx.service.monitor.MonitorAdminMBean
+* MonitorAdminMBean

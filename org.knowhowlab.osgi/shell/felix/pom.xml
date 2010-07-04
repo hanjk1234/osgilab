@@ -3,12 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.osgilab.bundles.shell</groupId>
+    <groupId>org.knowhowlab.osgi.shell</groupId>
     <artifactId>felix</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>OSGi Lab Shell - Felix console adapter</name>
-    <description>OSGi Lab Shell - Felix console adapter</description>
+    <name>KnowHowLab OSGi Shell - Felix console adapter</name>
+    <description>KnowHowLab OSGi Shell - Felix console adapter</description>
     <url>http://knowhowlab.org</url>
 
     <developers>
@@ -36,9 +36,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/shell/felix</url>
-        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/shell/felix</connection>
-        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.osgilab.bundles/shell/felix
+        <url>http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix</url>
+        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix</connection>
+        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix
         </developerConnection>
     </scm>
 
@@ -77,7 +77,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-Activator>org.osgilab.tips.shell.felix.Activator</Bundle-Activator>
+                        <Bundle-Activator>org.knowhowlab.osgi.shell.felix.Activator</Bundle-Activator>
                         <Bundle-License>http://code.google.com/p/osgilab/wiki/License</Bundle-License>
                         <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
                         <_removeheaders>Bnd-LastModified, Built-By, Private-Package, Tool, Build-Jdk, Include-Resource

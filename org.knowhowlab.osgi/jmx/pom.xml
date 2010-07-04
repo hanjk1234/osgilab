@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.osgilab.bundles</groupId>
+    <groupId>org.knowhowlab.osgi</groupId>
     <artifactId>jmx</artifactId>
     <version>1.0.2-SNAPSHOT</version>
 
 
     <packaging>bundle</packaging>
-    <name>OSGi Lab JMX Management Model</name>
+    <name>KnowHowLab OSGi JMX Management Model</name>
     <description>OSGi JMX Management Model Implementation</description>
     <url>http://knowhowlab.org</url>
 
@@ -38,9 +38,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.osgilab.bundles/jmx</url>
-        <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.bundles/jmx</connection>
-        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.osgilab.bundles/jmx
+        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.knowhowlab.osgi/jmx</url>
+        <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.knowhowlab.osgi/jmx</connection>
+        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.knowhowlab.osgi/jmx
         </developerConnection>
     </scm>
 
@@ -86,7 +86,7 @@
                     <instructions>
                         <Export-Package>
                             org.osgi.jmx*,
-                            org.osgilab.bundles.jmx.service.monitor;version=1.0
+                            org.knowhowlab.osgi.jmx.service.monitor;version=1.0
                         </Export-Package>
                         <Import-Package>
                             javax.management*,
@@ -95,7 +95,7 @@
                             org.osgi.service*;resolution:=optional,
                             org.osgi.util*
                         </Import-Package>
-                        <Bundle-Activator>org.osgilab.bundles.jmx.Activator</Bundle-Activator>
+                        <Bundle-Activator>org.knowhowlab.osgi.jmx.Activator</Bundle-Activator>
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId};singleton:=true
                         </Bundle-SymbolicName>
                         <Bundle-License>http://code.google.com/p/osgilab/wiki/License</Bundle-License>
@@ -146,7 +146,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
-                            <subpackages>org.osgilab.bundles.jmx.service.monitor</subpackages>
+                            <subpackages>org.knowhowlab.osgi.jmx.service.monitor</subpackages>
                         </configuration>
                     </plugin>
                     <plugin>
