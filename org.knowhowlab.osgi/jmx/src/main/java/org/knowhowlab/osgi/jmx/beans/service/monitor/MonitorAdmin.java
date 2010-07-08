@@ -16,14 +16,19 @@
 
 package org.knowhowlab.osgi.jmx.beans.service.monitor;
 
+import org.knowhowlab.osgi.jmx.beans.LogVisitor;
+import org.knowhowlab.osgi.jmx.beans.OsgiVisitor;
+import org.knowhowlab.osgi.jmx.beans.ServiceAbstractMBean;
 import org.knowhowlab.osgi.jmx.service.monitor.MonitorAdminMBean;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.monitor.MonitoringJob;
 import org.osgi.service.monitor.StatusVariable;
-import org.knowhowlab.osgi.jmx.beans.ServiceAbstractMBean;
 
-import javax.management.NotCompliantMBeanException;
+import javax.management.*;
 import javax.management.openmbean.*;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,10 +36,38 @@ import java.util.Map;
  * @author dmytro.pishchukhin
  */
 public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.MonitorAdmin>
-        implements MonitorAdminMBean {
+        implements MonitorAdminMBean, NotificationBroadcaster {
+    private NotificationBroadcasterSupport nbs;
+    private MBeanNotificationInfo[] notificationInfos;
+    private ServiceRegistration handlerRegistration;
 
     public MonitorAdmin() throws NotCompliantMBeanException {
         super(MonitorAdminMBean.class);
+        nbs = new NotificationBroadcasterSupport();
+    }
+
+    @Override
+    public void init() {
+        super.init();
+
+        try {
+            Class<?> handlerClass = Class.forName("org.knowhowlab.osgi.jmx.beans.service.monitor.MonitorAdminEventHandler");
+            Constructor<?> constructor = handlerClass.getConstructor(OsgiVisitor.class, LogVisitor.class, NotificationBroadcasterSupport.class);
+            Object handler = constructor.newInstance(visitor, logVisitor, nbs);
+            Dictionary props = (Dictionary) handlerClass.getMethod("getHandlerProperties").invoke(handler);
+            handlerRegistration = visitor.registerService("org.osgi.service.event.EventHandler", handler, props);
+        } catch (Exception e) {
+            logVisitor.warning("Unable to init EventHandler. MonitorAdmin events are ignored", e);
+        }
+    }
+
+    @Override
+    public void uninit() {
+        if (handlerRegistration != null) {
+            handlerRegistration.unregister();
+            handlerRegistration = null;
+        }
+        super.uninit();
     }
 
     public String getDescription(String path) throws IllegalArgumentException, IOException {
@@ -171,5 +204,23 @@ public class MonitorAdmin extends ServiceAbstractMBean<org.osgi.service.monitor.
         values.put(LOCAL, monitoringJob.isLocal());
         values.put(RUNNING, monitoringJob.isRunning());
         return new CompositeDataSupport(MONITORING_JOB_TYPE, values);
+    }
+
+    public void addNotificationListener(NotificationListener listener, NotificationFilter filter, Object handback) throws IllegalArgumentException {
+        nbs.addNotificationListener(listener, filter, handback);
+    }
+
+    public void removeNotificationListener(NotificationListener listener) throws ListenerNotFoundException {
+        nbs.removeNotificationListener(listener);
+    }
+
+    public MBeanNotificationInfo[] getNotificationInfo() {
+        if (notificationInfos == null) {
+            notificationInfos = new MBeanNotificationInfo[]{
+                    new MBeanNotificationInfo(new String[]{MonitorAdminMBean.EVENT},
+                            Notification.class.getName(), MonitorAdminMBean.EVENT)
+            };
+        }
+        return notificationInfos;
     }
 }

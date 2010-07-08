@@ -39,4 +39,7 @@ public abstract class ServiceAbstractMBean<T> extends AbstractMBean {
         service = null;
         super.uninit();
     }
+
+    public void init(){
+    }
 }

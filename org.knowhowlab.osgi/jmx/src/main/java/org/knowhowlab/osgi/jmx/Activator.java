@@ -47,6 +47,7 @@ import org.knowhowlab.osgi.jmx.beans.framework.ServiceState;
 import javax.management.*;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -134,20 +135,62 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
     private Map<String, ServiceAbstractMBean> compendiumServices = new HashMap<String, ServiceAbstractMBean>();
 
     public void start(BundleContext context) throws Exception {
-        bc = context;
+        try {
+            bc = context;
 
-        logServiceTracker = new ServiceTracker(bc, LogService.class.getName(), null);
-        logServiceTracker.open();
+            logServiceTracker = new ServiceTracker(bc, "org.osgi.service.log.LogService", null);
+            logServiceTracker.open();
 
-        server = ManagementFactory.getPlatformMBeanServer();
+            server = ManagementFactory.getPlatformMBeanServer();
 
-        registerCoreTrackers();
+            registerCoreTrackers();
 
-        registerJmxBeans();
+            registerJmxBeans();
 
-        registerCompendiumTrackers();
+            registerCompendiumTrackers();
 
-        info("JMX Management Model started", null);
+            info("JMX Management Model started", null);
+        } catch (Throwable e) {
+            error("Unable to start JMX Management Model", e);
+
+            tryToUnregisterBeans();
+
+            throw new Exception(e);
+        }
+    }
+
+    private void tryToUnregisterBeans() {
+        if (server != null) {
+            unregisterBean(PackageStateMBean.OBJECTNAME);
+            unregisterBean(ServiceStateMBean.OBJECTNAME);
+            unregisterBean(BundleStateMBean.OBJECTNAME);
+            unregisterBean(FrameworkMBean.OBJECTNAME);
+
+            unregisterTrackedBeans(permissionAdminTracker, PermissionAdminMBean.OBJECTNAME);
+            unregisterTrackedBeans(configurationAdminTracker, ConfigurationAdminMBean.OBJECTNAME);
+            unregisterTrackedBeans(provisioningServiceTracker, ProvisioningServiceMBean.OBJECTNAME);
+            unregisterTrackedBeans(userAdminTracker, UserAdminMBean.OBJECTNAME);
+            unregisterTrackedBeans(monitorAdminTracker, MonitorAdminMBean.OBJECTNAME);
+        }
+    }
+
+    private void unregisterTrackedBeans(ServiceTracker tracker, String objectname) {
+        if (tracker != null) {
+            ServiceReference[] serviceReferences = tracker.getServiceReferences();
+            if (serviceReferences != null) {
+            for (ServiceReference serviceReference : serviceReferences) {
+                unregisterBean(createObjectName(objectname, getServiceReferenceId(serviceReference)));
+            }
+        }
+        }
+    }
+
+    private void unregisterBean(String beanName) {
+        try {
+            server.unregisterMBean(new ObjectName(beanName));
+        } catch (Throwable e) {
+            // ignore
+        }
     }
 
     public void stop(BundleContext context) throws Exception {
@@ -251,20 +294,19 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         frameworkTracker.open();
     }
 
-    private void unregisterJmxBeans()
-            throws InstanceNotFoundException, MBeanRegistrationException, MalformedObjectNameException {
-        server.unregisterMBean(new ObjectName(PackageStateMBean.OBJECTNAME));
+    private void unregisterJmxBeans() {
+        unregisterBean(PackageStateMBean.OBJECTNAME);
         packageState.uninit();
 
         bc.removeServiceListener(serviceState);
-        server.unregisterMBean(new ObjectName(ServiceStateMBean.OBJECTNAME));
+        unregisterBean(ServiceStateMBean.OBJECTNAME);
         serviceState.uninit();
 
         bc.removeBundleListener(bundleState);
-        server.unregisterMBean(new ObjectName(BundleStateMBean.OBJECTNAME));
+        unregisterBean(BundleStateMBean.OBJECTNAME);
         bundleState.uninit();
 
-        server.unregisterMBean(new ObjectName(FrameworkMBean.OBJECTNAME));
+        unregisterBean(FrameworkMBean.OBJECTNAME);
         framework.uninit();
     }
 
@@ -294,36 +336,36 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
     }
 
     public void debug(String message, Throwable throwable) {
-        LogService logService = (LogService) logServiceTracker.getService();
+        Object logService = logServiceTracker.getService();
         if (logService != null) {
-            logService.log(LogService.LOG_DEBUG, message, throwable);
+            ((LogService) logService).log(LogService.LOG_DEBUG, message, throwable);
         } else {
             LOG.log(Level.FINE, message, throwable);
         }
     }
 
     public void info(String message, Throwable throwable) {
-        LogService logService = (LogService) logServiceTracker.getService();
+        Object logService = logServiceTracker.getService();
         if (logService != null) {
-            logService.log(LogService.LOG_INFO, message, throwable);
+            ((LogService) logService).log(LogService.LOG_INFO, message, throwable);
         } else {
             LOG.log(Level.INFO, message, throwable);
         }
     }
 
     public void warning(String message, Throwable throwable) {
-        LogService logService = (LogService) logServiceTracker.getService();
+        Object logService = logServiceTracker.getService();
         if (logService != null) {
-            logService.log(LogService.LOG_WARNING, message, throwable);
+            ((LogService) logService).log(LogService.LOG_WARNING, message, throwable);
         } else {
             LOG.log(Level.WARNING, message, throwable);
         }
     }
 
     public void error(String message, Throwable throwable) {
-        LogService logService = (LogService) logServiceTracker.getService();
+        Object logService = logServiceTracker.getService();
         if (logService != null) {
-            logService.log(LogService.LOG_ERROR, message, throwable);
+            ((LogService) logService).log(LogService.LOG_ERROR, message, throwable);
         } else {
             LOG.log(Level.SEVERE, message, throwable);
         }
@@ -382,6 +424,14 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         return bc.getBundles();
     }
 
+    public String getProperty(String name) {
+        return bc.getProperty(name);
+    }
+
+    public ServiceRegistration registerService(String className, Object object, Dictionary props) {
+        return bc.registerService(className, object, props);
+    }
+
     private String createServiceIdFilter(long id) {
         StringBuilder builder = new StringBuilder();
         builder.append('(');
@@ -396,6 +446,10 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         return objectNamePrefix + ",service.id=" + serviceId;
     }
 
+    private Long getServiceReferenceId(ServiceReference reference) {
+        return (Long) reference.getProperty(Constants.SERVICE_ID);
+    }
+
     private class CompendiumServiceCustomizer<T> implements ServiceTrackerCustomizer {
         private Class<? extends ServiceAbstractMBean<T>> beanClass;
         private String objectNamePrefix;
@@ -406,13 +460,14 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         }
 
         public Object addingService(ServiceReference reference) {
-            long serviceId = (Long) reference.getProperty(Constants.SERVICE_ID);
+            long serviceId = getServiceReferenceId(reference);
             T service = (T) bc.getService(reference);
             try {
                 ServiceAbstractMBean<T> mBean = beanClass.newInstance();
                 mBean.setVisitor(Activator.this);
                 mBean.setLogVisitor(Activator.this);
                 mBean.setService(service);
+                mBean.init();
                 String objectName = createObjectName(objectNamePrefix, serviceId);
                 compendiumServices.put(objectName, mBean);
                 server.registerMBean(mBean, new ObjectName(objectName));
@@ -428,7 +483,7 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         }
 
         public void removedService(ServiceReference reference, Object service) {
-            long serviceId = (Long) reference.getProperty(Constants.SERVICE_ID);
+            long serviceId = getServiceReferenceId(reference);
             try {
                 String objectName = createObjectName(objectNamePrefix, serviceId);
                 ServiceAbstractMBean serviceMBean = compendiumServices.get(objectName);

@@ -176,6 +176,58 @@ public interface MonitorAdminMBean {
             INITIATOR, STATUS_VARIABLE_NAMES);
 
     /**
+     * The key MONITORABLE_PID, used in {@link MonitorAdminMBean#MONITORABLE_PID_ITEM}
+     */
+    String MONITORABLE_PID = "MonitorablePid";
+    /**
+     * The item for <code>StatusVariable</code> event Monitorable PID value. The key is {@link MonitorAdminMBean#MONITORABLE_PID}
+     * and type is <code>SimpleType.STRING</code>.
+     */
+    Item MONITORABLE_PID_ITEM = new Item(MONITORABLE_PID, "StatusVariable event Monitorable PID", SimpleType.STRING);
+    /**
+     * The key STATUS_VARIABLE_NAME, used in {@link MonitorAdminMBean#STATUS_VARIABLE_NAME_ITEM}
+     */
+    String STATUS_VARIABLE_NAME = "StatusVariableName";
+    /**
+     * The item for <code>StatusVariable</code> event name value. The key is {@link MonitorAdminMBean#STATUS_VARIABLE_NAME}
+     * and type is <code>SimpleType.STRING</code>.
+     */
+    Item STATUS_VARIABLE_NAME_ITEM = new Item(STATUS_VARIABLE_NAME, "StatusVariable event name value", SimpleType.STRING);
+    /**
+     * The key STATUS_VARIABLE_VALUE, used in {@link MonitorAdminMBean#STATUS_VARIABLE_VALUE_ITEM}
+     */
+    String STATUS_VARIABLE_VALUE = "StatusVAriableValue";
+    /**
+     * The item for <code>StatusVariable</code> event value. The key is {@link MonitorAdminMBean#STATUS_VARIABLE_VALUE}
+     * and type is <code>SimpleType.STRING</code>.
+     */
+    Item STATUS_VARIABLE_VALUE_ITEM = new Item(STATUS_VARIABLE_VALUE, "StatusVariable event value", SimpleType.STRING);
+    /**
+     * The key EVENT_INITIATOR, used in {@link MonitorAdminMBean#EVENT_INITIATOR_ITEM}
+     */
+    String EVENT_INITIATOR = "Initiator";
+    /**
+     * The item for <code>StatusVariable</code> event initiator. The key is {@link MonitorAdminMBean#EVENT_INITIATOR}
+     * and type is <code>SimpleType.STRING</code>.
+     */
+    Item EVENT_INITIATOR_ITEM = new Item(EVENT_INITIATOR, "StatusVariable event initiator", SimpleType.STRING);
+    /**
+     * The key MONITORING_JOBS, used in {@link MonitorAdminMBean#EVENT_TYPE}
+     */
+    String EVENT = "MonitorAdminEvent";
+    /**
+     * The Composite Type for a <code>StatusVariable</code> change event. It contains the following items:
+     * <ul>
+     * <li>{@link MonitorAdminMBean#MONITORABLE_PID_ITEM}</li>
+     * <li>{@link MonitorAdminMBean#STATUS_VARIABLE_NAME_ITEM}</li>
+     * <li>{@link MonitorAdminMBean#STATUS_VARIABLE_VALUE_ITEM}</li>
+     * <li>{@link MonitorAdminMBean#EVENT_INITIATOR_ITEM}</li>
+     * </ul>
+     */
+    CompositeType EVENT_TYPE = Item.compositeType(EVENT, "This type incapsulates StatusVariable change event",
+            MONITORABLE_PID_ITEM, STATUS_VARIABLE_NAME_ITEM, STATUS_VARIABLE_VALUE_ITEM, EVENT_INITIATOR_ITEM);
+
+    /**
      * Returns a human readable description of the given <code>StatusVariable</code>.
      * The null value may be returned if there is no description for the given <code>StatusVariable</code>.
      *

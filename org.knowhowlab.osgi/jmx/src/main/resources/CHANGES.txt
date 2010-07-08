@@ -1,3 +1,12 @@
+1.0.2
+- refactor package to org.knowhowlab.osgi.jmx
+- change groupId to org.knowhowlab.osgi
+- change license to Apache License 2.0
+- add support of MonitorAdmin event to notify through JMX
+- handle errors on bundle start and unregister registered MBeans
+- embed org.osgi.jmx package
+
+--------------------------
 1.0.1
 - fix NoClassDefFoundException for Compendium service
 - fix NPEs

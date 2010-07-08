@@ -19,10 +19,12 @@ package org.knowhowlab.osgi.jmx.beans;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.service.startlevel.StartLevel;
 
 import java.io.InputStream;
+import java.util.Dictionary;
 
 /**
  * OSGi visitor interface. It is used to access OSGi specific services.
@@ -47,4 +49,8 @@ public interface OsgiVisitor {
     org.osgi.framework.launch.Framework getFramework();
 
     Bundle[] getBundles();
+
+    String getProperty(String name);
+
+    ServiceRegistration registerService(String className, Object object, Dictionary props);
 }

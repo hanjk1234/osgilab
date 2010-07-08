@@ -56,11 +56,6 @@
             <version>4.2.0</version>
         </dependency>
         <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.enterprise</artifactId>
-            <version>4.2.0</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.5</version>
@@ -85,12 +80,11 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.osgi.jmx*,
+                            org.osgi.jmx*;version=1.0,
                             org.knowhowlab.osgi.jmx.service.monitor;version=1.0
                         </Export-Package>
                         <Import-Package>
                             javax.management*,
-                            !org.osgi.jmx*,
                             org.osgi.framework*,
                             org.osgi.service*;resolution:=optional,
                             org.osgi.util*
