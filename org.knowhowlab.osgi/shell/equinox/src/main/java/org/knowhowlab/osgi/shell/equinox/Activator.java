@@ -147,8 +147,10 @@ public class Activator implements BundleActivator {
                     } catch (Exception e) {
                         LOG.log(Level.WARNING, "Unable to initialize group: " + groupName, e);
                     }
+                    return service;
+                } else {
+                    return null;
                 }
-                return service;
             }
         }
 

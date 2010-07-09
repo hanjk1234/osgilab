@@ -196,7 +196,7 @@ public interface MonitorAdminMBean {
     /**
      * The key STATUS_VARIABLE_VALUE, used in {@link MonitorAdminMBean#STATUS_VARIABLE_VALUE_ITEM}
      */
-    String STATUS_VARIABLE_VALUE = "StatusVAriableValue";
+    String STATUS_VARIABLE_VALUE = "StatusVariableValue";
     /**
      * The item for <code>StatusVariable</code> event value. The key is {@link MonitorAdminMBean#STATUS_VARIABLE_VALUE}
      * and type is <code>SimpleType.STRING</code>.
@@ -205,7 +205,7 @@ public interface MonitorAdminMBean {
     /**
      * The key EVENT_INITIATOR, used in {@link MonitorAdminMBean#EVENT_INITIATOR_ITEM}
      */
-    String EVENT_INITIATOR = "Initiator";
+    String EVENT_INITIATOR = "EventInitiator";
     /**
      * The item for <code>StatusVariable</code> event initiator. The key is {@link MonitorAdminMBean#EVENT_INITIATOR}
      * and type is <code>SimpleType.STRING</code>.

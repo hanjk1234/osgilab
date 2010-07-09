@@ -2,16 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+    <parent>
+        <artifactId>manual-tests</artifactId>
+        <groupId>org.knowhowlab.osgi</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.knowhowlab</groupId>
-    <artifactId>osgi</artifactId>
+    <groupId>org.knowhowlab.osgi.manual-tests</groupId>
+    <artifactId>monitor</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-
     <packaging>pom</packaging>
-    <name>KnowHowLab OSGi Bundles</name>
-    <description>KnowHowLab OSGi Bundles with Integration tests</description>
+
+    <name>KnowHowLab OSGi MonitorAdmin Manual Tests module</name>
     <url>http://knowhowlab.org</url>
 
     <developers>
@@ -38,17 +41,8 @@
         <url>http://code.google.com/p/osgilab/issues</url>
     </issueManagement>
 
-    <scm>
-        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi</connection>
-        <developerConnection>scm:svn:https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi</developerConnection>
-        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.knowhowlab.osgi</url>
-    </scm>
-
     <modules>
-        <module>monitoradmin</module>
-        <module>jmx</module>
-        <module>shell</module>
-        <module>it</module>
-        <module>manual-tests</module>
+        <module>test-monitorable</module>
     </modules>
+
 </project>
