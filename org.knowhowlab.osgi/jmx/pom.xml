@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.knowhowlab.osgi</groupId>
     <artifactId>jmx</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
 
 
     <packaging>bundle</packaging>
@@ -38,9 +37,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://code.google.com/p/osgilab/source/browse/#svn/trunk/org.knowhowlab.osgi/jmx</url>
-        <connection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.knowhowlab.osgi/jmx</connection>
-        <developerConnection>scm:svn:http://code.google.com/p/osgilab/svn/trunk/org.knowhowlab.osgi/jmx
+        <url>http://osgilab.googlecode.com/svn/tags/jmx-1.0.2</url>
+        <connection>scm:svn:http://osgilab.googlecode.com/svn/tags/jmx-1.0.2</connection>
+        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/tags/jmx-1.0.2
         </developerConnection>
     </scm>
 
@@ -106,7 +105,7 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.0</version>
                 <configuration>
-                    <tagBase>http://code.google.com/p/osgilab/svn/tags</tagBase>
+                    <tagBase>http://osgilab.googlecode.com/svn/tags/</tagBase>
                     <mavenExecutorId>forked-path</mavenExecutorId>
                 </configuration>
             </plugin>
