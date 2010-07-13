@@ -16,46 +16,41 @@
 
 package org.knowhowlab.osgi.monitoradmin;
 
-import org.knowhowlab.osgi.monitoradmin.job.AbstractMonitoringJob;
-import org.knowhowlab.osgi.monitoradmin.job.MonitoringJobVisitor;
 import org.knowhowlab.osgi.monitoradmin.job.ScheduledMonitoringJob;
 import org.knowhowlab.osgi.monitoradmin.job.SubscriptionMonitoringJob;
 import org.knowhowlab.osgi.monitoradmin.util.StatusVariablePath;
 import org.knowhowlab.osgi.monitoradmin.util.StatusVariablePathFilter;
-import org.osgi.framework.Constants;
-import org.osgi.framework.ServiceReference;
-import org.osgi.service.event.Event;
-import org.osgi.service.monitor.*;
-import org.knowhowlab.osgi.monitoradmin.util.Utils;
+import org.osgi.framework.Bundle;
+import org.osgi.service.monitor.MonitorAdmin;
+import org.osgi.service.monitor.Monitorable;
+import org.osgi.service.monitor.MonitoringJob;
+import org.osgi.service.monitor.StatusVariable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * MonitorAdmin implementation
  *
  * @author dmytro.pishchukhin
  */
-public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, MonitoringJobVisitor {
-    /**
-     * Set of StatusVariable paths for which events are disabled
-     */
-    private Set<String> disabledPaths = new HashSet<String>();
-    /**
-     * List of run jobs
-     */
-    private final List<AbstractMonitoringJob> jobs = new ArrayList<AbstractMonitoringJob>();
-    private OsgiVisitor osgiVisitor;
-    private LogVisitor logVisitor;
+public class MonitorAdminImpl implements MonitorAdmin {
+    private final LogVisitor logVisitor;
+    private final MonitorAdminCommon common;
+    private final Bundle consumer;
 
     /**
      * Initialize MonitorAdmin implementation instance
      *
-     * @param osgiVisitor osgi functionality visitor
-     * @param logVisitor loggers visitor
+     * @param logVisitor  loggers visitor
+     * @param common commons actions
+     * @param consumer bundle-consumer
      */
-    public MonitorAdminImpl(OsgiVisitor osgiVisitor, LogVisitor logVisitor) {
-        this.osgiVisitor = osgiVisitor;
+    public MonitorAdminImpl(LogVisitor logVisitor, MonitorAdminCommon common, Bundle consumer) {
         this.logVisitor = logVisitor;
+        this.common = common;
+        this.consumer = consumer;
     }
 
     /**
@@ -67,7 +62,6 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      * @param path the full path of the <code>StatusVariable</code> in
      *             [Monitorable_ID]/[StatusVariable_ID] format
      * @return the <code>StatusVariable</code> object
-     *
      * @throws java.lang.IllegalArgumentException
      *                                     if <code>path</code> is
      *                                     <code>null</code> or otherwise invalid, or points to a
@@ -82,7 +76,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
         logVisitor.debug("ENTRY: getStatusVariable: " + path, null);
         try {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
-            Monitorable monitorable = findMonitorableById(statusVariablePath.getMonitorableId());
+            Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
 
             return monitorable.getStatusVariable(statusVariablePath.getStatusVariableId());
         } finally {
@@ -104,7 +98,6 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      * @return the human readable description of this
      *         <code>StatusVariable</code> or <code>null</code> if it is not
      *         set
-     *
      * @throws java.lang.IllegalArgumentException
      *                                     if <code>path</code> is
      *                                     <code>null</code> or otherwise invalid, or points to a
@@ -119,7 +112,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
         logVisitor.debug("ENTRY: getDescription: " + path, null);
         try {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
-            Monitorable monitorable = findMonitorableById(statusVariablePath.getMonitorableId());
+            Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
 
             return monitorable.getDescription(statusVariablePath.getStatusVariableId());
         } finally {
@@ -144,21 +137,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
     public String[] getMonitorableNames() {
         logVisitor.debug("ENTRY: getMonitorableNames", null);
         try {
-            // sorted set that contains Monitorable SERVICE_PIDs
-            SortedSet<String> names = new TreeSet<String>();
-
-            ServiceReference[] serviceReferences = osgiVisitor.findMonitorableReferences(null);
-
-            if (serviceReferences != null) {
-                for (ServiceReference serviceReference : serviceReferences) {
-                    String pid = (String) serviceReference.getProperty(Constants.SERVICE_PID);
-                    if (pid != null) {
-                        names.add(pid);
-                    }
-                }
-            }
-
-            return names.toArray(new String[names.size()]);
+            return common.getMonitorableNames();
         } finally {
             logVisitor.debug("EXIT: getMonitorableNames", null);
         }
@@ -188,7 +167,6 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      *                      instance
      * @return a list of <code>StatusVariable</code> objects published
      *         by the specified <code>Monitorable</code>
-     *
      * @throws java.lang.IllegalArgumentException
      *          if <code>monitorableId</code>
      *          is <code>null</code> or otherwise invalid, or points to a
@@ -198,7 +176,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
             throws IllegalArgumentException {
         logVisitor.debug("ENTRY: getStatusVariables: " + monitorableId, null);
         try {
-            Monitorable monitorable = findMonitorableById(monitorableId);
+            Monitorable monitorable = common.findMonitorableById(monitorableId);
 
             String[] names = monitorable.getStatusVariableNames();
             StatusVariable[] variables = new StatusVariable[names.length];
@@ -236,7 +214,6 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      *                      instance
      * @return a list of <code>StatusVariable</code> objects names
      *         published by the specified <code>Monitorable</code>
-     *
      * @throws java.lang.IllegalArgumentException
      *          if <code>monitorableId</code>
      *          is <code>null</code> or otherwise invalid, or points to a
@@ -246,9 +223,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
             throws IllegalArgumentException {
         logVisitor.debug("ENTRY: getStatusVariableNames: " + monitorableId, null);
         try {
-            Monitorable monitorable = findMonitorableById(monitorableId);
-
-            return monitorable.getStatusVariableNames();
+            return common.getStatusVariableNames(monitorableId);
         } finally {
             logVisitor.debug("EXIT: getStatusVariableNames: " + monitorableId, null);
         }
@@ -274,7 +249,6 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      * @return <code>true</code> if the <code>Monitorable</code> could
      *         successfully reset the given <code>StatusVariable</code>,
      *         <code>false</code> otherwise
-     *
      * @throws java.lang.IllegalArgumentException
      *                                     if <code>path</code> is
      *                                     <code>null</code> or otherwise invalid, or points to a
@@ -289,7 +263,7 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
         logVisitor.debug("ENTRY: resetStatusVariable: " + path, null);
         try {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
-            Monitorable monitorable = findMonitorableById(statusVariablePath.getMonitorableId());
+            Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
 
             return monitorable.resetStatusVariable(statusVariablePath.getStatusVariableId());
         } finally {
@@ -342,31 +316,13 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
             StatusVariablePathFilter filter = new StatusVariablePathFilter(path);
             // check StatusVariable if filter does not contain wildcards
             if (!filter.isMonitorableWildcard()) {
-                Monitorable monitorable = findMonitorableById(filter.getMonitorableId());
+                Monitorable monitorable = common.findMonitorableById(filter.getMonitorableId());
                 if (!filter.isStatusVariableWildcard()) {
                     monitorable.getStatusVariable(filter.getStatusVariableId());
                 }
             }
 
-            if (on) {
-                Iterator<String> iterator = disabledPaths.iterator();
-                while (iterator.hasNext()) {
-                    StatusVariablePath statusVariablePath = new StatusVariablePath(iterator.next());
-                    if (filter.match(statusVariablePath.getMonitorableId(), statusVariablePath.getStatusVariableId())) {
-                        iterator.remove();
-                    }
-                }
-            } else {
-                String[] monitorableNames = getMonitorableNames();
-                for (String monitorableId : monitorableNames) {
-                    String[] statusVariableNames = getStatusVariableNames(monitorableId);
-                    for (String statusVariableId : statusVariableNames) {
-                        if (filter.match(monitorableId, statusVariableId)) {
-                            disabledPaths.add(monitorableId + '/' + statusVariableId);
-                        }
-                    }
-                }
-            }
+            common.switchEvents(filter, on);
         } finally {
             logVisitor.debug("EXIT: switchEvents: " + path + ", " + on, null);
         }
@@ -404,7 +360,6 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      * @param count           the number of measurements to be taken, or 0 for the
      *                        measurement to run until explicitly stopped
      * @return the successfully started job object, cannot be <code>null</code>
-     *
      * @throws java.lang.IllegalArgumentException
      *                                     if the list of
      *                                     <code>StatusVariable</code> names contains an invalid or
@@ -436,18 +391,16 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
             }
             for (String path : statusVariables) {
                 StatusVariablePath statusVariablePath = new StatusVariablePath(path);
-                Monitorable monitorable = findMonitorableById(statusVariablePath.getMonitorableId());
+                Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
                 if (!new HashSet<String>(Arrays.asList(monitorable.getStatusVariableNames()))
                         .contains(statusVariablePath.getStatusVariableId())) {
                     throw new IllegalArgumentException("StatusVariable: " + path + " is non-existing");
                 }
             }
 
-            ScheduledMonitoringJob job = new ScheduledMonitoringJob(this, logVisitor, initiator,
+            ScheduledMonitoringJob job = new ScheduledMonitoringJob(common, logVisitor, initiator,
                     statusVariables, schedule, count);
-            synchronized (jobs) {
-                jobs.add(job);
-            }
+            common.addJob(job);
             logVisitor.info("New Scheduled Job is started: " + initiator, null);
             return job;
         } finally {
@@ -480,7 +433,6 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
      * @param count           the number of changes that must happen to a
      *                        <code>StatusVariable</code> before a new notification is sent
      * @return the successfully started job object, cannot be <code>null</code>
-     *
      * @throws java.lang.IllegalArgumentException
      *                                     if the list of
      *                                     <code>StatusVariable</code> names contains an invalid or
@@ -507,16 +459,14 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
             }
             for (String path : statusVariables) {
                 StatusVariablePath statusVariablePath = new StatusVariablePath(path);
-                Monitorable monitorable = findMonitorableById(statusVariablePath.getMonitorableId());
+                Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
                 if (!monitorable.notifiesOnChange(statusVariablePath.getStatusVariableId())) {
                     throw new IllegalArgumentException("StatusVariable: " + path + " does not support notifications");
                 }
             }
-            SubscriptionMonitoringJob job = new SubscriptionMonitoringJob(this, logVisitor, initiator,
+            SubscriptionMonitoringJob job = new SubscriptionMonitoringJob(common, logVisitor, initiator,
                     statusVariables, count);
-            synchronized (jobs) {
-                jobs.add(job);
-            }
+            common.addJob(job);
             logVisitor.info("New Subscription Job is started: " + initiator, null);
             return job;
         } finally {
@@ -542,181 +492,10 @@ public class MonitorAdminImpl implements MonitorAdmin, MonitorListener, Monitori
     public MonitoringJob[] getRunningJobs() {
         logVisitor.debug("ENTRY: getRunningJobs", null);
         try {
-            List<MonitoringJob> runningJobs = new ArrayList<MonitoringJob>();
-            synchronized (jobs) {
-                for (AbstractMonitoringJob job : jobs) {
-                    if (job.isRunning()) {
-                        runningJobs.add(job);
-                    }
-                }
-            }
+            List<MonitoringJob> runningJobs = common.getRunningJobs();
             return runningJobs.toArray(new MonitoringJob[runningJobs.size()]);
         } finally {
             logVisitor.debug("EXIT: getRunningJobs", null);
-        }
-    }
-
-    /**
-     * Callback for notification of a <code>StatusVariable</code> change.
-     *
-     * @param monitorableId  the identifier of the <code>Monitorable</code>
-     *                       instance reporting the change
-     * @param statusVariable the <code>StatusVariable</code> that has changed
-     * @throws java.lang.IllegalArgumentException
-     *          if the specified monitorable
-     *          ID is invalid (<code>null</code>, empty, or contains illegal
-     *          characters) or points to a non-existing <code>Monitorable</code>,
-     *          or if <code>statusVariable</code> is <code>null</code>
-     */
-    public void updated(String monitorableId, StatusVariable statusVariable) throws IllegalArgumentException {
-        // validate monitorableId
-        findMonitorableById(monitorableId);
-        if (statusVariable == null) {
-            throw new IllegalArgumentException("StatusVariable is null");
-        }
-        StatusVariablePath path = new StatusVariablePath(monitorableId, statusVariable.getID());
-        if (isEventEnabled(path.getPath())) {
-            fireEvent(monitorableId, statusVariable, null);
-            logVisitor.info("Fire new SV update Event: " + path.getPath(), null);
-        }
-        // find jobs that handle this StatusVariable update event
-        if (!jobs.isEmpty()) {
-            synchronized (jobs) {
-                for (AbstractMonitoringJob job : jobs) {
-                    if (job.isHandleUpdateEvent(path.getPath())) {
-                        job.handleUpdateEvent(monitorableId, statusVariable);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Get array with paths that are disabled for notificatios with switchEvents() method
-     *
-     * @return array with StatusVariable paths
-     */
-    public String[] getDisabledNotificationPaths() {
-        return disabledPaths.toArray(new String[disabledPaths.size()]);
-    }
-
-    /**
-     * Check if events are disabled for given path
-     * @param path path to check
-     * @return if events are disabled - <code>true</code>, otherwise - <code>false</code>
-     */
-    private boolean isEventEnabled(String path) {
-        return !disabledPaths.contains(path);
-    }
-
-    /**
-     * Fire StatusVariable update event
-     *
-     * @param monitorableId  monitorableId
-     * @param statusVariable status variable
-     * @param initiator      initiator. if <code>null</code> - is not added to event
-     */
-    public void fireEvent(String monitorableId, StatusVariable statusVariable, String initiator) {
-        Dictionary<String, String> eventProperties = new Hashtable<String, String>();
-        eventProperties.put(ConstantsMonitorAdmin.MON_MONITORABLE_PID, monitorableId);
-        eventProperties.put(ConstantsMonitorAdmin.MON_STATUSVARIABLE_NAME, statusVariable.getID());
-
-        String value = null;
-        switch (statusVariable.getType()) {
-            case StatusVariable.TYPE_BOOLEAN:
-                value = Boolean.toString(statusVariable.getBoolean());
-                break;
-            case StatusVariable.TYPE_FLOAT:
-                value = Float.toString(statusVariable.getFloat());
-                break;
-            case StatusVariable.TYPE_INTEGER:
-                value = Integer.toString(statusVariable.getInteger());
-                break;
-            case StatusVariable.TYPE_STRING:
-                value = statusVariable.getString();
-                break;
-        }
-        eventProperties.put(ConstantsMonitorAdmin.MON_STATUSVARIABLE_VALUE, value);
-        if (initiator != null) {
-            eventProperties.put(ConstantsMonitorAdmin.MON_LISTENER_ID, initiator);
-        }
-
-        Event event = new Event(ConstantsMonitorAdmin.TOPIC, eventProperties);
-        osgiVisitor.postEvent(event);
-    }
-
-    /**
-     * Cancel Job and remove it from jobs list
-     *
-     * @param job job to cancel
-     */
-    public void cancelJob(AbstractMonitoringJob job) {
-        synchronized (jobs) {
-            jobs.remove(job);
-            job.cancel();
-        }
-    }
-
-    /**
-     * Find Monitorable service by monitorable Id. Returns Monitorable service or
-     * throws exception.
-     * If multiple services exist for the same monitorableId,
-     * the service with the highest ranking (as specified in its Constants.SERVICE_RANKING property)
-     * is returned.
-     * If there is a tie in ranking, the service with the lowest service ID (as specified
-     * in its Constants.SERVICE_ID property); that is, the service that was regis-
-     * tered first is returned.
-     *
-     * @param monitorableId id that is userd to filter services
-     * @return Monitorable service with specified monitorableId.
-     *
-     * @throws IllegalArgumentException monitorableId is <code>null</code> or monitorableId points
-     *                                  to non-existing service or monitorableId is invalid
-     */
-    private Monitorable findMonitorableById(String monitorableId) throws IllegalArgumentException {
-        if (monitorableId == null) {
-            throw new IllegalArgumentException("MonitorableId is null");
-        }
-
-        if (!Utils.validatePathId(monitorableId)) {
-            throw new IllegalArgumentException("MonitorableId is invalid");
-        }
-
-        ServiceReference mostSuitableMonitorable = null;
-        ServiceReference[] serviceReferences = osgiVisitor.findMonitorableReferences(monitorableId);
-
-        if (serviceReferences != null) {
-            for (ServiceReference serviceReference : serviceReferences) {
-                if (mostSuitableMonitorable == null ||
-                        mostSuitableMonitorable.compareTo(serviceReference) < 0) {
-                    mostSuitableMonitorable = serviceReference;
-                }
-            }
-        }
-        if (mostSuitableMonitorable == null) {
-            throw new IllegalArgumentException("Monitorable ID: " + monitorableId + " points to non-existing service");
-        }
-        return osgiVisitor.getService(mostSuitableMonitorable);
-    }
-
-    /**
-     * Cancel all jobs externaly
-     */
-    void cancelJobs() {
-        logVisitor.debug("ENTRY: cancelJobs", null);
-        try {
-            if (!jobs.isEmpty()) {
-                synchronized (jobs) {
-                    Iterator<AbstractMonitoringJob> iterator = jobs.iterator();
-                    while (iterator.hasNext()) {
-                        AbstractMonitoringJob job = iterator.next();
-                        job.cancel();
-                        iterator.remove();
-                    }
-                }
-            }
-        } finally {
-            logVisitor.debug("ENTRY: cancelJobs", null);
         }
     }
 }

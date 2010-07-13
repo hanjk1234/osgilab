@@ -16,15 +16,21 @@
 
 package org.knowhowlab.osgi.monitoradmin;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.knowhowlab.osgi.monitoradmin.mocks.MockLogVisitor;
 import org.knowhowlab.osgi.monitoradmin.mocks.MockMonitorable;
 import org.knowhowlab.osgi.monitoradmin.mocks.MockOsgiVisitor;
 import org.knowhowlab.osgi.monitoradmin.mocks.MonitorableMockServiceReference;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
-import org.osgi.service.monitor.*;
+import org.osgi.service.monitor.MonitorAdmin;
+import org.osgi.service.monitor.Monitorable;
+import org.osgi.service.monitor.MonitoringJob;
+import org.osgi.service.monitor.StatusVariable;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -33,9 +39,28 @@ import java.util.concurrent.TimeUnit;
  * @author dmytro.pishchukhin
  */
 public class MonitorAdminImplTest {
+    private MockOsgiVisitor osgiVisitor;
+    private MockLogVisitor logVisitor;
+    private MonitorAdminCommon common;
+    private Bundle bundle = null;
+
+    @Before
+    public void init() {
+        osgiVisitor = new MockOsgiVisitor();
+        logVisitor = new MockLogVisitor();
+        common = new MonitorAdminCommon(osgiVisitor, logVisitor);
+    }
+
+    @After
+    public void uninit() {
+        if (common != null) {
+            common.cancelAllJobs();
+        }
+    }
+
     @Test
     public void testGetMonitorableNames_NoMonitorableAvailable() throws Exception {
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(new MockOsgiVisitor(), new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
         String[] monitorableNames = monitorAdmin.getMonitorableNames();
         Assert.assertNotNull(monitorableNames);
         Assert.assertEquals(0, monitorableNames.length);
@@ -43,14 +68,13 @@ public class MonitorAdminImplTest {
 
     @Test
     public void testGetMonitorableNames_MonitorableAvailable() throws Exception {
-        MockOsgiVisitor osgiVisitor = new MockOsgiVisitor();
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
         map.put(new MonitorableMockServiceReference("com.acme.pid2"), new MockMonitorable());
         map.put(new MonitorableMockServiceReference("com.acme.pid3"), new MockMonitorable());
         map.put(new MonitorableMockServiceReference("com.acme.pid1"), new MockMonitorable());
         osgiVisitor.setReferences(map);
 
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
 
         String[] monitorableNames = monitorAdmin.getMonitorableNames();
         Assert.assertNotNull(monitorableNames);
@@ -62,8 +86,6 @@ public class MonitorAdminImplTest {
 
     @Test
     public void testGetStatusVariable() throws Exception {
-        MockOsgiVisitor osgiVisitor = new MockOsgiVisitor();
-
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
 
         MockMonitorable monitorable = new MockMonitorable();
@@ -74,7 +96,7 @@ public class MonitorAdminImplTest {
         map.put(new MonitorableMockServiceReference("com.acme.pid"), monitorable);
         osgiVisitor.setReferences(map);
 
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
 
         try {
             monitorAdmin.getStatusVariable(null);
@@ -111,8 +133,6 @@ public class MonitorAdminImplTest {
 
     @Test
     public void testGetDescription() throws Exception {
-        MockOsgiVisitor osgiVisitor = new MockOsgiVisitor();
-
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
 
         MockMonitorable monitorable = new MockMonitorable();
@@ -123,7 +143,7 @@ public class MonitorAdminImplTest {
         map.put(new MonitorableMockServiceReference("com.acme.pid"), monitorable);
         osgiVisitor.setReferences(map);
 
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
 
         try {
             monitorAdmin.getDescription(null);
@@ -156,8 +176,6 @@ public class MonitorAdminImplTest {
 
     @Test
     public void testGetStatusVariables() throws Exception {
-        MockOsgiVisitor osgiVisitor = new MockOsgiVisitor();
-
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
 
         MockMonitorable monitorable = new MockMonitorable();
@@ -171,7 +189,7 @@ public class MonitorAdminImplTest {
         map.put(new MonitorableMockServiceReference("com.acme.pid"), monitorable);
         osgiVisitor.setReferences(map);
 
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
 
         try {
             monitorAdmin.getStatusVariables(null);
@@ -200,8 +218,6 @@ public class MonitorAdminImplTest {
 
     @Test
     public void testGetStatusVariableNames() throws Exception {
-        MockOsgiVisitor osgiVisitor = new MockOsgiVisitor();
-
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
 
         MockMonitorable monitorable = new MockMonitorable();
@@ -215,7 +231,7 @@ public class MonitorAdminImplTest {
         map.put(new MonitorableMockServiceReference("com.acme.pid"), monitorable);
         osgiVisitor.setReferences(map);
 
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
 
         try {
             monitorAdmin.getStatusVariableNames(null);
@@ -244,8 +260,6 @@ public class MonitorAdminImplTest {
 
     @Test
     public void testGetRunningJobs() throws Exception {
-        MockOsgiVisitor osgiVisitor = new MockOsgiVisitor();
-
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
 
         MockMonitorable monitorable = new MockMonitorable();
@@ -260,7 +274,7 @@ public class MonitorAdminImplTest {
         map.put(new MonitorableMockServiceReference("com.acme.pid"), monitorable);
         osgiVisitor.setReferences(map);
 
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
 
         MonitoringJob[] jobs = monitorAdmin.getRunningJobs();
         Assert.assertNotNull(jobs);
@@ -282,8 +296,6 @@ public class MonitorAdminImplTest {
 
     @Test
     public void testResetStatusVariable() throws Exception {
-        MockOsgiVisitor osgiVisitor = new MockOsgiVisitor();
-
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
 
         MockMonitorable monitorable = new MockMonitorable();
@@ -298,7 +310,7 @@ public class MonitorAdminImplTest {
         map.put(new MonitorableMockServiceReference("com.acme.pid"), monitorable);
         osgiVisitor.setReferences(map);
 
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
 
         StatusVariable sv = monitorAdmin.getStatusVariable("com.acme.pid/sv.id1");
         Assert.assertNotNull(sv);
@@ -344,8 +356,6 @@ public class MonitorAdminImplTest {
 
     @Test
     public void testSwitchEvents() throws Exception {
-        MockOsgiVisitor osgiVisitor = new MockOsgiVisitor();
-
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
 
         MockMonitorable monitorable = new MockMonitorable();
@@ -359,7 +369,7 @@ public class MonitorAdminImplTest {
         map.put(new MonitorableMockServiceReference("com.acme.pid"), monitorable);
         osgiVisitor.setReferences(map);
 
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
 
         try {
             monitorAdmin.switchEvents(null, true);
@@ -400,29 +410,27 @@ public class MonitorAdminImplTest {
 
         monitorAdmin.switchEvents("com.acme.pid/sv.id1", false);
 
-        String[] paths = ((MonitorAdminImpl) monitorAdmin).getDisabledNotificationPaths();
+        String[] paths = common.getDisabledNotificationPaths();
         Assert.assertNotNull(paths);
         Assert.assertEquals(1, paths.length);
         Assert.assertEquals("com.acme.pid/sv.id1", paths[0]);
 
         monitorAdmin.switchEvents("com.acme.pid/sv.id1", true);
-        paths = ((MonitorAdminImpl) monitorAdmin).getDisabledNotificationPaths();
+        paths = common.getDisabledNotificationPaths();
         Assert.assertEquals(0, paths.length);
 
         monitorAdmin.switchEvents("*/sv.id1", false);
-        paths = ((MonitorAdminImpl) monitorAdmin).getDisabledNotificationPaths();
+        paths = common.getDisabledNotificationPaths();
         Assert.assertEquals(1, paths.length);
         Assert.assertEquals("com.acme.pid/sv.id1", paths[0]);
 
         monitorAdmin.switchEvents("*/*", true);
-        paths = ((MonitorAdminImpl) monitorAdmin).getDisabledNotificationPaths();
+        paths = common.getDisabledNotificationPaths();
         Assert.assertEquals(0, paths.length);
     }
 
     @Test
     public void testSwitchEventsWithNotification() throws Exception {
-        MockOsgiVisitor osgiVisitor = new MockOsgiVisitor();
-
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
 
         MockMonitorable monitorable = new MockMonitorable();
@@ -437,9 +445,9 @@ public class MonitorAdminImplTest {
         map.put(new MonitorableMockServiceReference("com.acme.pid"), monitorable);
         osgiVisitor.setReferences(map);
 
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
 
-        monitorable.setListener((MonitorListener) monitorAdmin);
+        monitorable.setListener(common);
         monitorable.setMonitorableId("com.acme.pid");
 
         monitorable.setNewStatusVariableValue("sv.id1", "15");
@@ -472,8 +480,6 @@ public class MonitorAdminImplTest {
 
     @Test
     public void testStartJob() throws Exception {
-        MockOsgiVisitor osgiVisitor = new MockOsgiVisitor();
-
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
 
         MockMonitorable monitorable = new MockMonitorable();
@@ -488,9 +494,9 @@ public class MonitorAdminImplTest {
         map.put(new MonitorableMockServiceReference("com.acme.pid"), monitorable);
         osgiVisitor.setReferences(map);
 
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
 
-        monitorable.setListener((MonitorListener) monitorAdmin);
+        monitorable.setListener(common);
         monitorable.setMonitorableId("com.acme.pid");
 
         MonitoringJob job = monitorAdmin.startJob("init1", new String[]{"com.acme.pid/sv.id1"}, 1);
@@ -533,8 +539,6 @@ public class MonitorAdminImplTest {
 
     @Test
     public void testStartScheduledJob() throws Exception {
-        MockOsgiVisitor osgiVisitor = new MockOsgiVisitor();
-
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
 
         MockMonitorable monitorable = new MockMonitorable();
@@ -548,9 +552,9 @@ public class MonitorAdminImplTest {
         map.put(new MonitorableMockServiceReference("com.acme.pid"), monitorable);
         osgiVisitor.setReferences(map);
 
-        MonitorAdmin monitorAdmin = new MonitorAdminImpl(osgiVisitor, new MockLogVisitor());
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
 
-        monitorable.setListener((MonitorListener) monitorAdmin);
+        monitorable.setListener(common);
         monitorable.setMonitorableId("com.acme.pid");
 
         monitorable.setNewStatusVariableValue("sv.id1", "15");

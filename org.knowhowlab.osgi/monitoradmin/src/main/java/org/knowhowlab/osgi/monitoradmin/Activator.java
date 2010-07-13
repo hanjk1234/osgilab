@@ -36,19 +36,40 @@ import java.util.logging.Logger;
  * @see org.osgi.framework.BundleActivator
  */
 public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
-    // default logger
+    /**
+     * Default logger
+     */
     private static final Logger LOG = Logger.getLogger(Activator.class.getName());
 
-    // monitor admin instance
-    private MonitorAdminImpl monitorAdmin;
+    /**
+     * <code>MonitorAdmin</code> <code>ServiceFactory</code> instance
+     */
+    private MonitorAdminFactory monitorAdminFactory;
+    /**
+     * MonitorAdmin commons actions
+     */
+    private MonitorAdminCommon common;
 
+    /**
+     * BundleContext
+     */
     private BundleContext bc;
-    // monitor admin service registration
-    private ServiceRegistration serviceRegistration;
+    /**
+     * MonitorAdmin ServiceFactory registration
+     */
+    private ServiceRegistration monitorAdminRegistration;
+    /**
+     * MonitorListener registration
+     */
+    private ServiceRegistration monitorListenerRegistration;
 
-    // EventAdmin service tracker
+    /**
+     * EventAdmin service tracker
+     */
     private ServiceTracker eventAdminTracker;
-    // LogService service tracker
+    /**
+     * LogService service tracker
+     */
     private ServiceTracker logServiceTracker;
 
 
@@ -63,27 +84,36 @@ public class Activator implements BundleActivator, OsgiVisitor, LogVisitor {
         eventAdminTracker = new ServiceTracker(bc, EventAdmin.class.getName(), null);
         eventAdminTracker.open();
 
-        monitorAdmin = new MonitorAdminImpl(this, this);
+        // init commons
+        common = new MonitorAdminCommon(this, this);
+        // init factory
+        monitorAdminFactory = new MonitorAdminFactory(this, common);
 
-        // register MonitorAdmin implementation under MonitorAdmin and MonitorListener interfaces
-        serviceRegistration = bundleContext.registerService(new String[]{MonitorAdmin.class.getName(),
-                MonitorListener.class.getName()}, monitorAdmin, null);
+        // register MonitorAdmin ServiceFactory
+        monitorAdminRegistration = bundleContext.registerService(MonitorAdmin.class.getName(), monitorAdminFactory, null);
+        // register MonitorListener
+        monitorListenerRegistration = bundleContext.registerService(MonitorListener.class.getName(), common, null);
 
         info("MonitorAdmin started", null);
     }
 
     public void stop(BundleContext bundleContext) throws Exception {
         // unregister MonitorAdmin service
-        if (serviceRegistration != null) {
-            serviceRegistration.unregister();
-            serviceRegistration = null;
+        if (monitorAdminRegistration != null) {
+            monitorAdminRegistration.unregister();
+            monitorAdminRegistration = null;
         }
 
-        // uninit monitor admin instance
-        if (monitorAdmin != null) {
+        // unregister MonitorListener service
+        if (monitorListenerRegistration != null) {
+            monitorListenerRegistration.unregister();
+            monitorListenerRegistration = null;
+        }
+
+        if (common != null) {
             // cancel started jobs
-            monitorAdmin.cancelJobs();
-            monitorAdmin = null;
+            common.cancelAllJobs();
+            monitorAdminFactory = null;
         }
 
         if (eventAdminTracker != null) {
