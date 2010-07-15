@@ -81,6 +81,7 @@
                                 <param>--workingDirectory=target/runner</param>
                                 <param>--definitionURL=file:felix-security-platform.xml</param>
                                 <param>--vmOptions=-Dorg.osgi.framework.security="osgi" -Djava.security.policy=${basedir}/all.policy</param>
+                                <param>mvn:org.knowhowlab.osgi/jmx/1.0.2</param>
                                 <param>mvn:org.knowhowlab.osgi/monitoradmin/1.0.2-SNAPSHOT</param>
                                 <param>mvn:org.knowhowlab.osgi.shell/felix/1.0.1-SNAPSHOT</param>
                             </provision>

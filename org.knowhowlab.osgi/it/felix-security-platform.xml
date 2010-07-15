@@ -30,28 +30,4 @@
             <url>mvn:org.apache.felix/org.apache.felix.eventadmin/1.2.2</url>
         </bundle>
     </profile>
-
-    <profile name="tui" extends="minimal">
-        <bundle>
-            <name>Shell</name>
-            <url>mvn:org.apache.felix/org.apache.felix.shell/1.4.2</url>
-        </bundle>
-        <bundle>
-            <name>Shell TUI</name>
-            <url>mvn:org.apache.felix/org.apache.felix.shell.tui/1.4.1</url>
-        </bundle>
-        <bundle>
-            <name>HTTP API</name>
-            <url>mvn:org.apache.felix/org.apache.felix.http.api/2.0.4</url>
-        </bundle>
-        <bundle>
-            <name>HTTP Jetty</name>
-            <url>mvn:org.apache.felix/org.apache.felix.http.jetty/2.0.4</url>
-        </bundle>
-        <bundle>
-            <name>Web Console</name>
-            <url>mvn:org.apache.felix/org.apache.felix.webconsole/3.1.0</url>
-        </bundle>
-    </profile>
-
 </platform>

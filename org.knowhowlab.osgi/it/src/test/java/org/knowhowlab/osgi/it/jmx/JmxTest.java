@@ -50,7 +50,6 @@ public class JmxTest {
                 // list of bundles that should be installd
                 provision(
                         mavenBundle().groupId("org.osgi").artifactId("org.osgi.compendium").version("4.2.0"),
-                        mavenBundle().groupId("org.osgi").artifactId("org.osgi.enterprise").version("4.2.0"),
                         mavenBundle().groupId("org.knowhowlab.osgi").artifactId("jmx").version("1.0.2-SNAPSHOT")
                 )
         );
