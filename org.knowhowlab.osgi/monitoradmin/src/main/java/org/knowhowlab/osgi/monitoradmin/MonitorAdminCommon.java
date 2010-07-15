@@ -295,7 +295,11 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
         }
 
         Event event = new Event(ConstantsMonitorAdmin.TOPIC, eventProperties);
-        osgiVisitor.postEvent(event);
+        try {
+            osgiVisitor.postEvent(event);
+        } catch (SecurityException e) {
+            logVisitor.error("MonitorAdmin bundle does not have TopicPermission", e);
+        }
     }
 
     /**

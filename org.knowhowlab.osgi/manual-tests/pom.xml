@@ -44,6 +44,7 @@
     <modules>
         <module>monitor</module>
         <module>jmx</module>
+        <module>test-monitorable</module>
     </modules>
 
 </project>
