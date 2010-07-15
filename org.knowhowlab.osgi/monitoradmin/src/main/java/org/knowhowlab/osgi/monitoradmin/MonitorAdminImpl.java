@@ -77,7 +77,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
         try {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
             Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
-
+            // todo: check MonitorPermission
             return monitorable.getStatusVariable(statusVariablePath.getStatusVariableId());
         } finally {
             logVisitor.debug("EXIT: getStatusVariable: " + path, null);
@@ -113,7 +113,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
         try {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
             Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
-
+            // todo: check MonitorPermission
             return monitorable.getDescription(statusVariablePath.getStatusVariableId());
         } finally {
             logVisitor.debug("EXIT: getDescription: " + path, null);
@@ -184,6 +184,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
             for (int i = 0; i < names.length; i++) {
                 variables[i] = monitorable.getStatusVariable(names[i]);
             }
+            // todo: check MonitorPermission
 
             return variables;
         } finally {
@@ -223,6 +224,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
             throws IllegalArgumentException {
         logVisitor.debug("ENTRY: getStatusVariableNames: " + monitorableId, null);
         try {
+            // todo: check MonitorPermission
             return common.getStatusVariableNames(monitorableId);
         } finally {
             logVisitor.debug("EXIT: getStatusVariableNames: " + monitorableId, null);
@@ -264,7 +266,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
         try {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
             Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
-
+            // todo: check MonitorPermission
             return monitorable.resetStatusVariable(statusVariablePath.getStatusVariableId());
         } finally {
             logVisitor.debug("EXIT: resetStatusVariable: " + path, null);
@@ -321,7 +323,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
                     monitorable.getStatusVariable(filter.getStatusVariableId());
                 }
             }
-
+            // todo: check MonitorPermission
             common.switchEvents(filter, on);
         } finally {
             logVisitor.debug("EXIT: switchEvents: " + path + ", " + on, null);
@@ -397,7 +399,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
                     throw new IllegalArgumentException("StatusVariable: " + path + " is non-existing");
                 }
             }
-
+            // todo: check MonitorPermission
             ScheduledMonitoringJob job = new ScheduledMonitoringJob(common, logVisitor, initiator,
                     statusVariables, schedule, count);
             common.addJob(job);
@@ -464,6 +466,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
                     throw new IllegalArgumentException("StatusVariable: " + path + " does not support notifications");
                 }
             }
+            // todo: check MonitorPermission
             SubscriptionMonitoringJob job = new SubscriptionMonitoringJob(common, logVisitor, initiator,
                     statusVariables, count);
             common.addJob(job);
@@ -493,6 +496,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
         logVisitor.debug("ENTRY: getRunningJobs", null);
         try {
             List<MonitoringJob> runningJobs = common.getRunningJobs();
+            // todo: check MonitorPermission
             return runningJobs.toArray(new MonitoringJob[runningJobs.size()]);
         } finally {
             logVisitor.debug("EXIT: getRunningJobs", null);
