@@ -21,14 +21,11 @@ import org.knowhowlab.osgi.monitoradmin.job.SubscriptionMonitoringJob;
 import org.knowhowlab.osgi.monitoradmin.util.StatusVariablePath;
 import org.knowhowlab.osgi.monitoradmin.util.StatusVariablePathFilter;
 import org.osgi.framework.Bundle;
-import org.osgi.service.monitor.MonitorAdmin;
-import org.osgi.service.monitor.Monitorable;
-import org.osgi.service.monitor.MonitoringJob;
-import org.osgi.service.monitor.StatusVariable;
+import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.monitor.*;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * MonitorAdmin implementation
@@ -43,9 +40,9 @@ public class MonitorAdminImpl implements MonitorAdmin {
     /**
      * Initialize MonitorAdmin implementation instance
      *
-     * @param logVisitor  loggers visitor
-     * @param common commons actions
-     * @param consumer bundle-consumer
+     * @param logVisitor loggers visitor
+     * @param common     commons actions
+     * @param consumer   bundle-consumer
      */
     public MonitorAdminImpl(LogVisitor logVisitor, MonitorAdminCommon common, Bundle consumer) {
         this.logVisitor = logVisitor;
@@ -114,7 +111,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
             Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
             // todo: check MonitorPermission
-            return monitorable.getDescription(statusVariablePath.getStatusVariableId());
+           return monitorable.getDescription(statusVariablePath.getStatusVariableId());
         } finally {
             logVisitor.debug("EXIT: getDescription: " + path, null);
         }
@@ -137,10 +134,49 @@ public class MonitorAdminImpl implements MonitorAdmin {
     public String[] getMonitorableNames() {
         logVisitor.debug("ENTRY: getMonitorableNames", null);
         try {
-            return common.getMonitorableNames();
+            ServiceReference[] serviceReferences = common.getMonitorableReferences();
+            SortedSet<String> names = new TreeSet<String>();
+            for (ServiceReference serviceReference : serviceReferences) {
+                String pid = (String) serviceReference.getProperty(Constants.SERVICE_PID);
+                String[] variableNames = common.getStatusVariableNames(pid);
+
+                if (variableNames.length > 0) {
+                    Collection<String> producerPublishedVariables = getFilterVariableNames(pid, variableNames, serviceReference.getBundle(), MonitorPermission.PUBLISH);
+                    Collection<String> consumerReadVariables = getFilterVariableNames(pid, variableNames, consumer, MonitorPermission.READ);
+                    if (!Collections.disjoint(producerPublishedVariables, consumerReadVariables)) {
+                        names.add(pid);
+                    }
+                } else {
+                    names.add(pid);
+                }
+            }
+            return names.toArray(new String[names.size()]);
         } finally {
             logVisitor.debug("EXIT: getMonitorableNames", null);
         }
+    }
+
+    /**
+     * Filter <code>StatusVariable</code> names by <code>MonitorPermission</code> action and for given <code>Bundle</code>
+     *
+     * @param pid              <code>Monitorable</code> service PID
+     * @param variableNames    list of <code>StatusVariable</code> names
+     * @param bundle           <code>Bundle</code> for permission check
+     * @param permissionAction <code>MonitorPermission</code> action
+     * @return filtered collection of <code>StatusVariable</code> names
+     */
+    private Collection<String> getFilterVariableNames(String pid, String[] variableNames, Bundle bundle, String permissionAction) {
+        List<String> result = new ArrayList<String>();
+        for (String variableName : variableNames) {
+            try {
+                if (bundle.hasPermission(new MonitorPermission(String.format("%s/%s", pid, variableName), permissionAction))) {
+                    result.add(variableName);
+                }
+            } catch (IllegalArgumentException e) {
+                logVisitor.debug("Unable to check permission", e);
+            }
+        }
+        return result;
     }
 
     /**

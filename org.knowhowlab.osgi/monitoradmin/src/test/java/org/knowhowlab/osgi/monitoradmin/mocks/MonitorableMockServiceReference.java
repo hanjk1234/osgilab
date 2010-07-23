@@ -16,6 +16,7 @@
 
 package org.knowhowlab.osgi.monitoradmin.mocks;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
 import org.osgi.service.monitor.Monitorable;
 import org.springframework.osgi.mock.MockServiceReference;
@@ -28,6 +29,13 @@ import java.util.Hashtable;
 public class MonitorableMockServiceReference extends MockServiceReference {
     public MonitorableMockServiceReference(String pid) {
         super(new String[]{Monitorable.class.getName()});
+        Hashtable<String, String> props = new Hashtable<String, String>();
+        props.put(Constants.SERVICE_PID, pid);
+        setProperties(props);
+    }
+
+    public MonitorableMockServiceReference(Bundle bundle, String pid) {
+        super(bundle, new String[]{Monitorable.class.getName()});
         Hashtable<String, String> props = new Hashtable<String, String>();
         props.put(Constants.SERVICE_PID, pid);
         setProperties(props);

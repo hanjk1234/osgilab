@@ -85,6 +85,19 @@ public class MonitorAdminImplTest {
     }
 
     @Test
+    public void testGetMonitorableNames_MonitorableAvailable_InvalidId() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+        map.put(new MonitorableMockServiceReference("com.acme.pid2.very.long.monitorable.id"), new MockMonitorable());
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, bundle);
+
+        String[] monitorableNames = monitorAdmin.getMonitorableNames();
+        Assert.assertNotNull(monitorableNames);
+        Assert.assertEquals(0, monitorableNames.length);
+    }
+
+    @Test
     public void testGetStatusVariable() throws Exception {
         HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
 

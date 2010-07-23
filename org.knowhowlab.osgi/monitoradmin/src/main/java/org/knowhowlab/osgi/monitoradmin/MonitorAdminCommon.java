@@ -29,6 +29,7 @@ import org.osgi.service.monitor.Monitorable;
 import org.osgi.service.monitor.MonitoringJob;
 import org.osgi.service.monitor.StatusVariable;
 
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -37,6 +38,12 @@ import java.util.*;
  * @author dpishchukhin
  */
 public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor {
+    private static final String SYMBOLIC_NAME_CHARACTERS =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" +
+                    "-_.";   // a subset of the characters allowed in DMT URIs
+
+    private static final int MAX_ID_LENGTH = 32;
+
     /**
      * Set of StatusVariable paths for which events are disabled
      */
@@ -172,6 +179,31 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
             }
         }
         return names.toArray(new String[names.size()]);
+    }
+
+    /**
+     * Returns array of the <code>Monitorable</code> <code>ServiceReference</code>s that are
+     * currently registered.
+     * <p/>
+     * The returned array contains the <code>ServiceTeference</code>s in alphabetical order by service PID.
+     * It cannot be <code>null</code>, an empty array is returned if no
+     * <code>Monitorable</code> services are registered.
+     *
+     * @return the array of <code>Monitorable</code> names
+     */
+    public ServiceReference[] getMonitorableReferences() {
+        // sorted set that contains Monitorable ServiceReferences
+        SortedSet<ServiceReference> names = new TreeSet<ServiceReference>(new ServiceReferencePidComparator());
+        ServiceReference[] serviceReferences = osgiVisitor.findMonitorableReferences(null);
+        if (serviceReferences != null) {
+            for (ServiceReference serviceReference : serviceReferences) {
+                String pid = (String) serviceReference.getProperty(Constants.SERVICE_PID);
+                if (pid != null && isValidId(pid)) {
+                    names.add(serviceReference);
+                }
+            }
+        }
+        return names.toArray(new ServiceReference[names.size()]);
     }
 
     /**
@@ -365,6 +397,56 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
      */
     public String[] getStatusVariableNames(String monitorableId) {
         Monitorable monitorable = findMonitorableById(monitorableId);
-        return monitorable.getStatusVariableNames();
+        String[] statusVariableNames = monitorable.getStatusVariableNames();
+
+        List<String> result = new ArrayList<String>();
+
+        for (String statusVariableName : statusVariableNames) {
+            if (isValidId(statusVariableName)) {
+                result.add(statusVariableName);
+            }
+        }
+        return result.toArray(new String[result.size()]);
     }
+
+    private static class ServiceReferencePidComparator implements Comparator<ServiceReference> {
+        public int compare(ServiceReference o1, ServiceReference o2) {
+            String pid1 = (String) o1.getProperty(Constants.SERVICE_PID);
+            String pid2 = (String) o2.getProperty(Constants.SERVICE_PID);
+            return pid1.compareTo(pid2);
+        }
+    }
+
+    /**
+     * Validate <code>Monitorable</code> Id or <code>StatusVariable</code> name
+     * @param id id
+     * @return <code>false</code> - id is invalid, otherwise - <code>true</code>
+     */
+    public static boolean isValidId(String id) {
+
+        byte[] nameBytes;
+        try {
+            nameBytes = id.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // never happens, "UTF-8" must always be supported
+            return false;
+        }
+        if (nameBytes.length > MAX_ID_LENGTH) {
+            return false;
+        }
+
+
+        if (id.equals(".") || id.equals("..")) {
+            return false;
+        }
+
+        char[] chars = id.toCharArray();
+        for (char aChar : chars) {
+            if (SYMBOLIC_NAME_CHARACTERS.indexOf(aChar) == -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

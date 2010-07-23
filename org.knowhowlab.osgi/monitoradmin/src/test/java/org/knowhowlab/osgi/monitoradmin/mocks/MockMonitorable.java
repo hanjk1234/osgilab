@@ -34,7 +34,8 @@ public class MockMonitorable implements Monitorable {
     private String monitorableId;
     private MonitorListener listener;
 
-    public MockMonitorable() {
+    public MockMonitorable(StatusVariable... statusVariables) {
+        setStatusVariables(statusVariables);
     }
 
     public void setMonitorableId(String monitorableId) {
