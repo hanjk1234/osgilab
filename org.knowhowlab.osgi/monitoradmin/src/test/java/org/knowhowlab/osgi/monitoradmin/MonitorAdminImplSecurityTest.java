@@ -28,6 +28,7 @@ import org.osgi.service.monitor.MonitorPermission;
 import org.osgi.service.monitor.Monitorable;
 import org.osgi.service.monitor.StatusVariable;
 
+import java.security.AllPermission;
 import java.security.Permission;
 import java.util.HashMap;
 
@@ -54,7 +55,11 @@ public class MonitorAdminImplSecurityTest {
     }
 
     private Bundle createMockBundle(Permission... permisions) {
-        return new SecutiryMockBundle(permisions);
+        if (permisions == null || permisions.length == 0) {
+            return new SecutiryMockBundle(new AllPermission());
+        } else {
+            return new SecutiryMockBundle(permisions);
+        }
     }
 
     @Test
@@ -114,7 +119,7 @@ public class MonitorAdminImplSecurityTest {
         map.put(new MonitorableMockServiceReference(createMockBundle(new MonitorPermission("com.acme.pid2/*", MonitorPermission.PUBLISH)),
                 "com.acme.pid2"), new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0)));
 
-        map.put(new MonitorableMockServiceReference(createMockBundle(),
+        map.put(new MonitorableMockServiceReference(createMockBundle(NonePermission.INSTANCE),
                 "com.acme.pid3"), new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0)));
 
         map.put(new MonitorableMockServiceReference(createMockBundle(new MonitorPermission("*/*", MonitorPermission.PUBLISH)),
@@ -136,8 +141,10 @@ public class MonitorAdminImplSecurityTest {
 
         map.put(new MonitorableMockServiceReference(createMockBundle(new MonitorPermission("com.acme.pid2/*", MonitorPermission.PUBLISH)),
                 "com.acme.pid2"), new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0)));
-        map.put(new MonitorableMockServiceReference(createMockBundle(),
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(NonePermission.INSTANCE),
                 "com.acme.pid3"), new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0)));
+
         map.put(new MonitorableMockServiceReference(createMockBundle(new MonitorPermission("*/*", MonitorPermission.PUBLISH)),
                 "com.acme.pid1"), new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0)));
         osgiVisitor.setReferences(map);
@@ -156,8 +163,10 @@ public class MonitorAdminImplSecurityTest {
 
         map.put(new MonitorableMockServiceReference(createMockBundle(new MonitorPermission("*/*", MonitorPermission.PUBLISH)),
                 "com.acme.pid2.very.long.monitorable.id"), new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0)));
-        map.put(new MonitorableMockServiceReference(createMockBundle(),
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(NonePermission.INSTANCE),
                 "com.acme.pid3"), new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0)));
+
         map.put(new MonitorableMockServiceReference(createMockBundle(new MonitorPermission("*/*", MonitorPermission.PUBLISH)),
                 "com.acme.pid1"), new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0)));
         osgiVisitor.setReferences(map);
@@ -169,4 +178,146 @@ public class MonitorAdminImplSecurityTest {
         Assert.assertEquals(0, monitorableNames.length);
     }
 
+
+    @Test
+    public void testGetStatusVariable_WithAllPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0));
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle());
+
+        StatusVariable sv = monitorAdmin.getStatusVariable("com.acme.pid/sv.id");
+        Assert.assertNotNull(sv);
+        Assert.assertEquals("sv.id", sv.getID());
+        Assert.assertEquals(StatusVariable.CM_CC, sv.getCollectionMethod());
+        Assert.assertEquals(StatusVariable.TYPE_INTEGER, sv.getType());
+        Assert.assertEquals(0, sv.getInteger());
+    }
+
+    @Test
+    public void testGetStatusVariable_WithMonitorPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0));
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id", MonitorPermission.PUBLISH)),
+                "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common,
+                createMockBundle(new MonitorPermission("com.acme.pid/sv.id", MonitorPermission.READ)));
+
+        StatusVariable sv = monitorAdmin.getStatusVariable("com.acme.pid/sv.id");
+        Assert.assertNotNull(sv);
+        Assert.assertEquals("sv.id", sv.getID());
+        Assert.assertEquals(StatusVariable.CM_CC, sv.getCollectionMethod());
+        Assert.assertEquals(StatusVariable.TYPE_INTEGER, sv.getType());
+        Assert.assertEquals(0, sv.getInteger());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetStatusVariable_WithMonitorPermissions_noPublishPermission() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0));
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(NonePermission.INSTANCE),
+                "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common,
+                createMockBundle(new MonitorPermission("com.acme.pid/sv.id", MonitorPermission.READ)));
+
+        monitorAdmin.getStatusVariable("com.acme.pid/sv.id");
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testGetStatusVariable_WithMonitorPermissions_noReadPermission() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0));
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id", MonitorPermission.PUBLISH)),
+                "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(NonePermission.INSTANCE));
+
+        monitorAdmin.getStatusVariable("com.acme.pid/sv.id");
+    }
+
+    @Test
+    public void testGetDescription_WithAllPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0));
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle());
+
+        String description = monitorAdmin.getDescription("com.acme.pid/sv.id");
+        Assert.assertNotNull(description);
+        Assert.assertEquals("sv.id", description);
+    }
+
+    @Test
+    public void testGetDescription_WithMonitorPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0));
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id", MonitorPermission.PUBLISH)),
+                "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id", MonitorPermission.READ)
+        ));
+
+        String description = monitorAdmin.getDescription("com.acme.pid/sv.id");
+        Assert.assertNotNull(description);
+        Assert.assertEquals("sv.id", description);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetDescription_NoPublishPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0));
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(NonePermission.INSTANCE),
+                "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id", MonitorPermission.READ)
+        ));
+
+        monitorAdmin.getDescription("com.acme.pid/sv.id");
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testGetDescription_NoReadPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id", StatusVariable.CM_CC, 0));
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id", MonitorPermission.PUBLISH)),
+                "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(NonePermission.INSTANCE));
+
+        monitorAdmin.getDescription("com.acme.pid/sv.id");
+    }
 }

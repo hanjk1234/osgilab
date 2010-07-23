@@ -3,7 +3,6 @@ package org.knowhowlab.osgi.monitoradmin.mocks;
 import org.osgi.framework.BundleContext;
 import org.springframework.osgi.mock.MockBundle;
 
-import java.security.AllPermission;
 import java.security.Permission;
 import java.util.Dictionary;
 
@@ -16,7 +15,7 @@ public class SecutiryMockBundle extends MockBundle {
     public SecutiryMockBundle() {
     }
 
-    public SecutiryMockBundle(Permission[] permissions) {
+    public SecutiryMockBundle(Permission... permissions) {
         this.permissions = permissions;
     }
 
@@ -46,7 +45,7 @@ public class SecutiryMockBundle extends MockBundle {
             }
             return false;
         } else {
-            return new AllPermission().implies((Permission) permission);
+            return false;
         }
     }
 }

@@ -73,11 +73,41 @@ public class MonitorAdminImpl implements MonitorAdmin {
         logVisitor.debug("ENTRY: getStatusVariable: " + path, null);
         try {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
-            Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
-            // todo: check MonitorPermission
-            return monitorable.getStatusVariable(statusVariablePath.getStatusVariableId());
+            ServiceReference serviceReference = common.findMonitorableReferenceById(statusVariablePath.getMonitorableId());
+
+            checkPermissions(statusVariablePath, serviceReference);
+
+            return common.getStatusVariable(serviceReference, statusVariablePath.getStatusVariableId());
         } finally {
             logVisitor.debug("EXIT: getStatusVariable: " + path, null);
+        }
+    }
+
+    /**
+     * Check permissions for StatusVariable path
+     *
+     * @param statusVariablePath path
+     * @param serviceReference   Monitorable service reference
+     * @throws java.lang.IllegalArgumentException
+     *                                     if <code>path</code> is
+     *                                     <code>null</code> or otherwise invalid, or points to a
+     *                                     non-existing <code>StatusVariable</code> (SV is not published)
+     * @throws java.lang.SecurityException if the caller does not hold a
+     *                                     <code>MonitorPermission</code> for the
+     *                                     <code>StatusVariable</code> specified by <code>path</code>
+     *                                     with the <code>read</code> action present
+     */
+    private void checkPermissions(StatusVariablePath statusVariablePath, ServiceReference serviceReference) {
+        String[] variableNames = common.getStatusVariableNames(statusVariablePath.getMonitorableId());
+
+        Collection<String> producerVariables = filterVariableNames(statusVariablePath.getMonitorableId(), variableNames, serviceReference.getBundle(), MonitorPermission.PUBLISH);
+        if (!producerVariables.contains(statusVariablePath.getStatusVariableId())) {
+            throw new IllegalArgumentException(statusVariablePath.getPath() + " StatusVariable is unavailable");
+        }
+
+        Collection<String> consumerVariables = filterVariableNames(statusVariablePath.getMonitorableId(), variableNames, consumer, MonitorPermission.READ);
+        if (!consumerVariables.contains(statusVariablePath.getStatusVariableId())) {
+            throw new SecurityException("No READ permissions for StatusVariable: " + statusVariablePath.getPath());
         }
     }
 
@@ -109,9 +139,11 @@ public class MonitorAdminImpl implements MonitorAdmin {
         logVisitor.debug("ENTRY: getDescription: " + path, null);
         try {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
-            Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
-            // todo: check MonitorPermission
-           return monitorable.getDescription(statusVariablePath.getStatusVariableId());
+            ServiceReference serviceReference = common.findMonitorableReferenceById(statusVariablePath.getMonitorableId());
+
+            checkPermissions(statusVariablePath, serviceReference);
+
+            return common.getDescription(serviceReference, statusVariablePath.getStatusVariableId());
         } finally {
             logVisitor.debug("EXIT: getDescription: " + path, null);
         }
@@ -139,14 +171,15 @@ public class MonitorAdminImpl implements MonitorAdmin {
             for (ServiceReference serviceReference : serviceReferences) {
                 String pid = (String) serviceReference.getProperty(Constants.SERVICE_PID);
                 String[] variableNames = common.getStatusVariableNames(pid);
-
+                // monitorable contains status variable - check permissions
                 if (variableNames.length > 0) {
-                    Collection<String> producerPublishedVariables = getFilterVariableNames(pid, variableNames, serviceReference.getBundle(), MonitorPermission.PUBLISH);
-                    Collection<String> consumerReadVariables = getFilterVariableNames(pid, variableNames, consumer, MonitorPermission.READ);
+                    Collection<String> producerPublishedVariables = filterVariableNames(pid, variableNames, serviceReference.getBundle(), MonitorPermission.PUBLISH);
+                    Collection<String> consumerReadVariables = filterVariableNames(pid, variableNames, consumer, MonitorPermission.READ);
                     if (!Collections.disjoint(producerPublishedVariables, consumerReadVariables)) {
                         names.add(pid);
                     }
                 } else {
+                    // monitorable does not contain status variable - just add it to the list
                     names.add(pid);
                 }
             }
@@ -165,16 +198,20 @@ public class MonitorAdminImpl implements MonitorAdmin {
      * @param permissionAction <code>MonitorPermission</code> action
      * @return filtered collection of <code>StatusVariable</code> names
      */
-    private Collection<String> getFilterVariableNames(String pid, String[] variableNames, Bundle bundle, String permissionAction) {
+    private Collection<String> filterVariableNames(String pid, String[] variableNames, Bundle bundle, String permissionAction) {
         List<String> result = new ArrayList<String>();
-        for (String variableName : variableNames) {
-            try {
-                if (bundle.hasPermission(new MonitorPermission(String.format("%s/%s", pid, variableName), permissionAction))) {
-                    result.add(variableName);
+        if (bundle != null) {
+            for (String variableName : variableNames) {
+                try {
+                    if (bundle.hasPermission(new MonitorPermission(String.format("%s/%s", pid, variableName), permissionAction))) {
+                        result.add(variableName);
+                    }
+                } catch (IllegalArgumentException e) {
+                    logVisitor.debug("Unable to check permission", e);
                 }
-            } catch (IllegalArgumentException e) {
-                logVisitor.debug("Unable to check permission", e);
             }
+        } else {
+            result.addAll(Arrays.asList(variableNames));
         }
         return result;
     }

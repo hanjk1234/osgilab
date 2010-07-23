@@ -157,6 +157,47 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
     }
 
     /**
+     * Find Monitorable service reference by monitorable Id. Returns Monitorable service reference or
+     * throws exception.
+     * If multiple services exist for the same monitorableId,
+     * the service with the highest ranking (as specified in its Constants.SERVICE_RANKING property)
+     * is returned.
+     * If there is a tie in ranking, the service with the lowest service ID (as specified
+     * in its Constants.SERVICE_ID property); that is, the service that was regis-
+     * tered first is returned.
+     *
+     * @param monitorableId id that is userd to filter services
+     * @return Monitorable service reference with specified monitorableId.
+     * @throws IllegalArgumentException monitorableId is <code>null</code> or monitorableId points
+     *                                  to non-existing service or monitorableId is invalid
+     */
+    public ServiceReference findMonitorableReferenceById(String monitorableId) throws IllegalArgumentException {
+        if (monitorableId == null) {
+            throw new IllegalArgumentException("MonitorableId is null");
+        }
+
+        if (!Utils.validatePathId(monitorableId)) {
+            throw new IllegalArgumentException("MonitorableId is invalid");
+        }
+
+        ServiceReference mostSuitableMonitorable = null;
+        ServiceReference[] serviceReferences = osgiVisitor.findMonitorableReferences(monitorableId);
+
+        if (serviceReferences != null) {
+            for (ServiceReference serviceReference : serviceReferences) {
+                if (mostSuitableMonitorable == null ||
+                        mostSuitableMonitorable.compareTo(serviceReference) < 0) {
+                    mostSuitableMonitorable = serviceReference;
+                }
+            }
+        }
+        if (mostSuitableMonitorable == null) {
+            throw new IllegalArgumentException("Monitorable ID: " + monitorableId + " points to non-existing service");
+        }
+        return mostSuitableMonitorable;
+    }
+
+    /**
      * Returns the names of the <code>Monitorable</code> services that are
      * currently registered.
      * <p/>
@@ -236,9 +277,6 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
 
     /**
      * Returns a <code>StatusVariable</code> addressed by its full path.
-     * The entity which queries a <code>StatusVariable</code> needs to hold
-     * <code>MonitorPermission</code> for the given target with the
-     * <code>read</code> action present.
      *
      * @param path the full path of the <code>StatusVariable</code> in
      *             [Monitorable_ID]/[StatusVariable_ID] format
@@ -259,6 +297,37 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
         } finally {
             logVisitor.debug("EXIT: getStatusVariable: " + path, null);
         }
+    }
+
+    /**
+     * Returns a <code>StatusVariable</code> addressed by Monitorable service reference and its id.
+     *
+     * @param serviceReference <code>Monitorable</code> service reference
+     * @param statusVariableId <code>StatusVariable</code> id
+     * @return the <code>StatusVariable</code> object
+     * @throws java.lang.IllegalArgumentException
+     *          if <code>path</code> is
+     *          <code>null</code> or otherwise invalid, or points to a
+     *          non-existing <code>StatusVariable</code>
+     */
+    public StatusVariable getStatusVariable(ServiceReference serviceReference, String statusVariableId) {
+        return osgiVisitor.getService(serviceReference).getStatusVariable(statusVariableId);
+    }
+
+    /**
+     * Returns a <code>StatusVariable</code> description addressed by
+     * Monitorable service reference and its id.
+     *
+     * @param serviceReference <code>Monitorable</code> service reference
+     * @param statusVariableId <code>StatusVariable</code> id
+     * @return the <code>StatusVariable</code> description
+     * @throws java.lang.IllegalArgumentException
+     *          if <code>path</code> is
+     *          <code>null</code> or otherwise invalid, or points to a
+     *          non-existing <code>StatusVariable</code>
+     */
+    public String getDescription(ServiceReference serviceReference, String statusVariableId) {
+        return osgiVisitor.getService(serviceReference).getDescription(statusVariableId);
     }
 
     /**
