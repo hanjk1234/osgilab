@@ -306,8 +306,7 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
      * @param statusVariableId <code>StatusVariable</code> id
      * @return the <code>StatusVariable</code> object
      * @throws java.lang.IllegalArgumentException
-     *          if <code>path</code> is
-     *          <code>null</code> or otherwise invalid, or points to a
+     *          if points to a
      *          non-existing <code>StatusVariable</code>
      */
     public StatusVariable getStatusVariable(ServiceReference serviceReference, String statusVariableId) {
@@ -322,13 +321,28 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
      * @param statusVariableId <code>StatusVariable</code> id
      * @return the <code>StatusVariable</code> description
      * @throws java.lang.IllegalArgumentException
-     *          if <code>path</code> is
-     *          <code>null</code> or otherwise invalid, or points to a
+     *          if points to a
      *          non-existing <code>StatusVariable</code>
      */
     public String getDescription(ServiceReference serviceReference, String statusVariableId) {
         return osgiVisitor.getService(serviceReference).getDescription(statusVariableId);
     }
+
+    /**
+     * Reset <code>StatusVariable</code> description addressed by
+     * Monitorable service reference and its id.
+     *
+     * @param serviceReference <code>Monitorable</code> service reference
+     * @param statusVariableId <code>StatusVariable</code> id
+     * @return the <code>StatusVariable</code> description
+     * @throws java.lang.IllegalArgumentException
+     *          if points to a
+     *          non-existing <code>StatusVariable</code>
+     */
+    public boolean resetStatusVariable(ServiceReference serviceReference, String statusVariableId) {
+        return osgiVisitor.getService(serviceReference).resetStatusVariable(statusVariableId);
+    }
+
 
     /**
      * Cancel Job and remove it from jobs list

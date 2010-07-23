@@ -556,4 +556,134 @@ public class MonitorAdminImplSecurityTest {
         Assert.assertEquals(1, variables.length);
         Assert.assertTrue("sv.id2".equals(variables[0].getID()));
     }
+
+    @Test
+    public void testResetStatusVariable_WithMonitorPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.READ),
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.RESET)
+        ));
+
+        StatusVariable sv = monitorAdmin.getStatusVariable("com.acme.pid/sv.id1");
+        Assert.assertNotNull(sv);
+        Assert.assertEquals(0, sv.getInteger());
+
+        monitorable.setNewStatusVariableValue("sv.id1", "15");
+
+        sv = monitorAdmin.getStatusVariable("com.acme.pid/sv.id1");
+        Assert.assertNotNull(sv);
+        Assert.assertEquals(15, sv.getInteger());
+
+        boolean result = monitorAdmin.resetStatusVariable("com.acme.pid/sv.id1");
+        Assert.assertTrue(result);
+
+        sv = monitorAdmin.getStatusVariable("com.acme.pid/sv.id1");
+        Assert.assertNotNull(sv);
+        Assert.assertEquals(0, sv.getInteger());
+    }
+
+    @Test
+    public void testResetStatusVariable_WithAllPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle());
+
+        StatusVariable sv = monitorAdmin.getStatusVariable("com.acme.pid/sv.id1");
+        Assert.assertNotNull(sv);
+        Assert.assertEquals(0, sv.getInteger());
+
+        monitorable.setNewStatusVariableValue("sv.id1", "15");
+
+        sv = monitorAdmin.getStatusVariable("com.acme.pid/sv.id1");
+        Assert.assertNotNull(sv);
+        Assert.assertEquals(15, sv.getInteger());
+
+        boolean result = monitorAdmin.resetStatusVariable("com.acme.pid/sv.id1");
+        Assert.assertTrue(result);
+
+        sv = monitorAdmin.getStatusVariable("com.acme.pid/sv.id1");
+        Assert.assertNotNull(sv);
+        Assert.assertEquals(0, sv.getInteger());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testResetStatusVariable_NoPublishPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                NonePermission.INSTANCE
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.READ),
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.RESET)
+        ));
+
+        monitorAdmin.resetStatusVariable("com.acme.pid/sv.id1");
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testResetStatusVariable_NoResetPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.READ)
+        ));
+
+        StatusVariable sv = monitorAdmin.getStatusVariable("com.acme.pid/sv.id1");
+        Assert.assertNotNull(sv);
+        Assert.assertEquals(0, sv.getInteger());
+
+        monitorable.setNewStatusVariableValue("sv.id1", "15");
+
+        sv = monitorAdmin.getStatusVariable("com.acme.pid/sv.id1");
+        Assert.assertNotNull(sv);
+        Assert.assertEquals(15, sv.getInteger());
+
+        monitorAdmin.resetStatusVariable("com.acme.pid/sv.id1");
+    }
 }

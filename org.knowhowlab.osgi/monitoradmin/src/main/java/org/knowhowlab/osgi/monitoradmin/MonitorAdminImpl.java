@@ -75,7 +75,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
             ServiceReference serviceReference = common.findMonitorableReferenceById(statusVariablePath.getMonitorableId());
 
-            checkPermissions(statusVariablePath, serviceReference);
+            checkPermissions(statusVariablePath, serviceReference, MonitorPermission.PUBLISH, MonitorPermission.READ);
 
             return common.getStatusVariable(serviceReference, statusVariablePath.getStatusVariableId());
         } finally {
@@ -88,6 +88,8 @@ public class MonitorAdminImpl implements MonitorAdmin {
      *
      * @param statusVariablePath path
      * @param serviceReference   Monitorable service reference
+     * @param producerPermission producer permission action
+     * @param consumerPermission consumer permission action
      * @throws java.lang.IllegalArgumentException
      *                                     if <code>path</code> is
      *                                     <code>null</code> or otherwise invalid, or points to a
@@ -97,17 +99,17 @@ public class MonitorAdminImpl implements MonitorAdmin {
      *                                     <code>StatusVariable</code> specified by <code>path</code>
      *                                     with the <code>read</code> action present
      */
-    private void checkPermissions(StatusVariablePath statusVariablePath, ServiceReference serviceReference) {
+    private void checkPermissions(StatusVariablePath statusVariablePath, ServiceReference serviceReference, String producerPermission, String consumerPermission) {
         String[] variableNames = common.getStatusVariableNames(statusVariablePath.getMonitorableId());
 
-        Collection<String> producerVariables = filterVariableNames(statusVariablePath.getMonitorableId(), variableNames, serviceReference.getBundle(), MonitorPermission.PUBLISH);
+        Collection<String> producerVariables = filterVariableNames(statusVariablePath.getMonitorableId(), variableNames, serviceReference.getBundle(), producerPermission);
         if (!producerVariables.contains(statusVariablePath.getStatusVariableId())) {
             throw new IllegalArgumentException(statusVariablePath.getPath() + " StatusVariable is unavailable");
         }
 
-        Collection<String> consumerVariables = filterVariableNames(statusVariablePath.getMonitorableId(), variableNames, consumer, MonitorPermission.READ);
+        Collection<String> consumerVariables = filterVariableNames(statusVariablePath.getMonitorableId(), variableNames, consumer, consumerPermission);
         if (!consumerVariables.contains(statusVariablePath.getStatusVariableId())) {
-            throw new SecurityException("No READ permissions for StatusVariable: " + statusVariablePath.getPath());
+            throw new SecurityException(consumerPermission + " permissions not set for StatusVariable: " + statusVariablePath.getPath());
         }
     }
 
@@ -141,7 +143,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
             ServiceReference serviceReference = common.findMonitorableReferenceById(statusVariablePath.getMonitorableId());
 
-            checkPermissions(statusVariablePath, serviceReference);
+            checkPermissions(statusVariablePath, serviceReference, MonitorPermission.PUBLISH, MonitorPermission.READ);
 
             return common.getDescription(serviceReference, statusVariablePath.getStatusVariableId());
         } finally {
@@ -353,9 +355,11 @@ public class MonitorAdminImpl implements MonitorAdmin {
         logVisitor.debug("ENTRY: resetStatusVariable: " + path, null);
         try {
             StatusVariablePath statusVariablePath = new StatusVariablePath(path);
-            Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
-            // todo: check MonitorPermission
-            return monitorable.resetStatusVariable(statusVariablePath.getStatusVariableId());
+            ServiceReference serviceReference = common.findMonitorableReferenceById(statusVariablePath.getMonitorableId());
+
+            checkPermissions(statusVariablePath, serviceReference, MonitorPermission.PUBLISH, MonitorPermission.RESET);
+
+            return common.resetStatusVariable(serviceReference, statusVariablePath.getStatusVariableId());
         } finally {
             logVisitor.debug("EXIT: resetStatusVariable: " + path, null);
         }
