@@ -249,17 +249,23 @@ public class MonitorAdminImpl implements MonitorAdmin {
             throws IllegalArgumentException {
         logVisitor.debug("ENTRY: getStatusVariables: " + monitorableId, null);
         try {
-            Monitorable monitorable = common.findMonitorableById(monitorableId);
+            List<StatusVariable> result = new ArrayList<StatusVariable>();
 
-            String[] names = monitorable.getStatusVariableNames();
-            StatusVariable[] variables = new StatusVariable[names.length];
+            Set<String> availableNames = new TreeSet<String>();
 
-            for (int i = 0; i < names.length; i++) {
-                variables[i] = monitorable.getStatusVariable(names[i]);
+            ServiceReference serviceReference = common.findMonitorableReferenceById(monitorableId);
+            String[] variableNames = common.getStatusVariableNames(monitorableId);
+            Collection<String> producerPublishedVariables = filterVariableNames(monitorableId, variableNames, serviceReference.getBundle(), MonitorPermission.PUBLISH);
+            Collection<String> consumerReadVariables = filterVariableNames(monitorableId, variableNames, consumer, MonitorPermission.READ);
+
+            availableNames.addAll(producerPublishedVariables);
+            availableNames.retainAll(consumerReadVariables);
+
+            for (String availableName : availableNames) {
+                result.add(common.getStatusVariable(serviceReference, availableName));
             }
-            // todo: check MonitorPermission
 
-            return variables;
+            return result.toArray(new StatusVariable[result.size()]);
         } finally {
             logVisitor.debug("EXIT: getStatusVariables: " + monitorableId, null);
         }
@@ -297,8 +303,17 @@ public class MonitorAdminImpl implements MonitorAdmin {
             throws IllegalArgumentException {
         logVisitor.debug("ENTRY: getStatusVariableNames: " + monitorableId, null);
         try {
-            // todo: check MonitorPermission
-            return common.getStatusVariableNames(monitorableId);
+            Set<String> result = new TreeSet<String>();
+
+            ServiceReference serviceReference = common.findMonitorableReferenceById(monitorableId);
+            String[] variableNames = common.getStatusVariableNames(monitorableId);
+            Collection<String> producerPublishedVariables = filterVariableNames(monitorableId, variableNames, serviceReference.getBundle(), MonitorPermission.PUBLISH);
+            Collection<String> consumerReadVariables = filterVariableNames(monitorableId, variableNames, consumer, MonitorPermission.READ);
+
+            result.addAll(producerPublishedVariables);
+            result.retainAll(consumerReadVariables);
+
+            return result.toArray(new String[result.size()]);
         } finally {
             logVisitor.debug("EXIT: getStatusVariableNames: " + monitorableId, null);
         }
