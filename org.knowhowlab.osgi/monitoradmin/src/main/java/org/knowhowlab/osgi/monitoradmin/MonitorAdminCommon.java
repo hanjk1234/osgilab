@@ -131,7 +131,7 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
      * @throws IllegalArgumentException monitorableId is <code>null</code> or monitorableId points
      *                                  to non-existing service or monitorableId is invalid
      */
-    public Monitorable findMonitorableById(String monitorableId) throws IllegalArgumentException {
+    private Monitorable findMonitorableById(String monitorableId) throws IllegalArgumentException {
         if (monitorableId == null) {
             throw new IllegalArgumentException("MonitorableId is null");
         }

@@ -57,7 +57,8 @@ public class MonitorAdminTest {
                         mavenBundle().groupId("org.apache.felix").artifactId("org.apache.felix.eventadmin").version("1.2.2"),
                         mavenBundle().groupId("org.apache.felix").artifactId("org.apache.felix.log").version("1.0.0"),
                         mavenBundle().groupId("org.knowhowlab.osgi.testing").artifactId("commons").version("1.0.1-SNAPSHOT"),
-                        mavenBundle().groupId("org.knowhowlab.osgi").artifactId("monitoradmin").version("1.0.2-SNAPSHOT")
+                        mavenBundle().groupId("org.knowhowlab.osgi").artifactId("monitoradmin").version("1.0.2-SNAPSHOT"),
+                        mavenBundle().groupId("org.knowhowlab.osgi.manual-tests").artifactId("test-monitorable").version("1.0.0-SNAPSHOT")
                 )
         );
     }
@@ -85,7 +86,7 @@ public class MonitorAdminTest {
         // get list of Monitorable names
         String[] monitorableNames = monitorAdmin.getMonitorableNames();
         Assert.assertNotNull(monitorableNames);
-        Assert.assertEquals(0, monitorableNames.length);
+        Assert.assertEquals(1, monitorableNames.length);
 
         // get list of running Monitoring jobs
         MonitoringJob[] runningJobs = monitorAdmin.getRunningJobs();

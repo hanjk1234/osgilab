@@ -33,6 +33,8 @@ import java.util.*;
  * @author dmytro.pishchukhin
  */
 public class MonitorAdminImpl implements MonitorAdmin {
+    private static final String STARTJOB_PERMISSION_PATTERN = String.format("%s:%%d", MonitorPermission.STARTJOB);
+
     private final LogVisitor logVisitor;
     private final MonitorAdminCommon common;
     private final Bundle consumer;
@@ -500,7 +502,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
                 String pid = (String) monitorableReference.getProperty(Constants.SERVICE_PID);
 
                 checkPermissions(new StatusVariablePath(pid, statusVariablePath.getStatusVariableId()), monitorableReference,
-                        MonitorPermission.PUBLISH, String.format("%s:%d", MonitorPermission.STARTJOB, schedule));
+                        MonitorPermission.PUBLISH, String.format(STARTJOB_PERMISSION_PATTERN, schedule));
             }
             ScheduledMonitoringJob job = new ScheduledMonitoringJob(common, logVisitor, initiator,
                     statusVariables, schedule, count);
@@ -605,8 +607,20 @@ public class MonitorAdminImpl implements MonitorAdmin {
             List<MonitoringJob> runningJobs = common.getRunningJobs();
             List<MonitoringJob> result = new ArrayList<MonitoringJob>();
             for (MonitoringJob runningJob : runningJobs) {
-                // todo: check MonitorPermission
-                result.add(runningJob);
+                String[] statusVariableNames = runningJob.getStatusVariableNames();
+                String action = String.format(STARTJOB_PERMISSION_PATTERN, runningJob.getSchedule());
+                boolean hasPermissions = true;
+                if (consumer != null) {
+                    for (String statusVariableName : statusVariableNames) {
+                        if (!consumer.hasPermission(new MonitorPermission(statusVariableName, action))) {
+                            hasPermissions = false;
+                            break;
+                        }
+                    }
+                }
+                if (hasPermissions) {
+                    result.add(runningJob);
+                }
             }
             return result.toArray(new MonitoringJob[result.size()]);
         } finally {
