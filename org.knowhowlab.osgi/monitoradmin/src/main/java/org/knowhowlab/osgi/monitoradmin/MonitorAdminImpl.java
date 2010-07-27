@@ -496,13 +496,12 @@ public class MonitorAdminImpl implements MonitorAdmin {
             }
             for (String path : statusVariables) {
                 StatusVariablePath statusVariablePath = new StatusVariablePath(path);
-                Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
-                if (!new HashSet<String>(Arrays.asList(monitorable.getStatusVariableNames()))
-                        .contains(statusVariablePath.getStatusVariableId())) {
-                    throw new IllegalArgumentException("StatusVariable: " + path + " is non-existing");
-                }
+                ServiceReference monitorableReference = common.findMonitorableReferenceById(statusVariablePath.getMonitorableId());
+                String pid = (String) monitorableReference.getProperty(Constants.SERVICE_PID);
+
+                checkPermissions(new StatusVariablePath(pid, statusVariablePath.getStatusVariableId()), monitorableReference,
+                        MonitorPermission.PUBLISH, String.format("%s:%d", MonitorPermission.STARTJOB, schedule));
             }
-            // todo: check MonitorPermission
             ScheduledMonitoringJob job = new ScheduledMonitoringJob(common, logVisitor, initiator,
                     statusVariables, schedule, count);
             common.addJob(job);
@@ -564,15 +563,20 @@ public class MonitorAdminImpl implements MonitorAdmin {
             }
             for (String path : statusVariables) {
                 StatusVariablePath statusVariablePath = new StatusVariablePath(path);
-                Monitorable monitorable = common.findMonitorableById(statusVariablePath.getMonitorableId());
-                if (!monitorable.notifiesOnChange(statusVariablePath.getStatusVariableId())) {
+                ServiceReference monitorableReference = common.findMonitorableReferenceById(statusVariablePath.getMonitorableId());
+                String pid = (String) monitorableReference.getProperty(Constants.SERVICE_PID);
+
+                if (!common.notifiesOnChange(monitorableReference, statusVariablePath.getStatusVariableId())) {
                     throw new IllegalArgumentException("StatusVariable: " + path + " does not support notifications");
                 }
+
+                checkPermissions(new StatusVariablePath(pid, statusVariablePath.getStatusVariableId()), monitorableReference,
+                        MonitorPermission.PUBLISH, MonitorPermission.STARTJOB);
             }
-            // todo: check MonitorPermission
-            SubscriptionMonitoringJob job = new SubscriptionMonitoringJob(common, logVisitor, initiator,
-                    statusVariables, count);
+            SubscriptionMonitoringJob job = new SubscriptionMonitoringJob(common, logVisitor, initiator, statusVariables, count);
+
             common.addJob(job);
+
             logVisitor.info("New Subscription Job is started: " + initiator, null);
             return job;
         } finally {
@@ -599,8 +603,12 @@ public class MonitorAdminImpl implements MonitorAdmin {
         logVisitor.debug("ENTRY: getRunningJobs", null);
         try {
             List<MonitoringJob> runningJobs = common.getRunningJobs();
-            // todo: check MonitorPermission
-            return runningJobs.toArray(new MonitoringJob[runningJobs.size()]);
+            List<MonitoringJob> result = new ArrayList<MonitoringJob>();
+            for (MonitoringJob runningJob : runningJobs) {
+                // todo: check MonitorPermission
+                result.add(runningJob);
+            }
+            return result.toArray(new MonitoringJob[result.size()]);
         } finally {
             logVisitor.debug("EXIT: getRunningJobs", null);
         }

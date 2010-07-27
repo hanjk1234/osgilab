@@ -320,6 +320,21 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
     }
 
     /**
+     * Returns a <code>StatusVariable</code> notification flag addressed by
+     * Monitorable service reference and its id.
+     *
+     * @param serviceReference <code>Monitorable</code> service reference
+     * @param statusVariableId <code>StatusVariable</code> id
+     * @return the <code>StatusVariable</code> notification flag
+     * @throws java.lang.IllegalArgumentException
+     *          if points to a
+     *          non-existing <code>StatusVariable</code>
+     */
+    public boolean notifiesOnChange(ServiceReference serviceReference, String statusVariableId) {
+        return osgiVisitor.getService(serviceReference).notifiesOnChange(statusVariableId);
+    }
+
+    /**
      * Reset <code>StatusVariable</code> description addressed by
      * Monitorable service reference and its id.
      *

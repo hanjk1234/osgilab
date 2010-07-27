@@ -512,6 +512,36 @@ public class MonitorAdminImplTest {
         monitorable.setListener(common);
         monitorable.setMonitorableId("com.acme.pid");
 
+        try {
+            monitorAdmin.startJob("init1", new String[]{"com.acme.pid/sv.id11"}, 1);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+        }
+
+        try {
+            monitorAdmin.startJob("init1", new String[]{"com.acme.pid/sv.id2"}, 1);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+        }
+
+        try {
+            monitorAdmin.startJob(null, new String[]{"com.acme.pid/sv.id2"}, 1);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+        }
+
+        try {
+            monitorAdmin.startJob("init1", new String[]{"com.acme.pid1/sv.id1"}, 1);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+        }
+
+        try {
+            monitorAdmin.startJob("init1", new String[]{"com.acme.pid/sv.id1"}, -1);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+        }
+
         MonitoringJob job = monitorAdmin.startJob("init1", new String[]{"com.acme.pid/sv.id1"}, 1);
 
         MonitoringJob[] jobs = monitorAdmin.getRunningJobs();
@@ -571,6 +601,36 @@ public class MonitorAdminImplTest {
         monitorable.setMonitorableId("com.acme.pid");
 
         monitorable.setNewStatusVariableValue("sv.id1", "15");
+
+        try {
+            monitorAdmin.startScheduledJob("init1", new String[]{"com.acme.pid/sv.id11"}, 1, 1);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+        }
+
+        try {
+            monitorAdmin.startScheduledJob("init1", new String[]{"com.acme.pid1/sv.id1"}, 1, 1);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+        }
+
+        try {
+            monitorAdmin.startScheduledJob(null, new String[]{"com.acme.pid1/sv.id1"}, 1, 1);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+        }
+
+        try {
+            monitorAdmin.startScheduledJob("init1", new String[]{"com.acme.pid/sv.id1"}, -1, 1);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+        }
+
+        try {
+            monitorAdmin.startScheduledJob("init1", new String[]{"com.acme.pid/sv.id1"}, 1, -1);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+        }
 
         MonitoringJob job = monitorAdmin.startScheduledJob("init1", new String[]{"com.acme.pid/sv.id1"}, 5, 0);
 

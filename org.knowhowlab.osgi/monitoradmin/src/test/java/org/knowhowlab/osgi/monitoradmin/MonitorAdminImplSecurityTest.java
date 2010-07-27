@@ -23,10 +23,7 @@ import org.junit.Test;
 import org.knowhowlab.osgi.monitoradmin.mocks.*;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.monitor.MonitorAdmin;
-import org.osgi.service.monitor.MonitorPermission;
-import org.osgi.service.monitor.Monitorable;
-import org.osgi.service.monitor.StatusVariable;
+import org.osgi.service.monitor.*;
 
 import java.security.AllPermission;
 import java.security.Permission;
@@ -825,5 +822,476 @@ public class MonitorAdminImplSecurityTest {
         ));
 
         monitorAdmin.switchEvents("*/*", false);
+    }
+
+    @Test
+    public void testStartJob_WithAllPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle());
+
+        monitorable.setListener(common);
+        monitorable.setMonitorableId("com.acme.pid");
+
+        MonitoringJob job = monitorAdmin.startJob("init1", new String[]{"com.acme.pid/sv.id1"}, 1);
+        job.stop();
+    }
+
+    @Test
+    public void testStartJob_WithMonitorPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB)
+        ));
+
+        monitorable.setListener(common);
+        monitorable.setMonitorableId("com.acme.pid");
+
+        MonitoringJob job = monitorAdmin.startJob("init1", new String[]{"com.acme.pid/sv.id1"}, 1);
+        job.stop();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testStartJob_NoPublishPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                NonePermission.INSTANCE
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB)
+        ));
+
+        monitorable.setListener(common);
+        monitorable.setMonitorableId("com.acme.pid");
+
+        monitorAdmin.startJob("init1", new String[]{"com.acme.pid/sv.id1"}, 1);
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testStartJob_NoStartJobPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                NonePermission.INSTANCE
+        ));
+
+        monitorable.setListener(common);
+        monitorable.setMonitorableId("com.acme.pid");
+
+        monitorAdmin.startJob("init1", new String[]{"com.acme.pid/sv.id1"}, 1);
+    }
+
+    @Test
+    public void testStartScheduledJob_WithAllPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        map.put(new MonitorableMockServiceReference(createMockBundle(), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle());
+
+        monitorable.setListener(common);
+        monitorable.setMonitorableId("com.acme.pid");
+
+        MonitoringJob job = monitorAdmin.startScheduledJob("init1", new String[]{"com.acme.pid/sv.id1"}, 5, 0);
+        job.stop();
+    }
+
+    @Test
+    public void testStartScheduledJob_WithMonitorPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB)
+        ));
+
+        monitorable.setListener(common);
+        monitorable.setMonitorableId("com.acme.pid");
+
+        MonitoringJob job = monitorAdmin.startScheduledJob("init1", new String[]{"com.acme.pid/sv.id1"}, 5, 0);
+        job.stop();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testStartScheduledJob_NoPublishPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                NonePermission.INSTANCE
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB)
+        ));
+
+        monitorable.setListener(common);
+        monitorable.setMonitorableId("com.acme.pid");
+
+        monitorAdmin.startScheduledJob("init1", new String[]{"com.acme.pid/sv.id1"}, 5, 0);
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testStartScheduledJob_NoStartJobPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                NonePermission.INSTANCE
+        ));
+
+        monitorable.setListener(common);
+        monitorable.setMonitorableId("com.acme.pid");
+
+        monitorAdmin.startScheduledJob("init1", new String[]{"com.acme.pid/sv.id1"}, 5, 0);
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testStartScheduledJob_NoStartJobFrequencyPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB + ":10")
+        ));
+
+        monitorable.setListener(common);
+        monitorable.setMonitorableId("com.acme.pid");
+
+        monitorAdmin.startScheduledJob("init1", new String[]{"com.acme.pid/sv.id1"}, 5, 0);
+    }
+
+    @Test
+    public void testGetRunningJobs_WithAllPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdminJobsCreator = new MonitorAdminImpl(logVisitor, common, createMockBundle());
+
+        MonitorAdmin monitorAdminJobsConsumer = new MonitorAdminImpl(logVisitor, common, createMockBundle());
+
+        MonitoringJob[] jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(0, jobs.length);
+
+        MonitoringJob job = monitorAdminJobsCreator.startJob("initiator", new String[]{"com.acme.pid/sv.id1"}, 1);
+        MonitoringJob scheduleJob = monitorAdminJobsCreator.startScheduledJob("initiator", new String[]{"com.acme.pid/sv.id2"}, 5, 0);
+
+        jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(2, jobs.length);
+
+        scheduleJob.stop();
+
+        jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(1, jobs.length);
+
+        job.stop();
+
+        jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(0, jobs.length);
+    }
+
+    @Test
+    public void testGetRunningJobs_WithMonitorPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdminJobsCreator = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB)
+        ));
+
+        MonitorAdmin monitorAdminJobsConsumer = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB)
+        ));
+
+        MonitoringJob[] jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(0, jobs.length);
+
+        MonitoringJob job = monitorAdminJobsCreator.startJob("initiator", new String[]{"com.acme.pid/sv.id1"}, 1);
+        MonitoringJob scheduleJob = monitorAdminJobsCreator.startScheduledJob("initiator", new String[]{"com.acme.pid/sv.id2"}, 5, 0);
+
+        jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(2, jobs.length);
+
+        scheduleJob.stop();
+
+        jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(1, jobs.length);
+
+        job.stop();
+
+        jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(0, jobs.length);
+    }
+
+    @Test
+    public void testGetRunningJobs_WithoutPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdminJobsCreator = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB)
+        ));
+
+        MonitorAdmin monitorAdminJobsConsumer = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                NonePermission.INSTANCE
+        ));
+
+        MonitoringJob[] jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(0, jobs.length);
+
+        MonitoringJob job = monitorAdminJobsCreator.startJob("initiator", new String[]{"com.acme.pid/sv.id1"}, 1);
+        MonitoringJob scheduleJob = monitorAdminJobsCreator.startScheduledJob("initiator", new String[]{"com.acme.pid/sv.id2"}, 5, 0);
+
+        jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(0, jobs.length);
+
+        scheduleJob.stop();
+        job.stop();
+    }
+
+    @Test
+    public void testGetRunningJobs_WithPartialPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdminJobsCreator = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB)
+        ));
+
+        MonitorAdmin monitorAdminJobsConsumer = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB)
+        ));
+
+        MonitoringJob[] jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(0, jobs.length);
+
+        MonitoringJob job = monitorAdminJobsCreator.startJob("initiator", new String[]{"com.acme.pid/sv.id1"}, 1);
+        MonitoringJob scheduleJob = monitorAdminJobsCreator.startScheduledJob("initiator", new String[]{"com.acme.pid/sv.id2"}, 5, 0);
+
+        jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(1, jobs.length);
+
+        scheduleJob.stop();
+        job.stop();
+    }
+
+    @Test
+    public void testGetRunningJobs_WithNoFrequencyPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdminJobsCreator = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB)
+        ));
+
+        MonitorAdmin monitorAdminJobsConsumer = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB + ":10")
+        ));
+
+        MonitoringJob[] jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(0, jobs.length);
+
+        MonitoringJob job = monitorAdminJobsCreator.startJob("initiator", new String[]{"com.acme.pid/sv.id1"}, 1);
+        MonitoringJob scheduleJob = monitorAdminJobsCreator.startScheduledJob("initiator", new String[]{"com.acme.pid/sv.id2"}, 5, 0);
+
+        jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(0, jobs.length);
+
+        scheduleJob.stop();
+        job.stop();
+    }
+
+    @Test
+    public void testGetRunningJobs_WithFrequencyPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(
+                new StatusVariable("sv.id1", StatusVariable.CM_CC, 0),
+                new StatusVariable("sv.id2", StatusVariable.CM_CC, "test")
+        );
+        monitorable.setNotificationSupport("sv.id1", true);
+
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdminJobsCreator = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.STARTJOB),
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB)
+        ));
+
+        MonitorAdmin monitorAdminJobsConsumer = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id2", MonitorPermission.STARTJOB + ":2")
+        ));
+
+        MonitoringJob[] jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(0, jobs.length);
+
+        MonitoringJob job = monitorAdminJobsCreator.startJob("initiator", new String[]{"com.acme.pid/sv.id1"}, 1);
+        MonitoringJob scheduleJob = monitorAdminJobsCreator.startScheduledJob("initiator", new String[]{"com.acme.pid/sv.id2"}, 5, 0);
+
+        jobs = monitorAdminJobsConsumer.getRunningJobs();
+        Assert.assertNotNull(jobs);
+        Assert.assertEquals(1, jobs.length);
+
+        scheduleJob.stop();
+        job.stop();
     }
 }
