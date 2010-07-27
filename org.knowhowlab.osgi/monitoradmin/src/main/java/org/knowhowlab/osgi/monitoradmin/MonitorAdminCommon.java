@@ -19,7 +19,6 @@ package org.knowhowlab.osgi.monitoradmin;
 import org.knowhowlab.osgi.monitoradmin.job.AbstractMonitoringJob;
 import org.knowhowlab.osgi.monitoradmin.job.MonitoringJobVisitor;
 import org.knowhowlab.osgi.monitoradmin.util.StatusVariablePath;
-import org.knowhowlab.osgi.monitoradmin.util.StatusVariablePathFilter;
 import org.knowhowlab.osgi.monitoradmin.util.Utils;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
@@ -43,6 +42,8 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
                     "-_.";   // a subset of the characters allowed in DMT URIs
 
     private static final int MAX_ID_LENGTH = 32;
+
+    public static final String PATH_PATERN = "%s/%s";
 
     /**
      * Set of StatusVariable paths for which events are disabled
@@ -198,31 +199,6 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
     }
 
     /**
-     * Returns the names of the <code>Monitorable</code> services that are
-     * currently registered.
-     * <p/>
-     * The returned array contains the names in alphabetical order. It cannot be
-     * <code>null</code>, an empty array is returned if no
-     * <code>Monitorable</code> services are registered.
-     *
-     * @return the array of <code>Monitorable</code> names
-     */
-    public String[] getMonitorableNames() {
-        // sorted set that contains Monitorable SERVICE_PIDs
-        SortedSet<String> names = new TreeSet<String>();
-        ServiceReference[] serviceReferences = osgiVisitor.findMonitorableReferences(null);
-        if (serviceReferences != null) {
-            for (ServiceReference serviceReference : serviceReferences) {
-                String pid = (String) serviceReference.getProperty(Constants.SERVICE_PID);
-                if (pid != null) {
-                    names.add(pid);
-                }
-            }
-        }
-        return names.toArray(new String[names.size()]);
-    }
-
-    /**
      * Returns array of the <code>Monitorable</code> <code>ServiceReference</code>s that are
      * currently registered.
      * <p/>
@@ -233,9 +209,24 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
      * @return the array of <code>Monitorable</code> names
      */
     public ServiceReference[] getMonitorableReferences() {
+        return getMonitorableReferences(null);
+    }
+
+    /**
+     * Returns array of the <code>Monitorable</code> <code>ServiceReference</code>s that are
+     * currently registered.
+     * <p/>
+     * The returned array contains the <code>ServiceTeference</code>s in alphabetical order by service PID.
+     * It cannot be <code>null</code>, an empty array is returned if no
+     * <code>Monitorable</code> services are registered.
+     *
+     * @param monitorableIdFilter <code>Monitorable</code> SERVICE_PID filter
+     * @return the array of <code>Monitorable</code> names
+     */
+    public ServiceReference[] getMonitorableReferences(String monitorableIdFilter) {
         // sorted set that contains Monitorable ServiceReferences
         SortedSet<ServiceReference> names = new TreeSet<ServiceReference>(new ServiceReferencePidComparator());
-        ServiceReference[] serviceReferences = osgiVisitor.findMonitorableReferences(null);
+        ServiceReference[] serviceReferences = osgiVisitor.findMonitorableReferences(monitorableIdFilter);
         if (serviceReferences != null) {
             for (ServiceReference serviceReference : serviceReferences) {
                 String pid = (String) serviceReference.getProperty(Constants.SERVICE_PID);
@@ -418,37 +409,20 @@ public class MonitorAdminCommon implements MonitorListener, MonitoringJobVisitor
     }
 
     /**
-     * Switch on/off events by filter
+     * Switch on/off events
      *
-     * @param filter events filter
+     * @param paths <code>StatusVariable</code> paths
      * @param on     <code>false</code> if event sending should be switched off,
      *               <code>true</code> if it should be switched on for the given path
-     * @throws java.lang.IllegalArgumentException
-     *          if <code>path</code> is
-     *          <code>null</code> or otherwise invalid, or points to a
-     *          non-existing <code>StatusVariable</code>
      */
-    public void switchEvents(StatusVariablePathFilter filter, boolean on) {
+    public void switchEvents(Set<String> paths, boolean on) {
         if (on) {
-            Iterator<String> iterator = disabledPaths.iterator();
-            while (iterator.hasNext()) {
-                StatusVariablePath statusVariablePath = new StatusVariablePath(iterator.next());
-                if (filter.match(statusVariablePath.getMonitorableId(), statusVariablePath.getStatusVariableId())) {
-                    iterator.remove();
-                }
-            }
+            disabledPaths.removeAll(paths);
         } else {
-            String[] monitorableNames = getMonitorableNames();
-            for (String monitorableId : monitorableNames) {
-                String[] statusVariableNames = getStatusVariableNames(monitorableId);
-                for (String statusVariableId : statusVariableNames) {
-                    if (filter.match(monitorableId, statusVariableId)) {
-                        disabledPaths.add(monitorableId + '/' + statusVariableId);
-                    }
-                }
-            }
+            disabledPaths.addAll(paths);
         }
     }
+
 
     /**
      * Returns the list of <code>StatusVariable</code> names published by a

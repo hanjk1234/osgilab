@@ -686,4 +686,144 @@ public class MonitorAdminImplSecurityTest {
 
         monitorAdmin.resetStatusVariable("com.acme.pid/sv.id1");
     }
+
+    @Test
+    public void testSwitchEvents_WithAllPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id1", StatusVariable.CM_CC, 0));
+        monitorable.setNotificationSupport("sv.id1", true);
+        map.put(new MonitorableMockServiceReference(createMockBundle(), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle());
+
+        monitorAdmin.switchEvents("com.acme.pid/sv.id1", false);
+
+        String[] paths = common.getDisabledNotificationPaths();
+        Assert.assertNotNull(paths);
+        Assert.assertEquals(1, paths.length);
+        Assert.assertEquals("com.acme.pid/sv.id1", paths[0]);
+
+        monitorAdmin.switchEvents("com.acme.pid/sv.id1", true);
+        paths = common.getDisabledNotificationPaths();
+        Assert.assertEquals(0, paths.length);
+
+        monitorAdmin.switchEvents("*/sv.id1", false);
+        paths = common.getDisabledNotificationPaths();
+        Assert.assertEquals(1, paths.length);
+        Assert.assertEquals("com.acme.pid/sv.id1", paths[0]);
+
+        monitorAdmin.switchEvents("*/*", true);
+        paths = common.getDisabledNotificationPaths();
+        Assert.assertEquals(0, paths.length);
+    }
+
+    @Test
+    public void testSwitchEvents_WithMonitorPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id1", StatusVariable.CM_CC, 0));
+        monitorable.setNotificationSupport("sv.id1", true);
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.SWITCHEVENTS)
+        ));
+
+        monitorAdmin.switchEvents("com.acme.pid/sv.id1", false);
+
+        String[] paths = common.getDisabledNotificationPaths();
+        Assert.assertNotNull(paths);
+        Assert.assertEquals(1, paths.length);
+        Assert.assertEquals("com.acme.pid/sv.id1", paths[0]);
+
+        monitorAdmin.switchEvents("com.acme.pid/sv.id1", true);
+        paths = common.getDisabledNotificationPaths();
+        Assert.assertEquals(0, paths.length);
+
+        monitorAdmin.switchEvents("*/sv.id1", false);
+        paths = common.getDisabledNotificationPaths();
+        Assert.assertEquals(1, paths.length);
+        Assert.assertEquals("com.acme.pid/sv.id1", paths[0]);
+
+        monitorAdmin.switchEvents("*/*", true);
+        paths = common.getDisabledNotificationPaths();
+        Assert.assertEquals(0, paths.length);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSwitchEvents_NoPublishPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id1", StatusVariable.CM_CC, 0));
+        monitorable.setNotificationSupport("sv.id1", true);
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                NonePermission.INSTANCE
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.SWITCHEVENTS)
+        ));
+
+        monitorAdmin.switchEvents("com.acme.pid/sv.id1", false);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSwitchEvents_NoPublishPermissions_WithWildcard() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id1", StatusVariable.CM_CC, 0));
+        monitorable.setNotificationSupport("sv.id1", true);
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                NonePermission.INSTANCE
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.SWITCHEVENTS)
+        ));
+
+        monitorAdmin.switchEvents("*/*", false);
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testSwitchEvents_NoSwitchEventdPermissions() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id1", StatusVariable.CM_CC, 0));
+        monitorable.setNotificationSupport("sv.id1", true);
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                NonePermission.INSTANCE
+        ));
+
+        monitorAdmin.switchEvents("com.acme.pid/sv.id1", false);
+    }
+
+    @Test(expected = SecurityException.class)
+    public void testSwitchEvents_NoSwitchEventdPermissions_WithWildcard() throws Exception {
+        HashMap<ServiceReference, Monitorable> map = new HashMap<ServiceReference, Monitorable>();
+
+        MockMonitorable monitorable = new MockMonitorable(new StatusVariable("sv.id1", StatusVariable.CM_CC, 0));
+        monitorable.setNotificationSupport("sv.id1", true);
+        map.put(new MonitorableMockServiceReference(createMockBundle(
+                new MonitorPermission("com.acme.pid/sv.id1", MonitorPermission.PUBLISH)
+        ), "com.acme.pid"), monitorable);
+        osgiVisitor.setReferences(map);
+
+        MonitorAdmin monitorAdmin = new MonitorAdminImpl(logVisitor, common, createMockBundle(
+                NonePermission.INSTANCE
+        ));
+
+        monitorAdmin.switchEvents("*/*", false);
+    }
 }

@@ -24,12 +24,14 @@ package org.knowhowlab.osgi.monitoradmin.util;
 public class StatusVariablePathFilter extends StatusVariablePath {
     private boolean monitorableWildcard = false;
     private boolean statusVariableWildcard = false;
+    private String monitorableIdFilter;
 
     public StatusVariablePathFilter(String path) throws IllegalArgumentException {
         String[] ids = parseIds(path);
         this.path = path;
-        if (ids[0].indexOf('*') != -1) {
-            monitorableId = ids[0].replace("*", "");
+        monitorableIdFilter = ids[0];
+        if (monitorableIdFilter.indexOf('*') != -1) {
+            monitorableId = monitorableIdFilter.replace("*", "");
             monitorableWildcard = true;
         } else {
             monitorableId = ids[0];
@@ -63,19 +65,7 @@ public class StatusVariablePathFilter extends StatusVariablePath {
                         statusVariableId.endsWith(this.statusVariableId));
     }
 
-    /**
-     * Check that filter contains monitorable Id wildcard
-     * @return <code>true</code> - contains, otherwise - <code>false</code>
-     */
-    public boolean isMonitorableWildcard() {
-        return monitorableWildcard;
-    }
-
-    /**
-     * Check that filter contains StatusVariable Id wildcard
-     * @return <code>true</code> - contains, otherwise - <code>false</code>
-     */
-    public boolean isStatusVariableWildcard() {
-        return statusVariableWildcard;
+    public String getMonitorableIdFilter() {
+        return monitorableIdFilter;
     }
 }

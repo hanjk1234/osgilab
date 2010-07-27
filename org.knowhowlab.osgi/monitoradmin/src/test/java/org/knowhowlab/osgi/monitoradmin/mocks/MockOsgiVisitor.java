@@ -49,11 +49,15 @@ public class MockOsgiVisitor implements OsgiVisitor {
         return serviceReferences.get(reference);
     }
 
-    public ServiceReference[] findMonitorableReferences(String monitorableId) {
+    public ServiceReference[] findMonitorableReferences(String monitorableIdFilter) {
+        if (monitorableIdFilter != null) {
+            monitorableIdFilter = monitorableIdFilter.replaceAll("\\*", "");
+        }
         Set<ServiceReference> references = serviceReferences.keySet();
         List<ServiceReference> result = new ArrayList<ServiceReference>();
         for (ServiceReference reference : references) {
-            if (monitorableId == null || reference.getProperty(Constants.SERVICE_PID).equals(monitorableId)) {
+            if (monitorableIdFilter == null ||
+                    ((String) reference.getProperty(Constants.SERVICE_PID)).startsWith(monitorableIdFilter)) {
                 result.add(reference);
             }
         }

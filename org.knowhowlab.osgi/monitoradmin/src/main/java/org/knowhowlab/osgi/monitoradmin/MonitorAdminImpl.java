@@ -205,7 +205,7 @@ public class MonitorAdminImpl implements MonitorAdmin {
         if (bundle != null) {
             for (String variableName : variableNames) {
                 try {
-                    if (bundle.hasPermission(new MonitorPermission(String.format("%s/%s", pid, variableName), permissionAction))) {
+                    if (bundle.hasPermission(new MonitorPermission(String.format(MonitorAdminCommon.PATH_PATERN, pid, variableName), permissionAction))) {
                         result.add(variableName);
                     }
                 } catch (IllegalArgumentException e) {
@@ -408,15 +408,26 @@ public class MonitorAdminImpl implements MonitorAdmin {
         logVisitor.debug("ENTRY: switchEvents: " + path + ", " + on, null);
         try {
             StatusVariablePathFilter filter = new StatusVariablePathFilter(path);
-            // check StatusVariable if filter does not contain wildcards
-            if (!filter.isMonitorableWildcard()) {
-                Monitorable monitorable = common.findMonitorableById(filter.getMonitorableId());
-                if (!filter.isStatusVariableWildcard()) {
-                    monitorable.getStatusVariable(filter.getStatusVariableId());
+
+            Set<String> paths = new TreeSet<String>();
+
+            ServiceReference[] monitorableReferences = common.getMonitorableReferences(filter.getMonitorableIdFilter());
+            for (ServiceReference monitorableReference : monitorableReferences) {
+                String pid = (String) monitorableReference.getProperty(Constants.SERVICE_PID);
+                String[] statusVariableNames = common.getStatusVariableNames(pid);
+                for (String statusVariableName : statusVariableNames) {
+                    if (filter.match(pid, statusVariableName)) {
+                        checkPermissions(new StatusVariablePath(pid, statusVariableName), monitorableReference,
+                                MonitorPermission.PUBLISH, MonitorPermission.SWITCHEVENTS);
+                        paths.add(String.format(MonitorAdminCommon.PATH_PATERN, pid, statusVariableName));
+                    }
                 }
             }
-            // todo: check MonitorPermission
-            common.switchEvents(filter, on);
+
+            if (paths.isEmpty()) {
+                throw new IllegalArgumentException(String.format("%s does not point any existing StatusVariables", path));
+            }
+            common.switchEvents(paths, on);
         } finally {
             logVisitor.debug("EXIT: switchEvents: " + path + ", " + on, null);
         }
