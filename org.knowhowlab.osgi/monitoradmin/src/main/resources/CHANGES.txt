@@ -1,6 +1,11 @@
 1.0.2
 - change POM packaging to JAR
-- 
+- embed org.osgi.service.monitor package
+- refactor package to org.knowhowlab.osgi.monitoradmin
+- change groupId to org.knowhowlab.osgi
+- change license to Apache License 2.0
+- add support of security permissions
+- add local permissions file
 
 --------------------------
 1.0.1
