@@ -6,7 +6,7 @@
 
     <groupId>org.knowhowlab.osgi</groupId>
     <artifactId>monitoradmin</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>KnowHowLab OSGi MonitorAdmin</name>
     <description>OSGi MonitorAdmin API Reference Implementation</description>
@@ -37,9 +37,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://osgilab.googlecode.com/svn/tags/monitoradmin-1.0.2</url>
-        <connection>scm:svn:http://osgilab.googlecode.com/svn/tags/monitoradmin-1.0.2</connection>
-        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/tags/monitoradmin-1.0.2
+        <url>http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/monitoradmin</url>
+        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/monitoradmin</connection>
+        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/monitoradmin
         </developerConnection>
     </scm>
 

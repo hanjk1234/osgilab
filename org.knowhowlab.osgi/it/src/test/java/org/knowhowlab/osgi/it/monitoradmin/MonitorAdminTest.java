@@ -57,7 +57,7 @@ public class MonitorAdminTest {
                         mavenBundle().groupId("org.apache.felix").artifactId("org.apache.felix.eventadmin").version("1.2.2"),
                         mavenBundle().groupId("org.apache.felix").artifactId("org.apache.felix.log").version("1.0.0"),
                         mavenBundle().groupId("org.knowhowlab.osgi.testing").artifactId("commons").version("1.0.1-SNAPSHOT"),
-                        mavenBundle().groupId("org.knowhowlab.osgi").artifactId("monitoradmin").version("1.0.2-SNAPSHOT"),
+                        mavenBundle().groupId("org.knowhowlab.osgi").artifactId("monitoradmin").version("1.0.2"),
                         mavenBundle().groupId("org.knowhowlab.osgi.manual-tests").artifactId("test-monitorable").version("1.0.0-SNAPSHOT")
                 )
         );
