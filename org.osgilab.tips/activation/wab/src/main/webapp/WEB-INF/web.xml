@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         metadata-complete="true"
+         version="2.5">
+    <display-name>KnowHowLab Tips and Tricks: Bundle Activation - WAB</display-name>
+    <listener>
+        <listener-class>org.knowhowlab.osgi.tips.activation.wab.ContextListener</listener-class>
+    </listener>
+
+    <!-- welcome file mapping -->
+    <welcome-file-list>
+        <welcome-file>index.htm</welcome-file>
+    </welcome-file-list>
+</web-app>
