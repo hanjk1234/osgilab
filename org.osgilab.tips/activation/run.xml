@@ -175,6 +175,47 @@
             </build>
         </profile>
         <profile>
+            <id>all</id>
+            <build>
+                <defaultGoal>pax:provision</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.ops4j</groupId>
+                        <artifactId>maven-pax-plugin</artifactId>
+                        <version>1.4</version>
+                        <configuration>
+                            <runner>1.5.0</runner>
+                            <framework>equinox</framework>
+                            <provision>
+                                <param>--log=debug</param>
+                                <param>--workingDirectory=target/runner</param>
+                                <param>--ee=J2SE-1.5</param>
+                                <param>--vmOptions=-Djetty.home=../../wab</param>
+                                <param>mvn:org.eclipse.osgi/org.eclipse.osgi.services/3.2.100.v20100503</param>
+                                <param>mvn:org.eclipse.equinox/org.eclipse.equinox.common/3.6.0.v20100503</param>
+                                <param>mvn:org.eclipse.equinox/org.eclipse.equinox.preferences/3.3.0.v20100503</param>
+                                <param>mvn:org.eclipse.equinox/org.eclipse.equinox.cm/1.0.200.v20100520</param>
+                                <param>mvn:org.eclipse.equinox/org.eclipse.equinox.util/1.0.200.v20100503</param>
+                                <param>mvn:org.eclipse.equinox/org.eclipse.equinox.ds/1.2.0.v20100507</param>
+                                <param>mvn:org.apache.geronimo.specs/geronimo-servlet_2.5_spec/1.2</param>
+                                <param>mvn:org.apache.geronimo.specs/geronimo-jaspic_1.0_spec/1.1</param>
+                                <param>mvn:org.eclipse.jetty.aggregate/jetty-all-server/7.2.0.v20101020</param>
+                                <param>mvn:org.eclipse.jetty.osgi/jetty-osgi-boot/7.2.0.v20101020</param>
+                                <param>mvn:org.slf4j/slf4j-api/1.6.1</param>
+                                <param>mvn:org.slf4j/slf4j-jdk14/1.6.1</param>
+                                <param>mvn:org.apache.aries.blueprint/org.apache.aries.blueprint/0.2-incubating</param>
+                                <param>mvn:org.knowhowlab.osgi.tips.activation/core/${project.version}</param>
+                                <param>mvn:org.knowhowlab.osgi.tips.activation/activator/${project.version}</param>
+                                <param>mvn:org.knowhowlab.osgi.tips.activation/ds/${project.version}</param>
+                                <param>mvn:org.knowhowlab.osgi.tips.activation/blueprint/${project.version}</param>
+                                <param>mvn:org.knowhowlab.osgi.tips.activation/wab/${project.version}/war</param>
+                            </provision>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>blueprint-annotations</id>
             <build>
                 <defaultGoal>pax:provision</defaultGoal>
