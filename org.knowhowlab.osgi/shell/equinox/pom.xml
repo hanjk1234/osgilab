@@ -4,7 +4,7 @@
 
     <groupId>org.knowhowlab.osgi.shell</groupId>
     <artifactId>equinox</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>KnowHowLab OSGi Shell - Equinox console adapter</name>
     <description>KnowHowLab OSGi Shell - Equinox console adapter</description>
