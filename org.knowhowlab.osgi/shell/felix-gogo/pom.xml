@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.knowhowlab.osgi.shell</groupId>
-    <artifactId>felix</artifactId>
+    <artifactId>felix-gogo</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>KnowHowLab OSGi Shell - Felix console adapter</name>
-    <description>KnowHowLab OSGi Shell - Felix console adapter</description>
+    <name>KnowHowLab OSGi Shell - Felix GoGo console adapter</name>
+    <description>KnowHowLab OSGi Shell - Felix GoGo console adapter</description>
     <url>http://knowhowlab.org</url>
 
     <developers>
@@ -36,9 +36,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix</url>
-        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix</connection>
-        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix
+        <url>http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix-gogo</url>
+        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix-gogo</connection>
+        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix-gogo
         </developerConnection>
     </scm>
 
@@ -55,8 +55,8 @@
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.shell</artifactId>
-            <version>1.2.0</version>
+            <artifactId>org.apache.felix.gogo.runtime</artifactId>
+            <version>0.8.0</version>
         </dependency>
     </dependencies>
 
@@ -77,7 +77,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-Activator>org.knowhowlab.osgi.shell.felix.Activator</Bundle-Activator>
+                        <Bundle-Activator>org.knowhowlab.osgi.shell.felixgogo.Activator</Bundle-Activator>
                         <Bundle-License>http://code.google.com/p/osgilab/wiki/License</Bundle-License>
                         <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
                         <_removeheaders>Bnd-LastModified, Built-By, Private-Package, Tool, Build-Jdk, Include-Resource
