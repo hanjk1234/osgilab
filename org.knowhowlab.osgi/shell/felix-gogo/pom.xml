@@ -36,9 +36,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix-gogo</url>
-        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix-gogo</connection>
-        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix-gogo
+        <url>https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix-gogo</url>
+        <connection>scm:svn:https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix-gogo</connection>
+        <developerConnection>scm:svn:https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix-gogo
         </developerConnection>
     </scm>
 
@@ -90,7 +90,7 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.1</version>
                 <configuration>
-                    <tagBase>http://osgilab.googlecode.com/svn/tags/</tagBase>
+                    <tagBase>https://osgilab.googlecode.com/svn/tags/</tagBase>
                     <mavenExecutorId>forked-path</mavenExecutorId>
                 </configuration>
             </plugin>
@@ -101,7 +101,7 @@
         <repository>
             <id>sonatype-nexus-staging</id>
             <name>Nexus Release Repository</name>
-            <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
 
