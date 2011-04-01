@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.knowhowlab.osgi.shell</groupId>
     <artifactId>equinox</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>KnowHowLab OSGi Shell - Equinox console adapter</name>
     <description>KnowHowLab OSGi Shell - Equinox console adapter</description>
@@ -36,9 +35,9 @@
     </issueManagement>
 
     <scm>
-        <url>http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/equinox</url>
-        <connection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/equinox</connection>
-        <developerConnection>scm:svn:http://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/equinox
+        <url>https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/equinox</url>
+        <connection>scm:svn:https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/equinox</connection>
+        <developerConnection>scm:svn:https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/equinox
         </developerConnection>
     </scm>
 
@@ -82,7 +81,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package/>
+                        <Export-Package />
                         <Import-Package>
                             org.osgi*,
                             org.eclipse.osgi.framework.console*,
@@ -103,7 +102,7 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.1</version>
                 <configuration>
-                    <tagBase>http://osgilab.googlecode.com/svn/tags/</tagBase>
+                    <tagBase>https://osgilab.googlecode.com/svn/tags/</tagBase>
                     <mavenExecutorId>forked-path</mavenExecutorId>
                 </configuration>
             </plugin>
