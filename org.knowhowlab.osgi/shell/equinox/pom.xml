@@ -4,7 +4,7 @@
 
     <groupId>org.knowhowlab.osgi.shell</groupId>
     <artifactId>equinox</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>KnowHowLab OSGi Shell - Equinox console adapter</name>
     <description>KnowHowLab OSGi Shell - Equinox console adapter</description>
@@ -35,9 +35,9 @@
     </issueManagement>
 
     <scm>
-        <url>https://osgilab.googlecode.com/svn/tags/equinox-1.1.0</url>
-        <connection>scm:svn:https://osgilab.googlecode.com/svn/tags/equinox-1.1.0</connection>
-        <developerConnection>scm:svn:https://osgilab.googlecode.com/svn/tags/equinox-1.1.0
+        <url>https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/equinox</url>
+        <connection>scm:svn:https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/equinox</connection>
+        <developerConnection>scm:svn:https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/equinox
         </developerConnection>
     </scm>
 
