@@ -89,7 +89,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.knopflerfish.bundles</groupId>
+            <groupId>org.knopflerfish.bundle</groupId>
             <artifactId>console-API</artifactId>
             <version>2.0.1</version>
             <scope>test</scope>
@@ -109,31 +109,31 @@
                 <dependency>
                     <groupId>org.knowhowlab.osgi</groupId>
                     <artifactId>monitoradmin</artifactId>
-                    <version>1.0.2-SNAPSHOT</version>
+                    <version>1.0.2</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.knowhowlab.osgi</groupId>
                     <artifactId>jmx</artifactId>
-                    <version>1.0.2-SNAPSHOT</version>
+                    <version>1.0.2</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.knowhowlab.osgi.shell</groupId>
                     <artifactId>equinox</artifactId>
-                    <version>1.0.1-SNAPSHOT</version>
+                    <version>1.0.2-SNAPSHOT</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.knowhowlab.osgi.shell</groupId>
                     <artifactId>felix</artifactId>
-                    <version>1.0.1-SNAPSHOT</version>
+                    <version>1.0.2-SNAPSHOT</version>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.knowhowlab.osgi.shell</groupId>
                     <artifactId>knopflerfish</artifactId>
-                    <version>1.0.1-SNAPSHOT</version>
+                    <version>1.0.2-SNAPSHOT</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>

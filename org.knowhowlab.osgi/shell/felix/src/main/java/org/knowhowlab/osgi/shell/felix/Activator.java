@@ -94,14 +94,14 @@ public class Activator implements BundleActivator {
             if (commandsDescription == null) {
                 LOG.warning(COMMANDS_DESCRIPTION_PROPERTY + " property is null. Ignore service");
                 return null;
-            } else if (!(commandsDescription instanceof String[][])) {
-                LOG.warning(COMMANDS_DESCRIPTION_PROPERTY + " property has wrong format: not String[][]");
+            } else if (!(commandsDescription instanceof String[][] || commandsDescription instanceof String[])) {
+                LOG.warning(COMMANDS_DESCRIPTION_PROPERTY + " property has wrong format: not String[][] or String[]");
                 return null;
             } else {
                 Object service = bc.getService(reference);
                 // get service ranking propety. if not null - use it on Command services registration
                 Integer ranking = (Integer) reference.getProperty(Constants.SERVICE_RANKING);
-                String[][] commands = (String[][]) commandsDescription;
+                String[][] commands = parseCommands(commandsDescription);
                 List<ServiceRegistration> registrations = new ArrayList<ServiceRegistration>();
                 for (String[] commandInfo : commands) {
                     // if command info is invalid - ignore command
@@ -132,6 +132,24 @@ public class Activator implements BundleActivator {
                     commandRegistrations.put(reference, registrations);
                     return service;
                 }
+                return null;
+            }
+        }
+
+        private String[][] parseCommands(Object commandsDescription) {
+            if (commandsDescription == null) {
+                return null;
+            } else if (commandsDescription instanceof String[][]) {
+                return (String[][]) commandsDescription;
+            } else if (commandsDescription instanceof String[]) {
+                String[] commands = (String[]) commandsDescription;
+                String[][] result = new String[commands.length][];
+                for (int i = 0; i < commands.length; i++) {
+                    String command = commands[i];
+                    result[i] = command.split("#");
+                }
+                return result;
+            } else {
                 return null;
             }
         }

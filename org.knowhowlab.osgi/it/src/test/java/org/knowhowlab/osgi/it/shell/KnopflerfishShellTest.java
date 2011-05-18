@@ -42,7 +42,7 @@ public class KnopflerfishShellTest extends AbstractShellTest {
                 knopflerfish().version("2.3.3"), knopflerfish().version("3.0.0"),
                 provision(
                         bundle("http://www.knopflerfish.org/releases/2.3.3/osgi/jars/console/console_all-2.0.1.jar"),
-                        mavenBundle().groupId("org.knowhowlab.osgi.shell").artifactId("knopflerfish").version("1.0.1-SNAPSHOT")
+                        mavenBundle().groupId("org.knowhowlab.osgi.shell").artifactId("knopflerfish").version("1.0.2-SNAPSHOT")
                 )
         );
     }

@@ -42,7 +42,7 @@ public class FelixShellTest extends AbstractShellTest {
                 felix(),
                 provision(
                         mavenBundle().groupId("org.apache.felix").artifactId("org.apache.felix.shell").version("1.2.0").startLevel(1),
-                        mavenBundle().groupId("org.knowhowlab.osgi.shell").artifactId("felix").version("1.0.1-SNAPSHOT").startLevel(1)
+                        mavenBundle().groupId("org.knowhowlab.osgi.shell").artifactId("felix").version("1.0.2-SNAPSHOT").startLevel(1)
                 )
         );
     }

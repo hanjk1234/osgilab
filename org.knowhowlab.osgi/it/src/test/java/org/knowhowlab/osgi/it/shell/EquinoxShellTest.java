@@ -40,7 +40,7 @@ public class EquinoxShellTest extends AbstractShellTest {
         return options(
                 // test framework tyte
                 equinox(),
-                mavenBundle().groupId("org.knowhowlab.osgi.shell").artifactId("equinox").version("1.0.1-SNAPSHOT")
+                mavenBundle().groupId("org.knowhowlab.osgi.shell").artifactId("equinox").version("1.0.2-SNAPSHOT")
         );
     }
 
@@ -54,13 +54,15 @@ public class EquinoxShellTest extends AbstractShellTest {
                 null);
         Assert.assertNotNull(commandReferences);
 
+        Assert.assertTrue(commandReferences.length != 0);
+
         int foundCommands = 0;
         Collection<String> commandHelps = defaultCommansList.values();
         for (ServiceReference commandReference : commandReferences) {
             CommandProvider commandProvider = (CommandProvider) bc.getService(commandReference);
-            if (commandProvider.getHelp().indexOf(groupName) != -1) {
+            if (commandProvider.getHelp().contains(groupName)) {
                 for (String commandHelp : commandHelps) {
-                    if (commandProvider.getHelp().indexOf(commandHelp) != -1) {
+                    if (commandProvider.getHelp().contains(commandHelp)) {
                         foundCommands++;
                     }
                 }
@@ -75,9 +77,9 @@ public class EquinoxShellTest extends AbstractShellTest {
         if (commandReferences != null) {
             for (ServiceReference commandReference : commandReferences) {
                 CommandProvider commandProvider = (CommandProvider) bc.getService(commandReference);
-                if (commandProvider.getHelp().indexOf(groupName) != -1) {
+                if (commandProvider.getHelp().contains(groupName)) {
                     for (String commandHelp : commandHelps) {
-                        if (commandProvider.getHelp().indexOf(commandHelp) != -1) {
+                        if (commandProvider.getHelp().contains(commandHelp)) {
                             foundCommands++;
                         }
                     }

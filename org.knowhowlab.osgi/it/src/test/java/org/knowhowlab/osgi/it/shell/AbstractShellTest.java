@@ -80,11 +80,11 @@ public abstract class AbstractShellTest {
             props.put("org.knowhowlab.osgi.shell.group.name", groupName);
         }
         if (commands != null && commands.size() > 0) {
-            String[][] commandsArray = new String[commands.size()][2];
+            String[] commandsArray = new String[commands.size()];
             Iterator<String> iterator = commands.keySet().iterator();
             for (int i = 0; iterator.hasNext(); i++) {
                 String name = iterator.next();
-                commandsArray[i] = new String[]{name, commands.get(name)};
+                commandsArray[i] = name + "#" + commands.get(name);
             }
             props.put("org.knowhowlab.osgi.shell.commands", commandsArray);
         }
