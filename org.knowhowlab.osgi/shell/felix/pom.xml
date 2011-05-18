@@ -4,7 +4,7 @@
 
     <groupId>org.knowhowlab.osgi.shell</groupId>
     <artifactId>felix</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>KnowHowLab OSGi Shell - Felix console adapter</name>
     <description>KnowHowLab OSGi Shell - Felix console adapter</description>
@@ -35,9 +35,9 @@
     </issueManagement>
 
     <scm>
-        <url>https://osgilab.googlecode.com/svn/tags/felix-1.1.0</url>
-        <connection>scm:svn:https://osgilab.googlecode.com/svn/tags/felix-1.1.0</connection>
-        <developerConnection>scm:svn:https://osgilab.googlecode.com/svn/tags/felix-1.1.0
+        <url>https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix</url>
+        <connection>scm:svn:https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix</connection>
+        <developerConnection>scm:svn:https://osgilab.googlecode.com/svn/trunk/org.knowhowlab.osgi/shell/felix
         </developerConnection>
     </scm>
 
